@@ -42,5 +42,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'address' => 'string',
+        'no_wa' => 'string',
+        'motor' => 'string',
+        'ukuran_baju' => 'string',
+        'tgl_masuk' => 'datetime',
     ];
 }

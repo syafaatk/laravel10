@@ -46,6 +46,31 @@
                 </div>
             @endif
         </div>
+        <div>
+            <x-input-label for="address" :value="__('Address')" />
+            <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $user->address)" autocomplete="address" />
+            <x-input-error class="mt-2" :messages="$errors->get('address')" />
+        </div>
+        <div>
+            <x-input-label for="no_wa" :value="__('No WA')" />
+            <x-text-input id="no_wa" name="no_wa" type="text" class="mt-1 block w-full" :value="old('no_wa', $user->no_wa)" autocomplete="no_wa" />
+            <x-input-error class="mt-2" :messages="$errors->get('no_wa')" />
+        </div>
+        <div>
+            <x-input-label for="motor" :value="__('Motor')" />
+            <x-text-input id="motor" name="motor" type="text" class="mt-1 block w-full" :value="old('motor', $user->motor)" autocomplete="motor" />
+            <x-input-error class="mt-2" :messages="$errors->get('motor')" />
+        </div>
+        <div>
+            <x-input-label for="ukuran_baju" :value="__('Ukuran Baju')" />
+            <x-text-input id="ukuran_baju" name="ukuran_baju" type="text" class="mt-1 block w-full" :value="old('ukuran_baju', $user->ukuran_baju)" autocomplete="ukuran_baju" />
+            <x-input-error class="mt-2" :messages="$errors->get('ukuran_baju')" />
+        </div>
+        <div>
+            <x-input-label for="tgl_masuk" :value="__('Tgl Masuk')" />
+            <x-text-input id="tgl_masuk" name="tgl_masuk" type="date" class="mt-1 block w-full" :value="old('tgl_masuk', $user->tgl_masuk)" autocomplete="tgl_masuk" />
+            <x-input-error class="mt-2" :messages="$errors->get('tgl_masuk')" />
+        </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
