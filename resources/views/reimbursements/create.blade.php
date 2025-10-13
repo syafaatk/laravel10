@@ -28,9 +28,9 @@
                             <label for="tipe">Tipe</label>
                             <select name="tipe" id="tipe" class="form-control @error('tipe') is-invalid @enderror" required>
                                 <option value="">Pilih Tipe</option>
-                                <option value="transportasi" {{ old('tipe') == '1' ? 'selected' : '' }}>Transportasi</option>
-                                <option value="akomodasi" {{ old('tipe') == '2' ? 'selected' : '' }}>Makan-makan</option>
-                                <option value="lain-lain" {{ old('tipe') == '3' ? 'selected' : '' }}>Lain-lain</option>
+                                <option value="1" {{ old('tipe') == '1' ? 'selected' : '' }}>Transportasi</option>
+                                <option value="2" {{ old('tipe') == '2' ? 'selected' : '' }}>Makan-makan</option>
+                                <option value="3" {{ old('tipe') == '3' ? 'selected' : '' }}>Lain-lain</option>
                             </select>
                             @error('tipe')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>

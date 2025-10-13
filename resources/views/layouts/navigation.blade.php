@@ -88,6 +88,18 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                {{ __('Users') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
+                {{ __('Reimbursements') }}
+            </x-responsive-nav-link>
+            @if(Auth::user()->hasRole('admin'))
+            <x-responsive-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
+                {{ __('Laporan') }}
+            </x-responsive-nav-link>
+            @endif
+            
         </div>
 
         <!-- Responsive Settings Options -->
