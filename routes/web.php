@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('reimbursements/{reimbursement}/reject', [ReimbursementController::class, 'reject'])->name('reimbursements.reject');
     Route::patch('reimbursements/{reimbursement}/pending', [ReimbursementController::class, 'pending'])->name('reimbursements.pending');
     Route::get('reimbursements/{reimbursement}/download', [ReimbursementController::class, 'downloadAttachment'])->name('reimbursements.download');
+    Route::get('reimbursements/{reimbursement}/download-note', [ReimbursementController::class, 'downloadNote'])->name('reimbursements.downloadNote');
     Route::post('reimbursements/print', [ReimbursementController::class, 'printSelected'])->name('reimbursements.print')->middleware('role:admin');
 });
 
@@ -51,6 +52,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('roles', RoleController::class);
     Route::get('laporan-reimbursements', [LaporanReimbursementController::class, 'index'])->name('laporan-reimbursements.index');
     Route::post('laporan-reimbursements/generate', [LaporanReimbursementController::class, 'generate'])->name('laporan-reimbursements.generate');
+    
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::delete('reimbursements/{reimbursement}', [ReimbursementController::class, 'destroy'])->name('reimbursements.destroy');
 });
 
 require __DIR__.'/auth.php';

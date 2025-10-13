@@ -23,9 +23,14 @@
                             <p>{{ $reimbursement->description }}</p>
 
                             @if ($reimbursement->attachment)
-                                <p><strong>Attachment:</strong></p>
-                                <a href="{{ route('reimbursements.download', $reimbursement) }}" class="btn btn-link">Download Attachment</a>
-                                <img src="{{ asset('storage/' . $reimbursement->attachment) }}" alt="Attachment" class="img-fluid mt-2">
+                                <p><strong>Receipt:</strong></p>
+                                <a href="{{ route('reimbursements.download', $reimbursement) }}" class="btn btn-link">Download Receipt</a>
+                                <img src="{{ asset('storage/' . $reimbursement->attachment) }}" alt="Receipt" class="img-fluid mt-2">
+                                @if ($reimbursement->attachment_note)
+                                    <p class="mt-3"><strong>Foto Bukti:</strong></p>
+                                    <a href="{{ route('reimbursements.downloadNote', $reimbursement) }}" class="btn btn-link">Download Foto Bukti</a>
+                                    <img src="{{ asset('storage/' . $reimbursement->attachment_note) }}" alt="Foto Bukti" class="img-fluid mt-2">
+                                @endif
                             @endif
                         </div>
                         <div class="col-md-4">
@@ -54,12 +59,12 @@
                                         <form action="{{ route('reimbursements.approve', $reimbursement) }}" method="POST" class="d-inline mr-2">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-success" style="background-color: green; color: white;">Approve</button>
+                                            <button type="submit" class="btn btn-success" style="background-color: green; color: white;">Diajukan ke QT</button>
                                         </form>
                                         <form action="{{ route('reimbursements.reject', $reimbursement) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Reject</button>
+                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Selesai</button>
                                         </form>
                                     </div>
                                 @endif
@@ -69,12 +74,12 @@
                                         <form action="{{ route('reimbursements.pending', $reimbursement) }}" method="POST" class="d-inline mr-2">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-success" style="background-color: green; color: white;">Pending</button>
+                                            <button type="submit" class="btn btn-warning" style="background-color: orange; color: white;">Pengajuan</button>
                                         </form>
                                         <form action="{{ route('reimbursements.reject', $reimbursement) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Reject</button>
+                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Selesai</button>
                                         </form>
                                     </div>
                                 @endif

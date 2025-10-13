@@ -32,6 +32,23 @@ class ReimbursementController extends Controller
         return view('reimbursements.create');
     }
 
+    public function destroy(Reimbursement $reimbursement)
+    {
+        // Hanya admin yang bisa menghapus
+        if (Auth::user()->hasRole('admin')) {
+            if ($reimbursement->attachment) {
+                Storage::disk('public')->delete($reimbursement->attachment);
+            }
+            if ($reimbursement->attachment_note) {
+                Storage::disk('public')->delete($reimbursement->attachment_note);
+            }
+            $reimbursement->delete();
+            return redirect()->route('reimbursements.index')->with('success', 'Reimbursement deleted successfully.');
+        }
+
+        abort(403);
+    }
+
     public function terbilang($angka) {
         $angka = abs($angka);
         $baca = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
@@ -69,11 +86,16 @@ class ReimbursementController extends Controller
             'description' => 'required|string',
             'amount' => 'required|numeric|min:0',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'attachment_note' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         $path = null;
         if ($request->hasFile('attachment')) {
             $path = $request->file('attachment')->store('attachments', 'public');
+        }
+        $path_note = null;
+        if ($request->hasFile('attachment_note')) {
+            $path_note = $request->file('attachment_note')->store('attachments', 'public');
         }
 
         Reimbursement::create([
@@ -83,6 +105,7 @@ class ReimbursementController extends Controller
             'description' => $request->description,
             'amount' => $request->amount,
             'attachment' => $path,
+            'attachment_note' => $path_note,
         ]);
 
         return redirect()->route('reimbursements.index')->with('success', 'Reimbursement request submitted successfully.');
@@ -136,6 +159,16 @@ class ReimbursementController extends Controller
         // Otorisasi
         if (Auth::user()->hasRole('admin') || Auth::id() === $reimbursement->user_id) {
             return Storage::disk('public')->download($reimbursement->attachment);
+        }
+
+        abort(403);
+    }
+
+    public function downloadNote(Reimbursement $reimbursement)
+    {
+        // Otorisasi
+        if (Auth::user()->hasRole('admin') || Auth::id() === $reimbursement->user_id) {
+            return Storage::disk('public')->download($reimbursement->attachment_note);
         }
 
         abort(403);

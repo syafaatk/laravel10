@@ -60,14 +60,22 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="attachment">Attachment (Receipt, etc.)</label>
+                            <label for="attachment">Attachment Receipt, Nota</label>
                             <input type="file" name="attachment" id="attachment" class="form-control-file @error('attachment') is-invalid @enderror">
                             @error('attachment')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label for="attachment_note">Foto Bukti</label>
+                            <input type="file" name="attachment_note" id="attachment_note" class="form-control-file @error('attachment_note') is-invalid @enderror">
+                            @error('attachment_note')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
 
-                        <button type="submit" class="btn btn-primary">
+
+                        <button type="submit" class="btn btn-primary" style="background-color: green; color: white;">
                             {{ __('Submit Request') }}
                         </button>
                     </form>

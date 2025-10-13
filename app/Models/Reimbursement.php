@@ -23,6 +23,7 @@ class Reimbursement extends Model
         'amount',
         'status',
         'attachment',
+        'attachment_note',
         'processed_by',
         'processed_at',
     ];
