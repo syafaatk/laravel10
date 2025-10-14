@@ -42,6 +42,8 @@
                                         <span class="badge badge-warning" style="font-size: 1rem;">Pending</span>
                                     @elseif ($reimbursement->status == 'approved')
                                         <span class="badge badge-success" style="font-size: 1rem;">Approved</span>
+                                    @elseif ($reimbursement->status == 'done')
+                                        <span class="badge badge-primary" style="font-size: 1rem;">Done</span>
                                     @else
                                         <span class="badge badge-danger" style="font-size: 1rem;">Rejected</span>
                                     @endif
@@ -64,11 +66,11 @@
                                         <form action="{{ route('reimbursements.reject', $reimbursement) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Selesai</button>
+                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Reject</button>
                                         </form>
                                     </div>
                                 @endif
-                                @if (Auth::user()->hasRole('admin') && $reimbursement->status != 'pending')
+                                @if (Auth::user()->hasRole('admin') && $reimbursement->status == 'approved')
                                     <hr>
                                     <div class="d-flex">
                                         <form action="{{ route('reimbursements.pending', $reimbursement) }}" method="POST" class="d-inline mr-2">
@@ -76,10 +78,10 @@
                                             @method('PATCH')
                                             <button type="submit" class="btn btn-warning" style="background-color: orange; color: white;">Pengajuan</button>
                                         </form>
-                                        <form action="{{ route('reimbursements.reject', $reimbursement) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('reimbursements.done', $reimbursement) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-danger" style="background-color: red; color: white;">Selesai</button>
+                                            <button type="submit" class="btn btn-success" style="background-color: green; color: white;">Done</button>
                                         </form>
                                     </div>
                                 @endif

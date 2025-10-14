@@ -47,7 +47,7 @@
             border-collapse: collapse;
         }
         .applicant-info td:first-child, .cuti-details td:first-child, .bank-info td:first-child {
-            width: 25%;
+            width: 30%;
             padding-right: 5px;
             vertical-align: top;
         }
@@ -101,12 +101,12 @@
         }
         .signature-box .name-underline {
             display: block;
-            margin-top: 60px; /* Space for signature */
+            margin-top: 85px; /* Space for signature */
             text-decoration: underline;
         }
 
         p {
-            margin: 10px 0;
+            margin: 8px 0;
         }
     </style>
 </head>
@@ -135,7 +135,10 @@
         
         <!-- surat cuti -->
          <!-- kepada yth -->
-          
+          <!-- lokasi dan tanggal -->
+        <div class="date-location" style="text-align: right; margin-bottom: 15px; margin-right: 20px;">
+            <p>Tanjung Enim, {{ $cuti->created_at->format('d F Y') }}</p>
+        </div>
         <div class="applicant-info">
             <p>Kepada Yth,</p>
             <p>Bapak/Ibu Pimpinan</p>
@@ -177,8 +180,12 @@
             <div class="signature-box" style="float: right; width: 50%;">
                 <p>Hormat Saya,</p>
                 <p>Yang Mengajukan,</p>
-                <img src="{{ asset('storage/' . Auth::user()->attachment_ttd) }}" alt="Signature" style="max-width: 200px; max-height: 100px;">
-                <span class="name-underline">{{ Auth::user()->name }}</span>
+                @if (Auth::user()->attachment_ttd)
+                    <img src="{{ asset('storage/' . Auth::user()->attachment_ttd) }}" alt="Signature" style="max-width: 200px; max-height: 100px;">
+                    <p style="margin-top: -10px;">{{ Auth::user()->name }}</p>
+                @else
+                    <span class="name-underline">{{ Auth::user()->name }}</span>
+                @endif
             </div>
             <div style="clear: both;"></div>
         </div>
@@ -191,19 +198,19 @@
             <table>
                 <tbody>
                     <tr>
-                        <td>Total Hak Cuti Tahun {{ \Carbon\Carbon::now()->format('Y') }}</td>
+                        <td>Total Hak {{ $cuti->masterCuti->name }} {{ \Carbon\Carbon::now()->format('Y') }}</td>
                         <td>: {{ $jatahCuti ?? 'N/A' }} Hari</td>
                     </tr>
                     <tr>
-                        <td>Cuti yang Sudah Diambil</td>
+                        <td>{{ $cuti->masterCuti->name }} yang Sudah Diambil</td>
                         <td>: {{ $report_data['taken_leave_this_year'] - $cuti->days_requested }} Hari</td>
                     </tr>
                     <tr>
-                        <td>Cuti yang diambil saat ini</td>
+                        <td>{{ $cuti->masterCuti->name }} yang diambil saat ini</td>
                         <td>: {{ $cuti->days_requested }} Hari</td>
                     </tr>
                     <tr>
-                        <td>Sisa Cuti Tahunan</td>
+                        <td>Sisa {{ $cuti->masterCuti->name }}</td>
                         <td>: {{ $report_data['remaining_leave'] }} Hari</td>
                     </tr>
                 </tbody>
@@ -216,12 +223,12 @@
             <div class="signature-box" style="float: left; width: 50%;">
                 <p>Mengetahui,</p>
                 <p>MANAGER PEOPLE&CULTURES,</p>
-                <span class="name-underline">{{ '____________________' }}</span>
+                <span class="name-underline" style="margin-top:95px">{{ '.......................' }}</span>
             </div>
             <div class="signature-box" style="float: right; width: 50%;">
                 <p>KEPUTUSAN PEJABAT YANG BERWENANG MEMBERIKAN CUTI ,</p>
                 <p>Atasan Pemohon,</p>
-                <span class="name-underline">{{ $report_data['supervisor_name'] ?? '____________________' }}</span>
+                <span class="name-underline">{{ $report_data['supervisor_name'] ?? 'Dedek Apriyani' }}</span>
             </div>
             <div style="clear: both;"></div>
         </div>

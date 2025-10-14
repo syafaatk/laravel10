@@ -12,7 +12,7 @@ class ReimbursementController extends Controller
     public function __construct()
     {
         // Middleware untuk memastikan hanya admin yang bisa approve/reject
-        $this->middleware('role:admin')->only(['approved', 'rejected', 'pending', 'printSelected']);
+        $this->middleware('role:admin')->only(['approved', 'rejected', 'pending','done', 'printSelected']);
     }
 
     public function index()
@@ -83,8 +83,8 @@ class ReimbursementController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'tipe' => 'required|in:1,2,3',
-            'description' => 'required|string',
-            'amount' => 'required|numeric|min:0',
+            'description' => 'required|string|max:1000',
+            'amount' => 'required|numeric|min:0|max:10000000',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'attachment_note' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
@@ -152,6 +152,16 @@ class ReimbursementController extends Controller
         ]);
 
         return redirect()->route('reimbursements.index')->with('success', 'Reimbursement rejected.');
+    }
+    public function done(Reimbursement $reimbursement)
+    {
+        $reimbursement->update([
+            'status' => 'done',
+            'processed_by' => Auth::id(),
+            'processed_at' => now(),
+        ]);
+
+        return redirect()->route('reimbursements.index')->with('success', 'Reimbursement marked as done.');
     }
 
     public function downloadAttachment(Reimbursement $reimbursement)

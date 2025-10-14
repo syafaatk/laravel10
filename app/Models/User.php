@@ -27,7 +27,8 @@ class User extends Authenticatable
         'motor',
         'ukuran_baju',
         'tgl_masuk',
-        'attachment_ttd'
+        'attachment_ttd',
+        'nopeg',
     ];
 
     /**

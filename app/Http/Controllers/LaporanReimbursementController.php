@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 
 use App\Models\Reimbursement;
+use App\Models\LaporanReimbursement;
 use Illuminate\Http\Request;
 
 class LaporanReimbursementController extends Controller
 {
     public function index()
     {
-        return view('laporan-reimbursements.index');
+        $laporanReimbursements = LaporanReimbursement::with('user')->latest()->paginate(10);
+        return view('laporan-reimbursements.index', compact('laporanReimbursements'));
+    }
+
+    public function search()
+    {
+        return view('laporan-reimbursements.search');
     }
 
     public function generate(Request $request)
@@ -18,7 +25,7 @@ class LaporanReimbursementController extends Controller
         $request->validate([
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'nullable|in:pending,approved,rejected',
+            'status' => 'nullable|in:pending,approved,done,rejected',
         ]);
 
         $startDate = Carbon::parse($request->start_date)->startOfDay();
@@ -92,7 +99,42 @@ class LaporanReimbursementController extends Controller
     {
         //
     }
+    
+    public function create()
+    {
+        $users = \App\Models\User::all(); // Assuming you want to select from all users
+        return view('laporan-reimbursements.create', compact('users'));
+    }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'user_id' => 'nullable|exists:users,id',
+            'status' => 'nullable|in:pending,approved,done,rejected',
+            'attachment' => 'nullable|file|mimes:pdf|max:2048', // Only PDF for reports
+            'amount' => 'nullable|integer|min:0|max:1000000000',
+        ]);
+
+        $path = null;
+        if ($request->hasFile('attachment')) {
+            $path = $request->file('attachment')->store('laporan_attachments', 'public');
+        }
+
+        $user_id = $request->user_id ?? auth()->id();
+
+        LaporanReimbursement::create([
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'user_id' => $user_id,
+            'status' => $request->status,
+            'attachment' => $path,
+        ]);
+
+        return redirect()->route('admin.laporan-reimbursements.index')->with('success', 'Laporan Reimbursement created successfully.');
+    }
+    
     public function form_number_month($month)
     {
         $months = [

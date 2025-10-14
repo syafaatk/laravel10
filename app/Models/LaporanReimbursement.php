@@ -15,6 +15,7 @@ class LaporanReimbursement extends Model
         'end_date',
         'status',
         'attachment',
+        'amount',
         'user_id',
     ];
 

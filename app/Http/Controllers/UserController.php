@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -13,6 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        Gate::authorize('view-user');
         $users = User::all();
         return view('admin.users.index', compact('users'));
     }
@@ -81,10 +83,11 @@ class UserController extends Controller
             'ukuran_baju' => 'nullable|string|max:255',
             'tgl_masuk' => 'nullable|date',
             'attachment_ttd' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'nopeg' => 'nullable|integer|unique:users,nopeg,' . $user->id,
         ]);
 
         $user->fill($request->only([
-            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk'
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg'
         ]));
 
         if ($request->hasFile('attachment_ttd')) {

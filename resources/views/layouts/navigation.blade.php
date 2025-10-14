@@ -9,16 +9,10 @@
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                        {{ __('Users') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -31,19 +25,67 @@
                         {{ __('Cuti') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
+                        {{ __('Profil Saya') }}
+                    </x-nav-link>
+                </div>
                 @if(Auth::user()->hasRole('admin'))
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
-                        {{ __('Master Cuti') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
-                        {{ __('Laporan') }}
-                    </x-nav-link>
+                    <x-dropdown align="left" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-slot name="trigger">
+                            <button class="h-16 flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                {{ __('Master') }}
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')">
+                                {{ __('Roles') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.permissions.index')" :active="request()->routeIs('admin.permissions.*')">
+                                {{ __('Permissions') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
+                                {{ __('Master Cuti') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                                {{ __('Users') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
                 </div>
                 @endif
+                @if(Auth::user()->hasRole('admin'))
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-dropdown align="left" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-slot name="trigger">
+                            <button class="h-16 flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                {{ __('Laporan') }}
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
 
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
+                                {{ __('Reimbursements') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.laporan-reimbursements.search')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
+                                {{ __('Generate Reimbursements') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -98,24 +140,42 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                {{ __('Users') }}
-            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
                 {{ __('Reimbursements') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
                 {{ __('Cuti') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
+                {{ __('Profil Saya') }}
+            </x-responsive-nav-link>
             @if(Auth::user()->hasRole('admin'))
-            <x-responsive-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
-                {{ __('Master Cuti') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
-                {{ __('Laporan') }}
-            </x-responsive-nav-link>
+                <div class="border-t border-gray-200">
+                    <div class="block px-4 py-2 text-xs text-gray-400">
+                        {{ __('Manage Master Data') }}
+                    </div>
+                    <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')">
+                        {{ __('Roles') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.permissions.index')" :active="request()->routeIs('admin.permissions.*')">
+                        {{ __('Permissions') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
+                        {{ __('Master Cuti') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                        {{ __('Users') }}
+                    </x-responsive-nav-link>
+                </div>
+                <div class="border-t border-gray-200">
+                    <div class="block px-4 py-2 text-xs text-gray-400">
+                        {{ __('Laporan') }}
+                    </div>
+                    <x-responsive-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
+                        {{ __('Reimbursements') }}
+                    </x-responsive-nav-link>
+                </div>
             @endif
-            
         </div>
 
         <!-- Responsive Settings Options -->

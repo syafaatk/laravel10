@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('ukuran_baju')->nullable();
             $table->date('tgl_masuk')->nullable();
             $table->string('attachment_ttd')->nullable();
+            $table->integer('nopeg')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
         });

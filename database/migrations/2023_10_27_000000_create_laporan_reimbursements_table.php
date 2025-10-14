@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->string('status')->nullable(); // pending, approved, rejected
             $table->string('attachment')->nullable();
+            $table->integer('amount')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

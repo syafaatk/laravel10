@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('reimbursements/{reimbursement}/approve', [ReimbursementController::class, 'approve'])->name('reimbursements.approve');
     Route::patch('reimbursements/{reimbursement}/reject', [ReimbursementController::class, 'reject'])->name('reimbursements.reject');
     Route::patch('reimbursements/{reimbursement}/pending', [ReimbursementController::class, 'pending'])->name('reimbursements.pending');
+    Route::patch('reimbursements/{reimbursement}/done', [ReimbursementController::class, 'done'])->name('reimbursements.done');
     Route::get('reimbursements/{reimbursement}/download', [ReimbursementController::class, 'downloadAttachment'])->name('reimbursements.download');
     Route::get('reimbursements/{reimbursement}/download-note', [ReimbursementController::class, 'downloadNote'])->name('reimbursements.downloadNote');
     Route::post('reimbursements/print', [ReimbursementController::class, 'printSelected'])->name('reimbursements.print')->middleware('role:admin');
@@ -63,8 +64,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('roles', RoleController::class);
     Route::resource('master-cuti', MasterCutiController::class)->except(['show']);
     Route::get('laporan-reimbursements', [LaporanReimbursementController::class, 'index'])->name('laporan-reimbursements.index');
+    Route::get('laporan-reimbursements/create', [LaporanReimbursementController::class, 'create'])->name('laporan-reimbursements.create');
+    Route::get('laporan-reimbursements/search', [LaporanReimbursementController::class, 'search'])->name('laporan-reimbursements.search');
     Route::post('laporan-reimbursements/generate', [LaporanReimbursementController::class, 'generate'])->name('laporan-reimbursements.generate');
-    
+    Route::post('laporan-reimbursements', [LaporanReimbursementController::class, 'store'])->name('laporan-reimbursements.store');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
