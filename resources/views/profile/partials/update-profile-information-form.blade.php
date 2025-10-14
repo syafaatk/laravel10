@@ -69,7 +69,7 @@
             </div>
             <div>
                 <x-input-label for="tgl_masuk" :value="__('Tgl Masuk')" />
-                <x-text-input id="tgl_masuk" name="tgl_masuk" type="date" class="mt-1 block w-full" :value="old('tgl_masuk', $user->tgl_masuk->format('Y-m-d'))" autocomplete="tgl_masuk" />
+                <x-text-input id="tgl_masuk" name="tgl_masuk" type="date" class="mt-1 block w-full" :value="old('tgl_masuk', $user->tgl_masuk->format('Y-m-d') ?? '')" autocomplete="tgl_masuk" />
                 <x-input-error class="mt-2" :messages="$errors->get('tgl_masuk')" />
             </div>
             <div>
