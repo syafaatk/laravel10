@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\CutiController;
+use App\Http\Controllers\MasterCutiController;
 use App\Http\Controllers\LaporanReimbursementController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -44,12 +46,22 @@ Route::middleware('auth')->group(function () {
     Route::get('reimbursements/{reimbursement}/download', [ReimbursementController::class, 'downloadAttachment'])->name('reimbursements.download');
     Route::get('reimbursements/{reimbursement}/download-note', [ReimbursementController::class, 'downloadNote'])->name('reimbursements.downloadNote');
     Route::post('reimbursements/print', [ReimbursementController::class, 'printSelected'])->name('reimbursements.print')->middleware('role:admin');
+
+    // Cuti (Leave) Routes
+    Route::get('cuti', [CutiController::class, 'index'])->name('cuti.index');
+    Route::get('cuti/create', [CutiController::class, 'create'])->name('cuti.create');
+    Route::post('cuti', [CutiController::class, 'store'])->name('cuti.store');
+    Route::get('cuti/{cuti}', [CutiController::class, 'show'])->name('cuti.show');
+    Route::get('cuti/{cuti}/print', [CutiController::class, 'print'])->name('cuti.print');
+    Route::patch('cuti/{cuti}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
+    Route::patch('cuti/{cuti}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('master-cuti', MasterCutiController::class)->except(['show']);
     Route::get('laporan-reimbursements', [LaporanReimbursementController::class, 'index'])->name('laporan-reimbursements.index');
     Route::post('laporan-reimbursements/generate', [LaporanReimbursementController::class, 'generate'])->name('laporan-reimbursements.generate');
     

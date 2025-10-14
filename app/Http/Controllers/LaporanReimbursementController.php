@@ -39,6 +39,7 @@ class LaporanReimbursementController extends Controller
         $report_data['reimbursements'] = $reimbursements;
         $report_data['total_amount'] = $reimbursements->sum('amount');
         $report_data['terbilang_total_amount'] = $this->terbilang($report_data['total_amount']);
+        $report_data['form_number_month'] = $this->form_number_month(Carbon::now()->month);
         $report_data['attachment'] = null;
 
         return view('reimbursements.print', compact('reimbursements', 'report_data'));
@@ -71,4 +72,45 @@ class LaporanReimbursementController extends Controller
         }
         return $temp;
     }
+
+    public function show(LaporanReimbursement $laporanReimbursement)
+    {
+        //
+    }
+
+    public function edit(LaporanReimbursement $laporanReimbursement)
+    {
+        //
+    }
+
+    public function update(Request $request, LaporanReimbursement $laporanReimbursement)
+    {
+        //
+    }
+
+    public function destroy(LaporanReimbursement $laporanReimbursement)
+    {
+        //
+    }
+
+    public function form_number_month($month)
+    {
+        $months = [
+            1 => 'I',
+            2 => 'II',
+            3 => 'III',
+            4 => 'IV',
+            5 => 'V',
+            6 => 'VI',
+            7 => 'VII',
+            8 => 'VIII',
+            9 => 'IX',
+            10 => 'X',
+            11 => 'XI',
+            12 => 'XII'
+        ];
+
+        return $months[$month] ?? '';
+    }
+    
 }

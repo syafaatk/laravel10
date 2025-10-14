@@ -26,7 +26,17 @@
                         {{ __('Reimbursements') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
+                        {{ __('Cuti') }}
+                    </x-nav-link>
+                </div>
                 @if(Auth::user()->hasRole('admin'))
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
+                        {{ __('Master Cuti') }}
+                    </x-nav-link>
+                </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
                         {{ __('Laporan') }}
@@ -94,7 +104,13 @@
             <x-responsive-nav-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
                 {{ __('Reimbursements') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
+                {{ __('Cuti') }}
+            </x-responsive-nav-link>
             @if(Auth::user()->hasRole('admin'))
+            <x-responsive-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
+                {{ __('Master Cuti') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
                 {{ __('Laporan') }}
             </x-responsive-nav-link>

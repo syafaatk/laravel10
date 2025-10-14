@@ -128,7 +128,7 @@
             <p class="form-title">FORMULIR KLAIM REIMBURSE TRANSPORT DAN AKOMODASI WAKAF</p>
         </div>
         <div class="form-number" style="text-align: center; margin-bottom: 10px;">
-            <p>Nomor : .... /FM-KR/QT/.... /2025</p>
+            <p>Nomor : .... /FM-KR/QT/{{ $report_data['form_number_month'] }}/{{ \Carbon\Carbon::now()->format('Y') }}</p>
         </div>
         <div class="applicant-info">
             <p>Yang bertanda tangan di bawah ini:</p>
@@ -237,6 +237,20 @@
                 </div>
             </div>
         </div>
+        <div class="signature-section">
+            <div class="row">
+                <div class="col-6 signature-box">
+                    <p style="margin-top: 20px; margin-bottom: 0;">Persetujuan,</p>
+                    <p style="margin-top: 0;">Direktur,</p>
+                    <p style="margin-top: 60px;">_________________________</p>
+                    <p class="name">...........</p>
+                </div>
+                <div class="col-6 signature-box">
+                    <p>Pengajuan sebesar Rp {{ number_format($reimbursements->sum('amount'), 2, ',', '.') }}</p><p>Disetujui / Tidak disetujui *),</p>
+                </div>
+            </div>
+        </div>
+        <p style="margin-top: 40px; font-style: italic;">*) Coret yang tidak perlu</p>
 
         <div class="attachment-section">
             <p><strong>Lampiran:</strong></p>
