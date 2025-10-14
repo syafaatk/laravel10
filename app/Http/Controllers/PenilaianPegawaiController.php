@@ -32,8 +32,8 @@ class PenilaianPegawaiController extends Controller
 
     public function create()
     {
-        $users = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'admin');
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'user');
         })->get();
         $criteria = self::CRITERIA;
         return view('admin.penilaian.create', compact('users', 'criteria'));

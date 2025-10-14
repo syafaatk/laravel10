@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w mx-auto sm:px-6 lg:px-8">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
@@ -22,6 +22,10 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Jabatan</th>
+                                <th>Ukuran Baju</th>
+                                <th>Motor</th>
+                                <th>Tgl Masuk</th>
+                                <th>Lama Kerja</th>
                                 <th>Roles</th>
                                 <th>Actions</th>
                             </tr>
@@ -33,6 +37,14 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->jabatan }}</td>
+                                    <td>{{ $user->ukuran_baju }}</td>
+                                    <td>{{ $user->motor ? $user->motor : 'No' }}</td>
+                                    <td>{{ $user->tgl_masuk ? \Carbon\Carbon::parse($user->tgl_masuk)->format('d M Y') : '' }}</td>
+                                    <td>
+                                        @if($user->tgl_masuk)
+                                            {{ \Carbon\Carbon::parse($user->tgl_masuk)->diffInYears(\Carbon\Carbon::now()) }} years
+                                        @endif
+                                    </td>
                                     <td>
                                         @foreach ($user->roles as $role)
                                             <span class="badge badge-success">{{ $role->name }}</span>

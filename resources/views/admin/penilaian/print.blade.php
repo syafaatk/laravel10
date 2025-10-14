@@ -123,6 +123,10 @@
                         <td>: TANJUNG ENIM</td>
                     </tr>
                     <tr>
+                        <td>Divisi</td>
+                        <td>: {{ $penilaian->user->kontrak }}</td>
+                    </tr>
+                    <tr>
                         <td>Jabatan</td>
                         <td>: {{ $penilaian->user->jabatan }}</td>
                     </tr>
