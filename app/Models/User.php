@@ -63,4 +63,30 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cuti::class)->where('status', 'approved')->where('master_cuti_id', 1);
     }
+
+    public function reimbursements()
+    {
+        return $this->hasMany(Reimbursement::class);
+    }
+
+    public function cutis()
+    {
+        return $this->hasMany(Cuti::class);
+    }
+
+    public function laporanReimbursements()
+    {
+        return $this->hasMany(LaporanReimbursement::class);
+    }
+
+    public function penilaianPegawai()
+    {
+        return $this->hasMany(PenilaianPegawai::class, 'user_id');
+    }
+
+    public function reviewsGiven()
+    {
+        return $this->hasMany(PenilaianPegawai::class, 'reviewer_id');
+    }
+    
 }
