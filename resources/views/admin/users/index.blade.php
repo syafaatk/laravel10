@@ -20,7 +20,7 @@
                             <tr>
                                 <th>No Pegawai</th>
                                 <th>Name</th>
-                                <th>Email</th>
+                                <th>Kontrak</th>
                                 <th>Jabatan</th>
                                 <th>Ukuran Baju</th>
                                 <th>Motor</th>
@@ -35,7 +35,7 @@
                                 <tr>
                                     <td>{{ $user->nopeg }}</td>
                                     <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->kontrak }}</td>
                                     <td>{{ $user->jabatan }}</td>
                                     <td>{{ $user->ukuran_baju }}</td>
                                     <td>{{ $user->motor ? $user->motor : 'No' }}</td>
