@@ -24,6 +24,8 @@ return new class extends Migration
             $table->date('tgl_masuk')->nullable();
             $table->string('attachment_ttd')->nullable();
             $table->integer('nopeg')->nullable()->unique();
+            $table->string('kontrak')->nullable();
+            $table->string('jabatan')->nullable(); // karyawan, admin, manager, hrd
             $table->rememberToken();
             $table->timestamps();
         });

@@ -29,6 +29,8 @@ class User extends Authenticatable
         'tgl_masuk',
         'attachment_ttd',
         'nopeg',
+        'kontrak',
+        'jabatan',
     ];
 
     /**

@@ -84,10 +84,12 @@ class UserController extends Controller
             'tgl_masuk' => 'nullable|date',
             'attachment_ttd' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'nopeg' => 'nullable|integer|unique:users,nopeg,' . $user->id,
+            'kontrak' => 'nullable|string|max:255',
+            'jabatan' => 'nullable|string|max:255',
         ]);
 
         $user->fill($request->only([
-            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg'
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan'
         ]));
 
         if ($request->hasFile('attachment_ttd')) {

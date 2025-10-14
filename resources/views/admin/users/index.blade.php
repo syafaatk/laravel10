@@ -18,8 +18,10 @@
                     <table id="users-table" class="table table-bordered table-striped">
                         <thead>
                             <tr>
+                                <th>No Pegawai</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Jabatan</th>
                                 <th>Roles</th>
                                 <th>Actions</th>
                             </tr>
@@ -27,8 +29,10 @@
                         <tbody>
                             @foreach ($users as $user)
                                 <tr>
+                                    <td>{{ $user->nopeg }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>{{ $user->jabatan }}</td>
                                     <td>
                                         @foreach ($user->roles as $role)
                                             <span class="badge badge-success">{{ $role->name }}</span>

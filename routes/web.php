@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\CutiController;
 use App\Http\Controllers\MasterCutiController;
+use App\Http\Controllers\PenilaianPegawaiController;
 use App\Http\Controllers\LaporanReimbursementController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('penilaian', PenilaianPegawaiController::class)->names('penilaian');
+    Route::get('penilaian/{penilaian}/print', [PenilaianPegawaiController::class, 'print'])->name('penilaian.print');
     Route::resource('master-cuti', MasterCutiController::class)->except(['show']);
     Route::get('laporan-reimbursements', [LaporanReimbursementController::class, 'index'])->name('laporan-reimbursements.index');
     Route::get('laporan-reimbursements/create', [LaporanReimbursementController::class, 'create'])->name('laporan-reimbursements.create');

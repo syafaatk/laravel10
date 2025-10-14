@@ -45,6 +45,8 @@ class ProfileController extends Controller
             $request->user()->attachment_ttd = $request->file('attachment_ttd')->store('attachments_ttd', 'public');
         }
         $request->user()->nopeg = $request->input('nopeg');
+        $request->user()->kontrak = $request->input('kontrak');
+        $request->user()->jabatan = $request->input('jabatan');
         
 
         $request->user()->save();

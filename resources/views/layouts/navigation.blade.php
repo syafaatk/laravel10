@@ -54,6 +54,9 @@
                             <x-dropdown-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
                                 {{ __('Master Cuti') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.penilaian.index')" :active="request()->routeIs('admin.penilaian.*')">
+                                {{ __('Penilaian Pegawai') }}
+                            </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-dropdown-link>
@@ -162,6 +165,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
                         {{ __('Master Cuti') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.penilaian.index')" :active="request()->routeIs('admin.penilaian.*')">
+                        {{ __('Penilaian Pegawai') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                         {{ __('Users') }}

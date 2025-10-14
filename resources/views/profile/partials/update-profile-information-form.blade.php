@@ -52,11 +52,50 @@
             <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $user->address)" autocomplete="address" />
             <x-input-error class="mt-2" :messages="$errors->get('address')" />
             </div>
-            <div>
-            <x-input-label for="no_wa" :value="__('No WA')" />
-            <x-text-input id="no_wa" name="no_wa" type="text" class="mt-1 block w-full" :value="old('no_wa', $user->no_wa)" autocomplete="no_wa" />
-            <x-input-error class="mt-2" :messages="$errors->get('no_wa')" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="no_wa" :value="__('No WA')" />
+                    <x-text-input id="no_wa" name="no_wa" type="text" class="mt-1 block w-full" :value="old('no_wa', $user->no_wa)" autocomplete="no_wa" />
+                    <x-input-error class="mt-2" :messages="$errors->get('no_wa')" />
+                </div>
+                <div>
+                    <x-input-label for="nopeg" :value="__('No Pegawai')" />
+                    <x-text-input id="nopeg" name="nopeg" type="text" class="mt-1 block w-full" :value="old('nopeg', $user->nopeg)" autocomplete="nopeg" />
+                    <x-input-error class="mt-2" :messages="$errors->get('nopeg')" />
+                </div>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="kontrak" :value="__('Kontrak')" />
+                    <!-- select -->
+
+                    <select id="kontrak" name="kontrak" class="form-select mt-1 block w-full @error('kontrak') border-red-500 @enderror" >
+                        <option value="">-- Select Kontrak --</option>
+                        <option value="Join Development PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'Join Development PT Bukit Asam' ? 'selected' : '' }}>Join Development PT Bukit Asam</option>
+                        <option value="K3L PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'K3L PT Bukit Asam' ? 'selected' : '' }}>K3L PT Bukit Asam</option>
+                        <option value="Supply Chain PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'Supply Chain PT Bukit Asam' ? 'selected' : '' }}>Supply Chain PT Bukit Asam</option>
+                        <option value="SDMO PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'SDMO PT Bukit Asam' ? 'selected' : '' }}>SDMO PT Bukit Asam</option>
+
+                    </select>
+                    
+                    <x-input-error class="mt-2" :messages="$errors->get('kontrak')" />
+                </div>
+                <div>
+                    <x-input-label for="jabatan" :value="__('Jabatan')" />
+                    <!-- select -->
+                    <select id="jabatan" name="jabatan" class="form-select mt-1 block w-full @error('jabatan') border-red-500 @enderror" >
+                        <option value="">Pilih Jabatan</option>
+                        <option value="Web Developer" {{ old('jabatan', $user->jabatan) == 'Web Developer' ? 'selected' : '' }}>Web Developer</option>
+                        <option value="Mobile Developer" {{ old('jabatan', $user->jabatan) == 'Mobile Developer' ? 'selected' : '' }}>Mobile Developer</option>
+                        <option value="System Analyst" {{ old('jabatan', $user->jabatan) == 'System Analyst' ? 'selected' : '' }}>System Analyst</option>
+                        <option value="UI UX Designer" {{ old('jabatan', $user->jabatan) == 'UI UX Designer' ? 'selected' : '' }}>UI UX Designer</option>
+                        <option value="Technical Writer" {{ old('jabatan', $user->jabatan) == 'Technical Writer' ? 'selected' : '' }}>Technical Writer</option>
+                        <option value="IoT Developer" {{ old('jabatan', $user->jabatan) == 'IoT Developer' ? 'selected' : '' }}>IoT Developer</option>
+                    </select>
+                    <x-input-error class="mt-2" :messages="$errors->get('jabatan')" />
+                </div>
+            </div>
+
             <div>
             <x-input-label for="motor" :value="__('Motor')" />
             <x-text-input id="motor" name="motor" type="text" class="mt-1 block w-full" :value="old('motor', $user->motor)" autocomplete="motor" />
