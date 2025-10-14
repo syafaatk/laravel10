@@ -154,7 +154,11 @@
                     <tr>
                         <td>Nama</td>
                         <!-- user login -->
-                        <td>: {{ Auth::user()->name }}</td>
+                        <td>: {{ $cuti->user->name }}</td>
+                    </tr>
+                    <tr>
+                        <td>No Pegawai</td>
+                        <td>: {{ $cuti->user->nopeg }}</td>
                     </tr>
                     <tr>
                         <td>Unit Kerja</td>
@@ -180,11 +184,11 @@
             <div class="signature-box" style="float: right; width: 50%;">
                 <p>Hormat Saya,</p>
                 <p>Yang Mengajukan,</p>
-                @if (Auth::user()->attachment_ttd)
-                    <img src="{{ asset('storage/' . Auth::user()->attachment_ttd) }}" alt="Signature" style="max-width: 200px; max-height: 100px;">
-                    <p style="margin-top: -10px;">{{ Auth::user()->name }}</p>
+                @if ($cuti->user->attachment_ttd)
+                    <img src="{{ asset('storage/' . $cuti->user->attachment_ttd) }}" alt="Signature" style="max-width: 200px; max-height: 100px;">
+                    <p style="margin-top: -10px;">{{ $cuti->user->name }}</p> 
                 @else
-                    <span class="name-underline">{{ Auth::user()->name }}</span>
+                    <span class="name-underline">{{ $cuti->user->name }}</span>
                 @endif
             </div>
             <div style="clear: both;"></div>
