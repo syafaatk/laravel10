@@ -26,6 +26,7 @@
                                 <th>Motor</th>
                                 <th>Tgl Masuk</th>
                                 <th>Lama Kerja</th>
+                                <th>Sisa Cuti</th>
                                 <th>Roles</th>
                                 <th>Actions</th>
                             </tr>
@@ -45,6 +46,7 @@
                                             {{ \Carbon\Carbon::parse($user->tgl_masuk)->diffInYears(\Carbon\Carbon::now()) }} years
                                         @endif
                                     </td>
+                                    <td>{{ 12 - $user->cuti_approved_sum_days_requested ?? 0 }}</td>
                                     <td>
                                         @foreach ($user->roles as $role)
                                             <span class="badge badge-success">{{ $role->name }}</span>

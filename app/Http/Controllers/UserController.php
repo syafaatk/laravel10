@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Cuti;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         Gate::authorize('view-user');
-        $users = User::all();
+        $users = User::withSum('cutiApproved', 'days_requested')->get();
         return view('admin.users.index', compact('users'));
     }
 

@@ -58,4 +58,9 @@ class User extends Authenticatable
         'tgl_masuk' => 'datetime',
         'attachment_ttd' => 'string',
     ];
+
+    public function cutiApproved()
+    {
+        return $this->hasMany(Cuti::class)->where('status', 'approved')->where('master_cuti_id', 1);
+    }
 }
