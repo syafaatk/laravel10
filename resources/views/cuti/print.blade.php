@@ -177,6 +177,7 @@
             <div class="signature-box" style="float: right; width: 50%;">
                 <p>Hormat Saya,</p>
                 <p>Yang Mengajukan,</p>
+                <img src="{{ asset('storage/' . Auth::user()->attachment_ttd) }}" alt="Signature" style="max-width: 200px; max-height: 100px;">
                 <span class="name-underline">{{ Auth::user()->name }}</span>
             </div>
             <div style="clear: both;"></div>
