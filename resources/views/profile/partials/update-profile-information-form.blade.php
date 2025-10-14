@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -68,8 +68,17 @@
         </div>
         <div>
             <x-input-label for="tgl_masuk" :value="__('Tgl Masuk')" />
-            <x-text-input id="tgl_masuk" name="tgl_masuk" type="date" class="mt-1 block w-full" :value="old('tgl_masuk', $user->tgl_masuk)" autocomplete="tgl_masuk" />
+            <x-text-input id="tgl_masuk" name="tgl_masuk" type="datetime" class="mt-1 block w-full" :value="old('tgl_masuk', $user->tgl_masuk)" autocomplete="tgl_masuk" />
             <x-input-error class="mt-2" :messages="$errors->get('tgl_masuk')" />
+        </div>
+        <div>
+            <x-input-label for="attachment_ttd" :value="__('Tanda Tangan')" />
+            <input id="attachment_ttd" name="attachment_ttd" type="file" class="mt-1 block w-full" />
+            @if ($user->attachment_ttd)
+                <p class="mt-2 text-sm text-gray-600">Current file: <a href="{{ asset('storage/' . $user->attachment_ttd) }}" target="_blank" class="text-blue-500 hover:underline">View Tanda Tangan</a></p>
+            @endif
+            <x-input-error class="mt-2" :messages="$errors->get('attachment_ttd')" />
+            
         </div>
 
         <div class="flex items-center gap-4">

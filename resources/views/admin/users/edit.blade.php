@@ -79,7 +79,18 @@
                                 </span>
                             @enderror
                         </div>
-                        
+                        <div class="form-group">
+                            <label for="attachment_ttd">Tanda Tangan</label>
+                            <input type="file" name="attachment_ttd" id="attachment_ttd" class="form-control-file @error('attachment_ttd') is-invalid @enderror">
+                            @if ($user->attachment_ttd)
+                                <p class="mt-2 text-sm text-gray-600">Current file: <a href="{{ asset('storage/' . $user->attachment_ttd) }}" target="_blank" class="text-blue-500 hover:underline">View Tanda Tangan</a></p>
+                            @endif
+                            @error('attachment_ttd')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                         <div class="form-group">
                             <label for="roles">Roles</label>
                             <select name="roles[]" id="roles" class="form-control @error('roles') is-invalid @enderror" multiple required>

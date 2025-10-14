@@ -37,6 +37,13 @@ class ProfileController extends Controller
         $request->user()->motor = $request->input('motor');
         $request->user()->ukuran_baju = $request->input('ukuran_baju');
         $request->user()->tgl_masuk = $request->input('tgl_masuk');
+        if ($request->hasFile('attachment_ttd')) {
+            // Delete old attachment if exists
+            if ($request->user()->attachment_ttd) {
+                Storage::delete('public/' . $request->user()->attachment_ttd);
+            }
+            $request->user()->attachment_ttd = $request->file('attachment_ttd')->store('attachments_ttd', 'public');
+        }
         
 
         $request->user()->save();

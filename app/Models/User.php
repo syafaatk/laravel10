@@ -22,6 +22,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'address',
+        'no_wa',
+        'motor',
+        'ukuran_baju',
+        'tgl_masuk',
+        'attachment_ttd'
     ];
 
     /**
@@ -47,5 +53,6 @@ class User extends Authenticatable
         'motor' => 'string',
         'ukuran_baju' => 'string',
         'tgl_masuk' => 'datetime',
+        'attachment_ttd' => 'string',
     ];
 }

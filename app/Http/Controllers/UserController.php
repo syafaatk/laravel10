@@ -73,22 +73,26 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'roles' => 'required|array',
             'address' => 'nullable|string|max:255',
             'no_wa' => 'nullable|string|max:255',
             'motor' => 'nullable|string|max:255',
             'ukuran_baju' => 'nullable|string|max:255',
             'tgl_masuk' => 'nullable|date',
+            'attachment_ttd' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        $user->name = $request->name;
+        $user->fill($request->only([
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk'
+        ]));
 
-        // if email sama, tidak perlu dicek unique
-        if ($user->email != $request->email) {
-            $user->email = $request->email;
-        } else {
-            $user->email = $user->email;
+        if ($request->hasFile('attachment_ttd')) {
+            // Delete old attachment if exists
+            if ($user->attachment_ttd) {
+                Storage::delete('public/' . $user->attachment_ttd);
+            }
+            $user->attachment_ttd = $request->file('attachment_ttd')->store('attachments_ttd', 'public');
         }
 
         $user->syncRoles($request->roles);

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('motor')->nullable();
             $table->string('ukuran_baju')->nullable();
             $table->date('tgl_masuk')->nullable();
+            $table->string('attachment_ttd')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

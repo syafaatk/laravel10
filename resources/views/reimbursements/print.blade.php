@@ -165,14 +165,14 @@
                             <p style="margin-bottom: 0;">Detail Pengeluaran</p>
                         </td>
                         <td>
-                            <ol style="padding-left: 20px; margin-bottom: 0;">
+                            <ol type="A" style="padding-left: 20px; margin-bottom: 0;">
                                 <!-- per tipe : -->
                                 Tipe Reimburse:
                                 @php
                                     $reimbursementsByTipe = $reimbursements->groupBy('tipe');
                                 @endphp
                                 @foreach ($reimbursementsByTipe as $tipe => $reimbursementGroup)
-                                    <p style="font-weight: bold; margin-bottom: 0;">{{ ucfirst($tipe) }} @if($tipe == 1) {{ ' (Transport)' }}@elseif($tipe == 2) {{ ' (Makan-Makan)' }} @else {{ ' (Lain-Lain)' }} @endif - Rp {{ number_format($reimbursementGroup->sum('amount'), 2, ',', '.') }}</p>
+                                    <li style="font-weight: bold; margin-bottom: 0;">@if($tipe == 1) {{ ' (Transport)' }}@elseif($tipe == 2) {{ ' (Makan-Makan)' }} @else {{ ' (Lain-Lain)' }} @endif - Rp {{ number_format($reimbursementGroup->sum('amount'), 2, ',', '.') }}</li>
                                     <ol style="padding-left: 20px; margin-bottom: 0;">
                                         @foreach ($reimbursementGroup as $reimbursement)
                                             <li>{{ $reimbursement->title }} - Rp {{ number_format($reimbursement->amount, 2, ',', '.') }}</li>
@@ -205,11 +205,11 @@
                 <tbody>
                     <tr>
                         <td>No. Rekening Bank</td>
-                        <td>: 1070010209924 (Mandiri)</td>
+                        <td>: 1120021670877 (Mandiri)</td>
                     </tr>
                     <tr>
-                        <td>Nama Bank</td>
-                        <td>: Herianto Saragi</td>
+                        <td>Atas Nama</td>
+                        <td>: Khoirusy Syafaat</td>
                     </tr>
                 </tbody>
             </table>
@@ -228,7 +228,11 @@
                         <p>Tanjung Enim, {{ \Carbon\Carbon::now()->format('d F Y') }}</p>
                     </div>
                     <p>Pemohon,</p>
-                    <p style="margin-top: 60px;">_________________________</p>
+                    @if(Auth::user()->attachment_ttd)
+                        <img src="{{ asset('storage/' . Auth::user()->attachment_ttd) }}" alt="Signature" style="max-width: 100px;">
+                    @else
+                        <p style="margin-top: 60px;">_________________________</p>
+                    @endif
                     <p class="name">({{  Auth::user()->name }})</p>
                 </div>
             </div>
@@ -241,6 +245,7 @@
                 <tr>
                 <th>No</th>
                 <th>Deskripsi - Jumlah - Foto</th>
+                <th>Foto Bukti</th>
                 </tr>
             </thead>
             <tbody>
@@ -249,7 +254,14 @@
                     <td>{{ $index + 1 }}</td>
                     <td>
                         <p>{{ $reimbursement->created_at->format('d F Y, H:i')}} - {{ $reimbursement->title }} - Rp {{ number_format($reimbursement->amount, 2, ',', '.') }} - {{ $reimbursement->user->name }}</p>
-                        <img src="{{ asset('storage/' . $reimbursement->attachment) }}" alt="Attachment" class="img-fluid mt-2" style="max-width: 400px;">
+                        <p class="mt-3"><strong>Foto Nota:</strong></p>
+                        <img src="{{ asset('storage/' . $reimbursement->attachment) }}" alt="Attachment" class="img-fluid mt-2" style="max-width: 300px;">
+                    </td>
+                    <td>
+                        @if ($reimbursement->attachment_note)
+                            <p class="mt-3"><strong>Foto Bukti:</strong></p>
+                            <img src="{{ asset('storage/' . $reimbursement->attachment_note) }}" alt="Foto Bukti" class="img-fluid mt-2" style="max-width: 350px;">
+                        @endif
                     </td>
                 </tr>
                 @endforeach
