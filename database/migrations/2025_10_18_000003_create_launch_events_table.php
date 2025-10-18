@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->dateTime('event_date');
-            $table->foreignId('restaurant_id')->nullable()->constrained('restaurants')->onDelete('set null');
+            $table->foreignId('restaurant_id')->nullable()->constrained('master_restaurants')->onDelete('set null');
             $table->string('status')->default('scheduled'); // scheduled, launched, postponed, cancelled
             $table->string('image')->nullable();
             $table->string('nota')->nullable();
