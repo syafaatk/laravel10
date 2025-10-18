@@ -95,9 +95,24 @@
                     <x-input-error class="mt-2" :messages="$errors->get('jabatan')" />
                 </div>
             </div>
+            <!-- 2 kolom norek dan bank -->
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="norek" :value="__('No Rekening')" />
+                    <x-text-input id="norek" name="norek" type="text" class="mt-1 block w-full" :value="old('norek', $user->norek)" autocomplete="norek" />
+                    <x-input-error class="mt-2" :messages="$errors->get('norek')" />
+                </div>
+                <div>
+                    <x-input-label for="bank" :value="__('Bank')" />
+                    <x-text-input id="bank" name="bank" type="text" class="mt-1 block w-full" :value="old('bank', $user->bank)" autocomplete="bank" />
+                    <x-input-error class="mt-2" :messages="$errors->get('bank')" />
+                </div>
+            </div>
+            
 
             <div>
-            <x-input-label for="motor" :value="__('Motor')" />
+            <x-input-label for="motor" :value="__('Motor - Plat Nomor')" />
             <x-text-input id="motor" name="motor" type="text" class="mt-1 block w-full" :value="old('motor', $user->motor)" autocomplete="motor" />
             <x-input-error class="mt-2" :messages="$errors->get('motor')" />
             </div>

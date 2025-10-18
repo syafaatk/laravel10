@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Cuti;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
+
 
 class UserController extends Controller
 {
@@ -17,7 +19,8 @@ class UserController extends Controller
     {
         Gate::authorize('view-user');
         $users = User::withSum('cutiApproved', 'days_requested')->get();
-        return view('admin.users.index', compact('users'));
+           
+        return view('admin.users.index', compact('users')); 
     }
 
     /**
@@ -87,10 +90,12 @@ class UserController extends Controller
             'nopeg' => 'nullable|integer|unique:users,nopeg,' . $user->id,
             'kontrak' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
+            'norek' => 'nullable|string|max:255',
+            'bank' => 'nullable|string|max:255'
         ]);
 
         $user->fill($request->only([
-            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan'
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan', 'norek', 'bank'
         ]));
 
         if ($request->hasFile('attachment_ttd')) {

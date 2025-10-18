@@ -47,8 +47,8 @@ class ProfileController extends Controller
         $request->user()->nopeg = $request->input('nopeg');
         $request->user()->kontrak = $request->input('kontrak');
         $request->user()->jabatan = $request->input('jabatan');
-        
-
+        $request->user()->norek = $request->input('norek');
+        $request->user()->bank = $request->input('bank');
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

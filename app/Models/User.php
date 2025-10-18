@@ -31,6 +31,8 @@ class User extends Authenticatable
         'nopeg',
         'kontrak',
         'jabatan',
+        'norek',
+        'bank'
     ];
 
     /**
@@ -89,4 +91,8 @@ class User extends Authenticatable
         return $this->hasMany(PenilaianPegawai::class, 'reviewer_id');
     }
     
+    public function assetAssign()
+    {
+        return $this->hasMany(AssetAssign::class);
+    }
 }

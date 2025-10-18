@@ -8,6 +8,8 @@ use App\Http\Controllers\CutiController;
 use App\Http\Controllers\MasterCutiController;
 use App\Http\Controllers\PenilaianPegawaiController;
 use App\Http\Controllers\LaporanReimbursementController;
+use App\Http\Controllers\MasterAssetController;
+use App\Http\Controllers\MasterRestaurantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -58,15 +60,20 @@ Route::middleware('auth')->group(function () {
     Route::get('cuti/{cuti}/print', [CutiController::class, 'print'])->name('cuti.print');
     Route::patch('cuti/{cuti}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
     Route::patch('cuti/{cuti}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+
+    Route::resource('master-restaurants', MasterRestaurantController::class)->names('master-restaurants');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
+    //route ajax_index
+    Route::get('ajax-cuti-details', [CutiController::class, 'ajax_index'])->name('ajax-cuti-details');
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('penilaian', PenilaianPegawaiController::class)->names('penilaian');
     Route::get('penilaian/{penilaian}/print', [PenilaianPegawaiController::class, 'print'])->name('penilaian.print');
     Route::resource('master-cuti', MasterCutiController::class)->except(['show']);
+    Route::resource('master-assets', MasterAssetController::class)->names('master-assets');
     Route::get('laporan-reimbursements', [LaporanReimbursementController::class, 'index'])->name('laporan-reimbursements.index');
     Route::get('laporan-reimbursements/create', [LaporanReimbursementController::class, 'create'])->name('laporan-reimbursements.create');
     Route::get('laporan-reimbursements/search', [LaporanReimbursementController::class, 'search'])->name('laporan-reimbursements.search');

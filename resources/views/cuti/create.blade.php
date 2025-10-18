@@ -14,6 +14,27 @@
                 <div class="card-body">
                     <form action="{{ route('cuti.store') }}" method="POST">
                         @csrf
+                        <!-- if admin can add other user leave -->
+                         
+                        @if(Auth::user()->hasRole('admin'))
+                            <div class="form-group">
+                                <label for="user_id">User</label>
+                                <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                                    <option value="">Select User</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @else
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                        @endif
+                        
                         <div class="form-group">
                             <label for="master_cuti_id">Leave Type</label>
                             <select name="master_cuti_id" id="master_cuti_id" class="form-control @error('master_cuti_id') is-invalid @enderror" required>
@@ -48,6 +69,18 @@
                                 </span>
                             @enderror
                         </div>
+                        <!-- day requested -->
+                         
+                        <div class="form-group">
+                            <label for="days_requested">Days Requested</label>
+                            <input type="number" name="days_requested" id="days_requested" class="form-control @error('days_requested') is-invalid @enderror" value="{{ old('days_requested') }}" required>
+                            @error('days_requested')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
                         <div class="form-group">
                             <label for="reason">Reason</label>
                             <textarea name="reason" id="reason" class="form-control @error('reason') is-invalid @enderror" rows="4" required>{{ old('reason') }}</textarea>

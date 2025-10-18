@@ -50,6 +50,16 @@
                             @enderror
                         </div>
                         <div class="form-group mt-3">
+                            <label for="days_requested">Days Requested</label>
+                            <input type="number" name="days_requested" id="days_requested" class="form-control @error('days_requested') is-invalid @enderror" value="{{ old('days_requested', $cuti->days_requested) }}" readonly>
+                            @error('days_requested')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group mt-3">
                             <label for="reason">Reason</label>
                             <textarea name="reason" id="reason" class="form-control @error('reason') is-invalid @enderror" rows="4" required>{{ old('reason', $cuti->reason) }}</textarea>
                             @error('reason')

@@ -26,6 +26,11 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('master-restaurants.index')" :active="request()->routeIs('master-restaurants.*')">
+                        {{ __('Master Restaurant') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                         {{ __('Profil Saya') }}
                     </x-nav-link>
@@ -54,9 +59,13 @@
                             <x-dropdown-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
                                 {{ __('Master Cuti') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.master-assets.index')" :active="request()->routeIs('admin.master-assets.*')">
+                                {{ __('Master Asset') }}
+                            </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.penilaian.index')" :active="request()->routeIs('admin.penilaian.*')">
                                 {{ __('Penilaian Pegawai') }}
                             </x-dropdown-link>
+                            
                             <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-dropdown-link>
@@ -149,6 +158,9 @@
             <x-responsive-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
                 {{ __('Cuti') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('master-restaurants.index')" :active="request()->routeIs('master-restaurants.*')">
+                {{ __('Master Restaurant') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                 {{ __('Profil Saya') }}
             </x-responsive-nav-link>
@@ -166,6 +178,11 @@
                     <x-responsive-nav-link :href="route('admin.master-cuti.index')" :active="request()->routeIs('admin.master-cuti.*')">
                         {{ __('Master Cuti') }}
                     </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.master-assets.index')" :active="request()->routeIs('admin.master-assets.*')">
+                        {{ __('Master Asset') }}
+                    </x-responsive-nav-link>
+                    
+                    
                     <x-responsive-nav-link :href="route('admin.penilaian.index')" :active="request()->routeIs('admin.penilaian.*')">
                         {{ __('Penilaian Pegawai') }}
                     </x-responsive-nav-link>

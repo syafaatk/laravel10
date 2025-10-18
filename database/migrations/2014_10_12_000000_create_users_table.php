@@ -26,6 +26,8 @@ return new class extends Migration
             $table->integer('nopeg')->nullable()->unique();
             $table->string('kontrak')->nullable();
             $table->string('jabatan')->nullable(); // karyawan, admin, manager, hrd
+            $table->string('norek')->nullable();
+            $table->string('bank')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
