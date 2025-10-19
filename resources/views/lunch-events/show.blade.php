@@ -103,19 +103,31 @@
                                 <!-- tampilkan user yang memesan -->
                                  
                                 <div class="py-4">
-                                    <dt class="text-base font-semibold mb-2">Orders:</dt>
+                                    <dt class="text-base font-semibold mb-2">Orders :</dt>
                                     <dd>
                                         @if ($lunchEventUserOrders->count() > 0)
                                             <ul class="list-disc pl-5">
                                                 @foreach ($lunchEventUserOrders as $order)
                                                     <li class="mb-2">
-                                                        <a href="{{ route('user-order-details.create', $order->id) }}" class="text-blue-600 hover:underline">
+                                                        <a href="" class="text-blue-600 hover:underline">
                                                             Order by {{ $order->user->name }} - Status: {{ $order->status }} - Total: Rp{{ number_format($order->total_price, 0, ',', '.') }}
                                                         </a>
                                                         <!-- tampilkan list pesanannya -->
                                                         <ul class="list-disc pl-5 text-gray-600">
+                                                            <li>Ditempat:</li>
                                                             @forelse ($order->orderDetails ?? [] as $detail)
-                                                                <li>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }}) - {{$detail->notes}}</li>
+                                                                @if ($detail->notes === 'ditempat')
+                                                                <ul>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }}) - {{$detail->notes}}</ul>
+                                                                @endif
+                                                            @empty
+                                                                {{-- Display a friendly message if the collection is null or empty --}}
+                                                                <li class="italic text-gray-500">No specific order items were found for this event.</li>
+                                                            @endforelse
+                                                            <li>Bungkus:</li>
+                                                            @forelse ($order->orderDetails ?? [] as $detail)
+                                                                @if ($detail->notes === 'bungkus')
+                                                                <ul>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }}) - {{$detail->notes}}</ul>
+                                                                @endif
                                                             @empty
                                                                 {{-- Display a friendly message if the collection is null or empty --}}
                                                                 <li class="italic text-gray-500">No specific order items were found for this event.</li>
