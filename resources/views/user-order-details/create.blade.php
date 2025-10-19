@@ -82,10 +82,10 @@
                                 </div>
                                 
                                 <div class="flex items-center justify-end mt-6 space-x-3">
-                                    <a href="{{ route('lunch-event-user-orders.show', $lunchEventUserOrder->id) }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
-                                        {{ __('Cancel') }}
+                                    <a href="{{ route('lunch-events.show', $lunchEventUserOrder->lunchEvent->id) }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                                        {{ __('View Order Details') }}
                                     </a>
-                                    <x-primary-button class="ml-4 bg-indigo-600 hover:bg-indigo-700">
+                                    <x-primary-button class="ml-4 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-xs">
                                         {{ __('Add Item to Order') }}
                                     </x-primary-button>
                                 </div>
