@@ -53,6 +53,14 @@
                                         @endif
                                     </dd>
                                 </div>
+                                <!-- total biaya -->
+                                 
+                                <div class="py-4 flex flex-col sm:flex-row sm:items-center">
+                                    <dt class="text-base font-semibold w-full sm:w-1/4">Total Cost:</dt>
+                                    <dd class="mt-1 sm:mt-0 sm:w-3/4 text-lg">
+                                        Rp{{ number_format($totalPrice, 0, ',', '.') }}
+                                    </dd>
+                                </div>
                                 
                                 {{-- Deskripsi --}}
                                 <div class="py-4">

@@ -54,7 +54,13 @@ class LunchEventController extends Controller
     {
         // tampilkan data luncheventuserorders
         $lunchEventUserOrders = LunchEventUserOrder::where('lunch_event_id', $lunchEvent->id)->get();
-        return view('lunch-events.show', compact('lunchEvent', 'lunchEventUserOrders'));
+        // total price sum
+        $totalPrice = 0;
+        foreach ($lunchEventUserOrders as $lunchEventUserOrder) {
+            $totalPrice += $lunchEventUserOrder->total_price;
+        }
+        $lunchEvent->totalPrice = $totalPrice;
+        return view('lunch-events.show', compact('lunchEvent', 'lunchEventUserOrders', 'totalPrice'));
     }
 
     public function edit(LunchEvent $lunchEvent)
