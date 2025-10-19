@@ -51,7 +51,7 @@ class MasterRestaurantController extends Controller
 
         MasterRestaurant::create($data);
 
-        return redirect()->route('admin.master-restaurants.index')
+        return redirect()->route('master-restaurants.index')
                          ->with('success', 'Restaurant created successfully.');
     }
 
@@ -105,7 +105,7 @@ class MasterRestaurantController extends Controller
         }
         $masterRestaurant->update($data);
 
-        return redirect()->route('admin.master-restaurants.index')
+        return redirect()->route('master-restaurants.index')
                          ->with('success', 'Restaurant updated successfully.');
     }
 
@@ -120,7 +120,7 @@ class MasterRestaurantController extends Controller
             }
         }
 
-        return redirect()->route('admin.master-restaurants.index')
+        return redirect()->route('master-restaurants.index')
                          ->with('success', 'Restaurant deleted successfully.');
     }
     
