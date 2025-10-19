@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Restaurant;
+use App\Models\MasterRestaurant;
 
 
-class LaunchEvent extends Model
+class LunchEvent extends Model
 {
     use HasFactory;
 
@@ -21,9 +21,13 @@ class LaunchEvent extends Model
         'nota',
     ];
 
+    protected $cast = [
+        'event_date' => 'date',
+    ];
+
     public function restaurant()
     {
-        return $this->belongsTo(Restaurant::class);
+        return $this->belongsTo(MasterRestaurant::class);
     }
     
 }

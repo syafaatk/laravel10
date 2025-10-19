@@ -27,9 +27,15 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('master-restaurants.index')" :active="request()->routeIs('master-restaurants.*')">
-                        {{ __('Master Restaurant') }}
+                        {{ __('Data Restaurant') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('lunch-events.index')" :active="request()->routeIs('lunch-events.*')">
+                        {{ __('Makan-Makan') }}
+                    </x-nav-link>
+                </div>
+                
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                         {{ __('Profil Saya') }}
@@ -159,7 +165,10 @@
                 {{ __('Cuti') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('master-restaurants.index')" :active="request()->routeIs('master-restaurants.*')">
-                {{ __('Master Restaurant') }}
+                {{ __('Data Restaurant') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('lunch-events.index')" :active="request()->routeIs('lunch-events.*')">
+                {{ __('Makan-Makan') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                 {{ __('Profil Saya') }}

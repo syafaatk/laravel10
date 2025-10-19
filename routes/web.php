@@ -10,6 +10,9 @@ use App\Http\Controllers\PenilaianPegawaiController;
 use App\Http\Controllers\LaporanReimbursementController;
 use App\Http\Controllers\MasterAssetController;
 use App\Http\Controllers\MasterRestaurantController;
+use App\Http\Controllers\LunchEventController;
+use App\Http\Controllers\LunchEventUserOrderController;
+use App\Http\Controllers\UserOrderDetailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +65,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('cuti/{cuti}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
 
     Route::resource('master-restaurants', MasterRestaurantController::class)->names('master-restaurants');
+    Route::resource('lunch-events', LunchEventController::class)->names('lunch-events');
+    Route::resource('lunch-event-user-orders', LunchEventUserOrderController::class)->except(['create', 'store']);
+    Route::get('lunch-events/{lunchEvent}/order', [LunchEventUserOrderController::class, 'create'])->name('lunch-event-user-orders.create');
+    Route::post('lunch-events/{lunchEvent}/order', [LunchEventUserOrderController::class, 'store'])->name('lunch-event-user-orders.store');
+    // user-order-details.create
+    Route::get('lunch-event-user-orders/{lunchEventUserOrder}/details/create', [UserOrderDetailController::class, 'create'])->name('user-order-details.create');
+    Route::post('lunch-event-user-orders/{lunchEventUserOrder}/details', [UserOrderDetailController::class, 'store'])->name('user-order-details.store');
+    Route::resource('user-order-details', UserOrderDetailController::class)->except(['create', 'store']);
+    
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
