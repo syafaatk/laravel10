@@ -27,9 +27,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                             
                             <div class="mb-4">
-                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                <input type="text" name="phone" id="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('phone') border-red-500 @enderror" value="{{ old('phone') }}">
-                                @error('phone')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
+                                <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                <input type="text" name="phone_number" id="phone_number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('phone_number') border-red-500 @enderror" value="{{ old('phone_number') }}">
+                                @error('phone_number')<p class="text-sm text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
 
                             <div class="mb-4">

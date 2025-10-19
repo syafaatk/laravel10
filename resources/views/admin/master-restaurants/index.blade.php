@@ -72,9 +72,8 @@
                                             <form action="{{ route('master-restaurants.destroy', $restaurant->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this restaurant?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger bg-red-600 hover:bg-red-700 text-white font-medium text-red-600 dark:text-red-500 hover:underline ml-2">Delete</button>
+                                                <button type="submit" class="btn btn-sm btn-danger bg-red-600 hover:bg-red-700 text-white font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
                                             </form>
-                                            
                                         </td>
                                     </tr>
                                 @endforeach
