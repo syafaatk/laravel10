@@ -40,6 +40,7 @@ class UserOrderDetailController extends Controller
             'quantity' => $request->quantity,
             'price' => $request->price,
             'subtotal' => $subtotal,
+            'notes' => $request->notes,
         ]);
 
         // note didapat dari rangkuman pesanan , contoh "Makanan : Nasi Goreng 1 Porsi, Ayam Goreng 1 Porsi, Minuman : Es Jeruk 1 Gelas"
@@ -110,6 +111,7 @@ class UserOrderDetailController extends Controller
             'quantity' => $request->quantity,
             'price' => $request->price,
             'subtotal' => $subtotal,
+            'notes' => $request->notes,
         ]);
 
         // Update total_price in LunchEventUserOrder

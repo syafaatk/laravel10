@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('user_order_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('launch_event_user_order_id')->constrained('launch_event_user_orders')->onDelete('cascade');
+            $table->foreignId('lunch_event_user_order_id')->constrained('lunch_event_user_orders')->onDelete('cascade');
             $table->enum('type', ['makanan', 'minuman'])->default('makanan');
             $table->string('item_name');
             $table->integer('quantity');
             $table->integer('price');
+            $table->integer('subtotal');
+            $table->string('notes');
             $table->timestamps();
         });
     }

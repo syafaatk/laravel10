@@ -67,6 +67,18 @@
                                         <x-text-input id="price" class="block mt-1 w-full" type="number" step="1" name="price" :value="old('price')" required min="0" />
                                         <x-input-error :messages="$errors->get('price')" class="mt-2" />
                                     </div>
+                                    <!-- notes -->
+                                     
+                                    <div>
+                                        <x-input-label for="notes" :value="__('Notes')" />
+                                        <select name="notes" id="notes"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('notes') border-red-500 @enderror"
+                                            required>
+                                            <option value="ditempat" {{ old('notes') == 'ditempat' ? 'selected' : '' }}>Makan ditempat</option>
+                                            <option value="bungkus" {{ old('notes') == 'bungkus' ? 'selected' : '' }}>Bungkus</option>
+                                        </select>
+                                        <x-input-error :messages="$errors->get('notes')" class="mt-2" />
+                                    </div>
                                 </div>
                                 
                                 <div class="flex items-center justify-end mt-6 space-x-3">
@@ -128,6 +140,9 @@
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">
                                                         Rp{{ number_format($detail->subtotal, 0, ',', '.') }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">
+                                                        {{ $detail->notes }}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                                                         <form action="{{ route('user-order-details.destroy', $detail->id) }}" method="POST" class="inline">
