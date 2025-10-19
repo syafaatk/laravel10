@@ -19,7 +19,7 @@ class LunchEventUserOrderController extends Controller
                                             ->first();
 
         if ($existingOrder) {
-            return redirect()->route('user-order-details.create', $lunchEvent->id)
+            return redirect()->route('user-order-details.create', $existingOrder->id)
                              ->with('error', 'You have already placed an order for this event. You can edit your existing order.');
         }else{
             LunchEventUserOrder::create([

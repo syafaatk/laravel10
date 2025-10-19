@@ -63,7 +63,7 @@
                                             @if(Auth::user()->hasRole('admin'))
                                             <a href="{{ route('lunch-events.show', $event->id) }}" class="btn btn-primary text-white hover:text-indigo-900 py-1 px-2 rounded text-xs">View</a>
                                             <a href="{{ route('lunch-events.edit', $event->id) }}" class="btn btn-primary text-white hover:text-green-900 py-1 px-2 rounded text-xs">Edit</a>
-                                            <a href="{{ route('lunch-event-user-orders.create', $event->id) }}" class="btn btn-primary bg-yellow-500 hover:bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Buat Pesanan</a>
+                                            <a href="" class="btn btn-primary bg-yellow-500 hover:bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Buat Pesanan</a>
                                             <form action="{{ route('lunch-events.destroy', $event->id) }}" method="POST" class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
