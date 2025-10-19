@@ -66,7 +66,7 @@
                                             <br>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <a href="{{ route('master-restaurants.edit', $restaurant->id) }}" class="btn btn-sm btn-primary font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                            <a href="{{ route('master-restaurants.edit', $restaurant->id) }}" class="btn btn-sm btn-primary bg-blue-600 hover:bg-blue-700 text-white font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                             <!-- delete -->
                                              
                                             <form action="{{ route('master-restaurants.destroy', $restaurant->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this restaurant?');">
