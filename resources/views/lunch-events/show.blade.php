@@ -115,7 +115,7 @@
                                                         <!-- tampilkan list pesanannya -->
                                                         <ul class="list-disc pl-5 text-gray-600">
                                                             @forelse ($order->orderDetails ?? [] as $detail)
-                                                                <li>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }})</li>
+                                                                <li>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }}) - {{$detail->notes}}</li>
                                                             @empty
                                                                 {{-- Display a friendly message if the collection is null or empty --}}
                                                                 <li class="italic text-gray-500">No specific order items were found for this event.</li>

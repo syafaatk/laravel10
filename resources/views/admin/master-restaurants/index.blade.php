@@ -10,9 +10,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-end mb-4">
+                        @if(Auth::user()->hasRole('admin')) 
                         <a href="{{ route('master-restaurants.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             {{ __('Add New Restaurant') }}
                         </a>
+                        @endif
                     </div>
 
                     @if (session('success'))
@@ -66,16 +68,17 @@
                                             <br>
                                         </td>
                                         <td class="px-6 py-4">
+                                            @if(Auth::user()->hasRole('admin')) 
                                             <!-- show -->
                                             <a href="{{ route('master-restaurants.show', $restaurant->id) }}" class="btn btn-sm btn-info bg-green-600 hover:bg-green-700 text-white font-medium text-green-600 dark:text-green-500 hover:underline">Show</a>
                                             <a href="{{ route('master-restaurants.edit', $restaurant->id) }}" class="btn btn-sm btn-primary bg-blue-600 hover:bg-blue-700 text-white font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                             <!-- delete -->
-                                             
                                             <form action="{{ route('master-restaurants.destroy', $restaurant->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this restaurant?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger bg-red-600 hover:bg-red-700 text-white font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
                                             </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
