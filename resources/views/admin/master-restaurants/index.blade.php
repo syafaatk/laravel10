@@ -66,6 +66,8 @@
                                             <br>
                                         </td>
                                         <td class="px-6 py-4">
+                                            <!-- show -->
+                                            <a href="{{ route('master-restaurants.show', $restaurant->id) }}" class="btn btn-sm btn-info bg-green-600 hover:bg-green-700 text-white font-medium text-green-600 dark:text-green-500 hover:underline">Show</a>
                                             <a href="{{ route('master-restaurants.edit', $restaurant->id) }}" class="btn btn-sm btn-primary bg-blue-600 hover:bg-blue-700 text-white font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                             <!-- delete -->
                                              
