@@ -27,14 +27,14 @@ class MasterRestaurantController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'description' => 'nullable|string',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_1' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_2' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_3' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_4' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_5' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_6' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_7' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_1' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_2' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_3' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_4' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_5' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_6' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_7' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480'
         ]);
 
         $data = $request->all();
@@ -74,14 +74,14 @@ class MasterRestaurantController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'description' => 'nullable|string',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_1' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_2' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_3' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_4' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_5' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_6' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'menu_7' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_1' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_2' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_3' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_4' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_5' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_6' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'menu_7' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480'
         ]);
 
         $data = $request->all();

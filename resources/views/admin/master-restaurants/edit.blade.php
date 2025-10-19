@@ -80,10 +80,14 @@
                                         $menuImageField = "menu_{$i}";
                                     @endphp
                                     @if ($masterRestaurant->$menuImageField)
-                                        <div class="mt-2 mb-2">
-                                            <img src="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" alt="Menu Image {{ $i }}" class="w-32 h-32 object-cover rounded-md">
-                                            <p class="text-sm text-gray-500 mt-1">Current Menu Image {{ $i }}</p>
-                                        </div>
+                                        @if (in_array(pathinfo($masterRestaurant->$menuImageField, PATHINFO_EXTENSION), ['png', 'jpeg', 'jpg', 'gif', 'webp']))
+                                            <div class="mt-2 mb-2">
+                                                <img src="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" alt="Menu Image {{ $i }}" class="w-32 h-32 object-cover rounded-md">
+                                                <p class="text-sm text-gray-500 mt-1">Current Menu Image {{ $i }}</p>
+                                            </div>
+                                        @else
+                                            <p class="text-sm text-gray-500 mt-1">Current Menu Image {{ $i }}: {{ $masterRestaurant->$menuImageField }} (File)</p>
+                                        @endif
                                     @endif
                                     <input type="file" name="menu_{{ $i }}" id="menu_{{ $i }}" 
                                         class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-white file:bg-blue-500 hover:file:bg-blue-600 @error('menu_' . $i) border-red-500 @enderror">

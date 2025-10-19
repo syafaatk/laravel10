@@ -85,12 +85,26 @@
 
                             @if ($masterRestaurant->$menuImageField)
                                 @php $hasMenuImage = true; @endphp
-                                <div class="shadow-md rounded-lg overflow-hidden border border-gray-200">
-                                    <a href="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" target="_blank">
-                                        <img src="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" alt="Menu {{ $i }}" class="w-full h-32 object-cover transition duration-300 ease-in-out hover:scale-105">
-                                    </a>
-                                    <p class="text-xs text-center p-1 text-gray-600">Menu {{ $i }}</p>
-                                </div>
+                                    @if (in_array(pathinfo($masterRestaurant->$menuImageField, PATHINFO_EXTENSION), ['png', 'jpeg', 'jpg', 'gif', 'webp']))
+                                        <div class="shadow-md rounded-lg overflow-hidden border border-gray-200">
+                                            <a href="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" target="_blank">
+                                                <img src="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" alt="Menu {{ $i }}" class="w-full h-32 object-cover transition duration-300 ease-in-out hover:scale-105">
+                                            </a>
+                                            <p class="text-xs text-center p-1 text-gray-600">Menu {{ $i }}</p>
+                                        </div>
+                                    @else 
+                                        <!-- pdf -->
+                                        <div class="shadow-md rounded-lg overflow-hidden border border-gray-200 flex flex-col items-center justify-center p-2">
+                                            <a href="{{ asset('storage/restaurants/' . $masterRestaurant->$menuImageField) }}" target="_blank" class="text-blue-500 hover:underline text-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-2 text-red-500">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25m-4.5 3v7.5m-2.25-3h4.5" />
+                                                </svg>
+                                                View PDF
+                                            </a>
+                                            <p class="text-xs text-center p-1 text-gray-600">Menu {{ $i }} (PDF)</p>
+                                        </div>
+                                    @endif
+                                    
                             @endif
                         @endfor
 
