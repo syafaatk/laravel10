@@ -33,22 +33,17 @@
                                 </div>
                                 <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                     <dt class="text-sm font-medium leading-6 text-gray-900">Phone</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $masterRestaurant->phone ?? '-' }}</dd>
+                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $masterRestaurant->phone_number ?? '-' }}</dd>
                                 </div>
-                                <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Email</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $masterRestaurant->email ?? '-' }}</dd>
-                                </div>
-                                <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Website</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-blue-600 sm:col-span-2 sm:mt-0">
-                                        <a href="{{ $masterRestaurant->website }}" target="_blank" class="hover:underline">{{ $masterRestaurant->website ?? '-' }}</a>
-                                    </dd>
                                 </div>
                                 <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                     <dt class="text-sm font-medium leading-6 text-gray-900">Geolocation</dt>
                                     <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                                         Latitude: **{{ $masterRestaurant->latitude ?? '-' }}**, Longitude: **{{ $masterRestaurant->longitude ?? '-' }}**
+                                        <!-- view google map -->
+                                        @if ($masterRestaurant->latitude && $masterRestaurant->longitude)
+                                            <a href="https://www.google.com/maps/search/?api=1&query={{ $masterRestaurant->latitude }},{{ $masterRestaurant->longitude }}" target="_blank" class="text-blue-600 hover:underline ml-2">View on Map</a>
+                                        @endif
                                     </dd>
                                 </div>
                                 <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
