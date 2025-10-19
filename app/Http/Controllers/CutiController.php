@@ -75,7 +75,7 @@ class CutiController extends Controller
         $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'master_cuti_id' => 'required|exists:master_cutis,id',
-            'start_date' => 'required|date|after_or_equal:today',
+            'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'days_requested' => 'nullable|numeric|min:1',
             'reason' => 'required|string|max:1000',
