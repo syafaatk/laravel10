@@ -51,13 +51,15 @@
                                             <div class="text-sm text-gray-900">{{ $event->name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</div>
+                                            <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}</div>
+                                            <div class="text-sm text-gray-900">5:00 PM</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ $event->restaurant->name }}</div>
+                                            <div class="text-sm text-gray-900">{{ $event->restaurant->name }} - 
+                                                <a href="https://www.google.com/maps/search/?api=1&query={{ $event->restaurant->latitude }},{{ $event->restaurant->longitude }}" target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View on Map</a>
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <!-- jika admin -->
