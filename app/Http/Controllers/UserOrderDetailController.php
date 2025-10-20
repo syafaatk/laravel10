@@ -36,6 +36,7 @@ class UserOrderDetailController extends Controller
 
         UserOrderDetail::create([
             'lunch_event_user_order_id' => $lunchEventUserOrder->id,
+            'type' => $request->type,
             'item_name' => $request->item_name,
             'quantity' => $request->quantity,
             'price' => $request->price,
@@ -107,6 +108,8 @@ class UserOrderDetailController extends Controller
         $subtotal = $request->quantity * $request->price;
 
         $userOrderDetail->update([
+            'lunch_event_user_order_id' => $lunchEventUserOrder->id,
+            'type' => $request->type,
             'item_name' => $request->item_name,
             'quantity' => $request->quantity,
             'price' => $request->price,
