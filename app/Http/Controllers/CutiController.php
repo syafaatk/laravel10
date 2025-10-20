@@ -138,7 +138,7 @@ class CutiController extends Controller
                 'master_cuti_id' => $request->master_cuti_id,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
-                'days_requested' => $request->day_requested,
+                'days_requested' => $request->days_requested,
                 'reason' => $request->reason,
                 'status' => 'pending',
             ]);
