@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MasterRestaurant;
+use Illuminate\Support\Facades\Gate;
 
 class MasterRestaurantController extends Controller
 {
@@ -15,7 +16,11 @@ class MasterRestaurantController extends Controller
 
     public function create()
     {
-        return view('admin.master-restaurants.create');
+        if (!Gate::allows('create-restaurant')) {
+            return redirect()->route('master-restaurants.index')->with('error', 'You are not authorized to create a restaurant.');
+        }else{
+            return view('admin.master-restaurants.create');
+        }
     }
 
     public function store(Request $request)

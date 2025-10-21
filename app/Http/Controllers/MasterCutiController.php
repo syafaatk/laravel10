@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MasterCuti;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MasterCutiController extends Controller
 {
@@ -15,7 +16,11 @@ class MasterCutiController extends Controller
 
     public function create()
     {
-        return view('admin.master-cuti.create');
+        if (!Gate::allows('create-master-cuti')) {
+            return redirect()->route('admin.master-cuti.index')->with('error', 'You are not authorized to create a master cuti.');
+        }else{
+            return view('admin.master-cuti.create');
+        }
     }
 
     public function store(Request $request)
