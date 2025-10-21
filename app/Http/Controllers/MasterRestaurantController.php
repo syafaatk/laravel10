@@ -67,7 +67,11 @@ class MasterRestaurantController extends Controller
 
     public function edit(MasterRestaurant $masterRestaurant)
     {
-        return view('admin.master-restaurants.edit', compact('masterRestaurant'));
+        if (!Gate::allows('edit-restaurant')) {
+            return redirect()->route('master-restaurants.index')->with('error', 'You are not authorized to edit a restaurant.');
+        }else{
+            return view('admin.master-restaurants.edit', compact('masterRestaurant'));
+        }
     }
 
     public function update(Request $request, MasterRestaurant $masterRestaurant)
@@ -116,17 +120,20 @@ class MasterRestaurantController extends Controller
 
     public function destroy(MasterRestaurant $masterRestaurant)
     {
-        $masterRestaurant->delete();
-        // Delete associated files
-        $fileFields = ['image', 'menu_1', 'menu_2', 'menu_3', 'menu_4', 'menu_5', 'menu_6', 'menu_7'];
-        foreach ($fileFields as $field) {
-            if ($masterRestaurant->$field && \Storage::exists('public/restaurants/' . $masterRestaurant->$field)) {
-                \Storage::delete('public/restaurants/' . $masterRestaurant->$field);
+        if (!Gate::allows('delete-restaurant')) {
+            return redirect()->route('master-restaurants.index')->with('error', 'You are not authorized to delete a restaurant.');
+        }else{
+            $masterRestaurant->delete();
+            // Delete associated files
+            $fileFields = ['image', 'menu_1', 'menu_2', 'menu_3', 'menu_4', 'menu_5', 'menu_6', 'menu_7'];
+            foreach ($fileFields as $field) {
+                if ($masterRestaurant->$field && \Storage::exists('public/restaurants/' . $masterRestaurant->$field)) {
+                    \Storage::delete('public/restaurants/' . $masterRestaurant->$field);
+                }
             }
+            return redirect()->route('master-restaurants.index')
+                            ->with('success', 'Restaurant deleted successfully.');
         }
-
-        return redirect()->route('master-restaurants.index')
-                         ->with('success', 'Restaurant deleted successfully.');
     }
     
 }

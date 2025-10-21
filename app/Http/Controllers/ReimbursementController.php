@@ -85,8 +85,8 @@ class ReimbursementController extends Controller
             'tipe' => 'required|in:1,2,3',
             'description' => 'required|string|max:1000',
             'amount' => 'required|numeric|min:0|max:10000000',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'attachment_note' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'attachment_note' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
         ]);
 
         $path = null;

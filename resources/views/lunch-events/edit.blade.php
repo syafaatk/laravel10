@@ -76,7 +76,7 @@
                                     file:bg-indigo-50 file:text-indigo-700
                                     hover:file:bg-indigo-100"/>
                                 @if($lunchEvent->image)
-                                    <p class="text-sm text-gray-500 mt-2">Current Image: <a href="{{ asset('storage/lunch_event_images/' . $lunchEvent->image) }}" target="_blank" class="text-indigo-600 hover:text-indigo-900">View Image</a></p>
+                                    <p class="text-sm text-gray-500 mt-2">Current Image: <a href="{{ asset('storage/' . $lunchEvent->image) }}" target="_blank" class="text-indigo-600 hover:text-indigo-900">View Image</a></p>
                                 @endif
                                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             </div>
@@ -91,7 +91,7 @@
                                     file:bg-indigo-50 file:text-indigo-700
                                     hover:file:bg-indigo-100"/>
                                 @if($lunchEvent->nota)
-                                    <p class="text-sm text-gray-500 mt-2">Current Receipt: <a href="{{ asset('storage/lunch_event_nota/' . $lunchEvent->nota) }}" target="_blank" class="text-indigo-600 hover:text-indigo-900">View Receipt</a></p>
+                                    <p class="text-sm text-gray-500 mt-2">Current Receipt: <a href="{{ asset('storage/' . $lunchEvent->nota) }}" target="_blank" class="text-indigo-600 hover:text-indigo-900">View Receipt</a></p>
                                 @endif
                                 <x-input-error :messages="$errors->get('receipt')" class="mt-2" />
                             </div>

@@ -163,6 +163,13 @@
                                 @if ($lunchEvent->restaurant->image)
                                     <img src="{{ asset('storage/restaurants/' . $lunchEvent->restaurant->image) }}" alt="Restaurant Image" class="w-full h-70 object-cover rounded-md mt-3">
                                 @endif
+                                @if ($lunchEvent->image)
+                                    <img src="{{ asset('storage/' . $lunchEvent->image) }}" alt="Eviden Image" class="w-full h-70 object-cover rounded-md mt-3">
+                                @endif 
+                                <!-- foto nota -->
+                                @if ($lunchEvent->nota)
+                                    <img src="{{ asset('storage/' . $lunchEvent->nota) }}" alt="Nota Image" class="w-full h-70 object-cover rounded-md mt-3">
+                                @endif 
                             @else
                                 <p class="text-gray-500 italic">No associated restaurant details to display.</p>
                             @endif

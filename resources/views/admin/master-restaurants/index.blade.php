@@ -74,7 +74,6 @@
                                             <br>
                                         </td>
                                         <td class="px-6 py-4">
-                                            @if(Auth::user()->hasRole('admin')) 
                                             <!-- show -->
                                             <a href="{{ route('master-restaurants.show', $restaurant->id) }}" class="btn btn-sm btn-info bg-green-600 hover:bg-green-700 text-white font-medium text-green-600 dark:text-green-500 hover:underline">Show</a>
                                             <a href="{{ route('master-restaurants.edit', $restaurant->id) }}" class="btn btn-sm btn-primary bg-blue-600 hover:bg-blue-700 text-white font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -84,7 +83,6 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger bg-red-600 hover:bg-red-700 text-white font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
                                             </form>
-                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

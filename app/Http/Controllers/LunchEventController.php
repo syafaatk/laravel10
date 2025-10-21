@@ -6,6 +6,7 @@ use App\Models\LunchEvent;
 use App\Models\MasterRestaurant;
 use App\Models\LunchEventUserOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class LunchEventController extends Controller
 {
@@ -17,9 +18,12 @@ class LunchEventController extends Controller
 
     public function create()
     {
-        // get restaurant
-        $restaurants = MasterRestaurant::all();
-        return view('lunch-events.create', compact('restaurants'));
+        if (!Gate::allows('create-lunch-event')) {
+            return redirect()->route('lunch-events.index')->with('error', 'You are not authorized to create a lunch event.');
+        }else{
+            $restaurants = MasterRestaurant::all();
+            return view('lunch-events.create', compact('restaurants'));
+        }
     }
 
     public function store(Request $request)
@@ -65,8 +69,12 @@ class LunchEventController extends Controller
 
     public function edit(LunchEvent $lunchEvent)
     {
-        $restaurants = MasterRestaurant::all();
-        return view('lunch-events.edit', compact('lunchEvent', 'restaurants'));
+        if (!Gate::allows('edit-lunch-event')) {
+            return redirect()->route('lunch-events.index')->with('error', 'You are not authorized to edit a lunch event.');
+        }else{
+            $restaurants = MasterRestaurant::all();
+            return view('lunch-events.edit', compact('lunchEvent', 'restaurants'));
+        }
     }
 
     public function update(Request $request, LunchEvent $lunchEvent)
@@ -109,16 +117,18 @@ class LunchEventController extends Controller
 
     public function destroy(LunchEvent $lunchEvent)
     {
-        $lunchEvent->delete();
-
-        if ($lunchEvent->image) {
-            \Storage::disk('public')->delete($lunchEvent->image);
+        if (!Gate::allows('delete-lunch-event')) {
+            return redirect()->route('lunch-events.index')->with('error', 'You are not authorized to delete a lunch event.');
+        }else{
+            $lunchEvent->delete();
+            if ($lunchEvent->image) {
+                \Storage::disk('public')->delete($lunchEvent->image);
+            }
+            if ($lunchEvent->nota) {
+                \Storage::disk('public')->delete($lunchEvent->nota);
+            }
+            return redirect()->route('lunch-events.index')
+                            ->with('success', 'Lunch event deleted successfully.');
         }
-        if ($lunchEvent->nota) {
-            \Storage::disk('public')->delete($lunchEvent->nota);
-        }
-
-        return redirect()->route('lunch-events.index')
-                         ->with('success', 'Lunch event deleted successfully.');
     }
 }
