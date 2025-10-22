@@ -11,6 +11,7 @@ class LaporanReimbursement extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
         'start_date',
         'end_date',
         'status',
