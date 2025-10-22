@@ -14,7 +14,7 @@
                         <p><strong>User:</strong> {{ $laporanReimbursement->user->name }}</p>
                         <p><strong>Start Date:</strong> {{ $laporanReimbursement->start_date }}</p>
                         <p><strong>End Date:</strong> {{ $laporanReimbursement->end_date }}</p>
-                        <p><strong>Total Amount:</strong> {{ number_format($laporanReimbursement->total_amount, 2) }}</p>
+                        <p><strong>Total Amount:</strong> {{ number_format($laporanReimbursement->amount, 2) }}</p>
                         <p><strong>Status:</strong> {{ ucfirst($laporanReimbursement->status) }}</p>
                         <p><strong>Created At:</strong> {{ $laporanReimbursement->created_at->format('d-m-Y H:i:s') }}</p>
                     </div>

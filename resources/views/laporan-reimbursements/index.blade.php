@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $laporan->user->name }}</td>
-                                    <td>{{ number_format($laporan->total_amount, 2) }}</td>
+                                    <td>{{ number_format($laporan->amount, 2) }}</td>
                                     <td>{{ ucfirst($laporan->status) }}</td>
                                     <td>{{ $laporan->created_at->format('d-m-Y') }}</td>
                                     <td>
