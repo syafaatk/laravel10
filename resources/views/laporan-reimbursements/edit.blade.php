@@ -9,17 +9,16 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('admin.laporan-reimbursements.update', $laporanReimbursement->id) }}">
+                    <form method="POST" action="{{ route('admin.laporan-reimbursements.update', $laporanReimbursement->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
                         <!-- Title -->
-                        <div>
+                        <div class="mt-4">
                             <x-input-label for="title" :value="__('Title')" />
                             <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title', $laporanReimbursement->title)" required autofocus />
                             <x-input-error :messages="$errors->get('title')" class="mt-2" />
                         </div>
-
                         <!-- Start Date -->
                         <div class="mt-4">
                             <x-input-label for="start_date" :value="__('Start Date')" />
