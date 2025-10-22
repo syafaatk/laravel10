@@ -101,15 +101,6 @@ class LaporanReimbursementController extends Controller
             'attachment' => 'nullable|file|mimes:pdf|max:20480', // Only PDF for reports
         ]);
 
-        $laporanReimbursement->update([
-            'title' => $request->title,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'status' => $request->status,
-            'amount' => $request->amount,
-            'attachment' => $path ?? $laporanReimbursement->attachment,
-        ]);
-
         $path = null;
         if ($request->hasFile('attachment')) {
             // Delete old attachment if exists
@@ -118,6 +109,15 @@ class LaporanReimbursementController extends Controller
             }
             $path = $request->file('attachment')->store('laporan_attachments', 'public');
         }
+
+        $laporanReimbursement->update([
+            'title' => $request->title,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+            'amount' => $request->amount,
+            'attachment' => $path ?? $laporanReimbursement->attachment,
+        ]);
 
         return redirect()->route('admin.laporan-reimbursements.index')->with('success', 'Laporan Reimbursement updated successfully.');
         
