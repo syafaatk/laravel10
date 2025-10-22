@@ -82,22 +82,36 @@ class LaporanReimbursementController extends Controller
 
     public function show(LaporanReimbursement $laporanReimbursement)
     {
-        //
+        return view('laporan-reimbursements.show', compact('laporanReimbursement'));
     }
 
     public function edit(LaporanReimbursement $laporanReimbursement)
     {
-        //
+        return view('laporan-reimbursements.edit', compact('laporanReimbursement'));
     }
 
     public function update(Request $request, LaporanReimbursement $laporanReimbursement)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $laporanReimbursement->update([
+            'title' => $request->title,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]);
+
+        return redirect()->route('admin.laporan-reimbursements.index')->with('success', 'Laporan Reimbursement updated successfully.');
+        
     }
 
     public function destroy(LaporanReimbursement $laporanReimbursement)
     {
-        //
+        $laporanReimbursement->delete();
+        return redirect()->route('admin.laporan-reimbursements.index')->with('success', 'Laporan Reimbursement deleted successfully.');
     }
     
     public function create()
@@ -109,6 +123,7 @@ class LaporanReimbursementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'title' => 'string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'user_id' => 'nullable|exists:users,id',

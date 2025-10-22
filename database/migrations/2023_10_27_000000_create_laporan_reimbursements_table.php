@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('laporan_reimbursements', function (Blueprint $table) {
             $table->id();
+            $table->string('title')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->string('status')->nullable(); // pending, approved, rejected

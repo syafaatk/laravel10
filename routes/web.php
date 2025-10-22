@@ -91,6 +91,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('laporan-reimbursements/search', [LaporanReimbursementController::class, 'search'])->name('laporan-reimbursements.search');
     Route::post('laporan-reimbursements/generate', [LaporanReimbursementController::class, 'generate'])->name('laporan-reimbursements.generate');
     Route::post('laporan-reimbursements', [LaporanReimbursementController::class, 'store'])->name('laporan-reimbursements.store');
+    Route::get('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'show'])->name('laporan-reimbursements.show');
+    // edit
+    Route::get('laporan-reimbursements/{laporanReimbursement}/edit', [LaporanReimbursementController::class, 'edit'])->name('laporan-reimbursements.edit');
+    Route::put('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'update'])->name('laporan-reimbursements.update');
+    Route::delete('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'destroy'])->name('laporan-reimbursements.destroy');
+    
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

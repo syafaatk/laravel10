@@ -23,6 +23,7 @@
                                 <th>Total Amount</th>
                                 <th>Status</th>
                                 <th>Created At</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,6 +34,15 @@
                                     <td>{{ number_format($laporan->total_amount, 2) }}</td>
                                     <td>{{ ucfirst($laporan->status) }}</td>
                                     <td>{{ $laporan->created_at->format('d-m-Y') }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.laporan-reimbursements.show', $laporan->id) }}" class="btn btn-info btn-sm">View</a>
+                                        <a href="{{ route('admin.laporan-reimbursements.edit', $laporan->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('admin.laporan-reimbursements.destroy', $laporan->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this report?')">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
