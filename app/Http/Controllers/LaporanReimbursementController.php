@@ -142,7 +142,7 @@ class LaporanReimbursementController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'user_id' => 'nullable|exists:users,id',
             'status' => 'nullable|in:pending,approved,done,rejected',
-            'attachment' => 'nullable|file|mimes:pdf|max:2048', // Only PDF for reports
+            'attachment' => 'nullable|file|mimes:pdf|max:20480', // Only PDF for reports
             'amount' => 'nullable|integer|min:0|max:1000000000',
         ]);
 
