@@ -154,6 +154,8 @@ class LaporanReimbursementController extends Controller
         $user_id = $request->user_id ?? auth()->id();
 
         LaporanReimbursement::create([
+            'title' => $request->title,
+            'amount' => $request->amount,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'user_id' => $user_id,
