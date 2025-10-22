@@ -34,6 +34,13 @@
                             <x-input-error :messages="$errors->get('end_date')" class="mt-2" />
                         </div>
 
+                        <!-- Amount -->
+                        <div class="mt-4">
+                            <x-input-label for="amount" :value="__('Amount')" />
+                            <x-text-input id="amount" class="block mt-1 w-full" type="number" name="amount" :value="old('amount', $laporanReimbursement->amount)" required step="0.01" />
+                            <x-input-error :messages="$errors->get('amount')" class="mt-2" />
+                        </div>
+
                         <!-- Status -->
                         <div class="mt-4">
                             <x-input-label for="status" :value="__('Status')" />

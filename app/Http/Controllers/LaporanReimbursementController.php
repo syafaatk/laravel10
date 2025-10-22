@@ -96,6 +96,7 @@ class LaporanReimbursementController extends Controller
             'title' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'amount' => 'nullable|integer|min:0|max:1000000000',
             'status' => 'required|in:pending,approved,done,rejected',
             'attachment' => 'nullable|file|mimes:pdf|max:20480', // Only PDF for reports
         ]);
@@ -125,6 +126,10 @@ class LaporanReimbursementController extends Controller
     public function destroy(LaporanReimbursement $laporanReimbursement)
     {
         $laporanReimbursement->delete();
+        if ($laporanReimbursement->attachment) {
+            \Storage::disk('public')->delete($laporanReimbursement->attachment);
+        }
+        
         return redirect()->route('admin.laporan-reimbursements.index')->with('success', 'Laporan Reimbursement deleted successfully.');
     }
     
