@@ -83,7 +83,9 @@
                                             @else
                                             <!-- jika user biasa -->
                                             <a href="{{ route('lunch-events.show', $event->id) }}" class="btn btn-primary text-white hover:text-indigo-900 py-1 px-2 rounded text-xs">View Details</a>
-                                            <a href="{{ route('lunch-event-user-orders.create', $event->id) }}" class="btn btn-primary bg-yellow-500 hover:bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Buat Pesanan</a>
+                                                @if($event->status == 'scheduled')
+                                                <a href="{{ route('lunch-event-user-orders.create', $event->id) }}" class="btn btn-primary bg-yellow-500 hover:bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Buat Pesanan</a>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>

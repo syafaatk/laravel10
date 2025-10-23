@@ -13,9 +13,11 @@
                     {{-- Tombol Aksi --}}
                     <div class="flex justify-end mb-6 space-x-3">
                         <!-- buat pesanan -->
+                        @if($event->status == 'scheduled')
                         <a href="{{ route('lunch-event-user-orders.create', $lunchEvent->id) }}" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
                             {{ __('Buat Pesanan') }}
                         </a>
+                        @endif
                         <!-- <a href="{{ route('lunch-events.edit', $lunchEvent->id) }}" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">
                             {{ __('Edit Event') }}
                         </a> -->
