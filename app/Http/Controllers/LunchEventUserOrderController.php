@@ -23,10 +23,12 @@ class LunchEventUserOrderController extends Controller
                              ->with('error', 'You have already placed an order for this event. You can edit your existing order.');
         }else{
             LunchEventUserOrder::create([
-            'lunch_event_id' => $lunchEvent->id,
-            'user_id' => Auth::id(),
-            'status' => 'pending', // Default status
-        ]);
+                'lunch_event_id' => $lunchEvent->id,
+                'user_id' => Auth::id(),
+                'status' => 'pending', // Default status
+            ]);
+            return redirect()->route('user-order-details.create', $existingOrder->id)
+                             ->with('error', 'You have already placed an order for this event. You can edit your existing order.');
         }
     }
 
