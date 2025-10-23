@@ -184,7 +184,7 @@
                                 <h4 class="text-lg font-semibold mb-3 text-gray-800">{{ $lunchEventUserOrder->lunchEvent->restaurant->name }} Menu</h4>
                                 <p class="text-sm text-gray-600 mb-4">Click on the image or PDF icon to view the full menu.</p>
                                 
-                                <div class="grid grid-cols-1 gap-4" style="max-height: 800px; overflow-y: auto;">
+                                <div class="grid grid-cols-1 gap-4" style="max-height: 1000px; overflow-y: auto;">
                                     @for ($i = 1; $i <= 7; $i++)
                                         @php
                                             $menuImage = 'menu_' . $i;
@@ -201,7 +201,7 @@
 
                                                 @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
                                                     <a href="{{ $fileUrl }}" target="_blank" class="block group relative">
-                                                        <img src="{{ $fileUrl }}" alt="Menu {{ $i }}" class="w-full h-40 object-cover rounded-md mb-2 transition duration-300 group-hover:opacity-75">
+                                                        <img src="{{ $fileUrl }}" alt="Menu {{ $i }}" class="w-full object-cover rounded-md mb-2 transition duration-300 group-hover:opacity-75">
                                                         <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 rounded-md">
                                                             <span class="text-white font-bold text-sm">View Image</span>
                                                         </div>
