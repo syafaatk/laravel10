@@ -36,6 +36,7 @@ class User extends Authenticatable
         'gaji_tunjangan_tetap',
         'gaji_tunjangan_makan',
         'gaji_tunjangan_transport',
+        'gaji_tunjangan_lain',
         'gaji_pokok',
         'gaji_bpjs',
     ];

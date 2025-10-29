@@ -190,7 +190,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="gaji_tunjangan_transport">Gaji Tunjangan Transport</label>
+                                    <label for="gaji_tunjangan_transport">Gaji Tunjangan Transport + Tempat Tinggal</label>
                                     <input type="number" name="gaji_tunjangan_transport" id="gaji_tunjangan_transport" class="form-control @error('gaji_tunjangan_transport') is-invalid @enderror" value="{{ old('gaji_tunjangan_transport', $user->gaji_tunjangan_transport) }}">
                                     @error('gaji_tunjangan_transport')
                                         <span class="invalid-feedback" role="alert">
@@ -211,15 +211,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="gaji_bpjs">Uang BPJS</label>
-                            <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="form-control @error('gaji_bpjs') is-invalid @enderror" value="{{ old('gaji_bpjs', $user->gaji_bpjs) }}">
-                            @error('gaji_bpjs')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="gaji_tunjangan_lain">Gaji Tunjangan Lain-Lain</label>
+                                    <input type="number" name="gaji_tunjangan_lain" id="gaji_tunjangan_lain" class="form-control @error('gaji_tunjangan_lain') is-invalid @enderror" value="{{ old('gaji_tunjangan_lain', $user->gaji_tunjangan_lain) }}">
+                                    @error('gaji_tunjangan_lain')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="gaji_bpjs">Gaji BPJS</label>
+                                    <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="form-control @error('gaji_bpjs') is-invalid @enderror" value="{{ old('gaji_bpjs', $user->gaji_bpjs) }}">
+                                    @error('gaji_bpjs')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        
                         
                         <div class="form-group">
                             <label for="attachment_ttd">Tanda Tangan</label>

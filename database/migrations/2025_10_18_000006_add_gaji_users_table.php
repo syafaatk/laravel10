@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('gaji_tunjangan_tetap')->nullable()->after('bank');
             $table->integer('gaji_tunjangan_makan')->after('gaji_tunjangan_tetap')->default('1000000');
-            $table->integer('gaji_tunjangan_transport')->nullable()->after('gaji_tunjangan_makan')->default('1000000');
+            $table->integer('gaji_tunjangan_transport')->nullable()->after('gaji_tunjangan_makan')->default('2000000');
             $table->integer('gaji_pokok')->nullable()->after('gaji_tunjangan_transport');
             $table->integer('gaji_bpjs')->nullable()->after('gaji_pokok')->default('150000');
         });
