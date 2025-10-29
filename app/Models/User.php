@@ -32,7 +32,12 @@ class User extends Authenticatable
         'kontrak',
         'jabatan',
         'norek',
-        'bank'
+        'bank',
+        'gaji_tunjangan_tetap',
+        'gaji_tunjangan_makan',
+        'gaji_tunjangan_transport',
+        'gaji_pokok',
+        'gaji_bpjs',
     ];
 
     /**

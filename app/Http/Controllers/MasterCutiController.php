@@ -11,7 +11,7 @@ class MasterCutiController extends Controller
     public function index()
     {
         $masterCutis = MasterCuti::all();
-        return view('admin.master-cuti.index');
+        return view('admin.master-cuti.index', compact('masterCutis'));
     }
 
     public function create()

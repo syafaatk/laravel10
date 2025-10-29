@@ -91,11 +91,16 @@ class UserController extends Controller
             'kontrak' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'norek' => 'nullable|string|max:255',
-            'bank' => 'nullable|string|max:255'
+            'bank' => 'nullable|string|max:255',
+            'gaji_tunjangan_tetap' => 'nullable|integer|min:0',
+            'gaji_tunjangan_makan' => 'nullable|integer|min:0',
+            'gaji_tunjangan_transport' => 'nullable|integer|min:0',
+            'gaji_pokok' => 'nullable|integer|min:0',
+            'gaji_bpjs' => 'nullable|integer|min:0',
         ]);
 
         $user->fill($request->only([
-            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan', 'norek', 'bank'
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan', 'norek', 'bank', 'gaji_tunjangan_tetap', 'gaji_tunjangan_makan', 'gaji_tunjangan_transport', 'gaji_pokok', 'gaji_bpjs'
         ]));
 
         if ($request->hasFile('attachment_ttd')) {
