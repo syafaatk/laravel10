@@ -26,6 +26,7 @@
                                 <th>Motor</th>
                                 <th>Tgl Masuk</th>
                                 <th>Lama Kerja</th>
+                                <th>Total Gaji</th>
                                 <th>Sisa Cuti</th>
                                 <th>Roles</th>
                                 <th>Actions</th>
@@ -45,6 +46,11 @@
                                         @if($user->tgl_masuk)
                                             {{ \Carbon\Carbon::parse($user->tgl_masuk)->diffInYears(\Carbon\Carbon::now()) }} years
                                         @endif
+                                    </td>
+                                    <td>@php
+                                            $totalGaji = $user->gaji_tunjangan_tetap + $user->gaji_tunjangan_makan + $user->gaji_tunjangan_transport + $user->gaji_tunjangan_lain + $user->gaji_pokok + $user->gaji_bpjs;
+                                        @endphp
+                                        {{ number_format($totalGaji, 0, ',', '.') }}
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-primary view-cuti-detail" style="background-color: green; color: white;" data-bs-toggle="modal" data-bs-target="#detailCutiModal" data-user-id="{{ $user->id }}">
