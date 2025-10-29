@@ -126,6 +126,43 @@
                 <x-text-input id="tgl_masuk" name="tgl_masuk" type="date" class="mt-1 block w-full" :value="old('tgl_masuk', $user->tgl_masuk ? \Carbon\Carbon::parse($user->tgl_masuk)->format('Y-m-d') : '')" autocomplete="tgl_masuk" />
                 <x-input-error class="mt-2" :messages="$errors->get('tgl_masuk')" />
             </div>
+            <!--  -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="gaji_tunjangan_tetap" :value="__('Gaji Tunjangan Tetap')" />
+                    <x-text-input id="gaji_tunjangan_tetap" name="gaji_tunjangan_tetap" type="number" class="mt-1 block w-full" :value="old('gaji_tunjangan_tetap', $user->gaji_tunjangan_tetap)" autocomplete="gaji_tunjangan_tetap" />
+                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_tetap')" />
+                </div>
+                <div>
+                    <x-input-label for="gaji_tunjangan_makan" :value="__('Gaji Tunjangan Makan')" />
+                    <x-text-input id="gaji_tunjangan_makan" name="gaji_tunjangan_makan" type="number" class="mt-1 block w-full" :value="old('gaji_tunjangan_makan', $user->gaji_tunjangan_makan)" autocomplete="gaji_tunjangan_makan" />
+                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_makan')" />
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="gaji_tunjangan_transport" :value="__('Gaji Tunjangan Transport + Tempat Tinggal')" />
+                    <x-text-input id="gaji_tunjangan_transport" name="gaji_tunjangan_transport" type="number" class="mt-1 block w-full" :value="old('gaji_tunjangan_transport', $user->gaji_tunjangan_transport)" autocomplete="gaji_tunjangan_transport" />
+                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_transport')" />
+                </div>
+                <div>
+                    <x-input-label for="gaji_tunjangan_lain" :value="__('Gaji Tunjangan Lain-Lain')" />
+                    <x-text-input id="gaji_tunjangan_lain" name="gaji_tunjangan_lain" type="number" class="mt-1 block w-full" :value="old('gaji_tunjangan_lain', $user->gaji_tunjangan_lain)" autocomplete="gaji_tunjangan_lain" />
+                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_lain')" />
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="gaji_pokok" :value="__('Gaji Pokok')" />
+                    <x-text-input id="gaji_pokok" name="gaji_pokok" type="number" class="mt-1 block w-full" :value="old('gaji_pokok', $user->gaji_pokok)" autocomplete="gaji_pokok" />
+                    <x-input-error class="mt-2" :messages="$errors->get('gaji_pokok')" />
+                </div>
+                <div>
+                    <x-input-label for="gaji_bpjs" :value="__('Gaji BPJS')" />
+                    <x-text-input id="gaji_bpjs" name="gaji_bpjs" type="number" class="mt-1 block w-full" :value="old('gaji_bpjs', $user->gaji_bpjs)" autocomplete="gaji_bpjs" />
+                    <x-input-error class="mt-2" :messages="$errors->get('gaji_bpjs')" />
+                </div>
+            </div>
             <div>
             <x-input-label for="attachment_ttd" :value="__('Tanda Tangan')" />
             <input id="attachment_ttd" name="attachment_ttd" type="file" class="mt-1 block w-full" />

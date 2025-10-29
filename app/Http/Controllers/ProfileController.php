@@ -49,6 +49,13 @@ class ProfileController extends Controller
         $request->user()->jabatan = $request->input('jabatan');
         $request->user()->norek = $request->input('norek');
         $request->user()->bank = $request->input('bank');
+        $request->user()->gaji_tunjangan_tetap = $request->input('gaji_tunjangan_tetap');
+        $request->user()->gaji_tunjangan_makan = $request->input('gaji_tunjangan_makan');
+        $request->user()->gaji_tunjangan_transport = $request->input('gaji_tunjangan_transport');
+        $request->user()->gaji_tunjangan_lain = $request->input('gaji_tunjangan_lain');
+        $request->user()->gaji_pokok = $request->input('gaji_pokok');
+        $request->user()->gaji_bpjs = $request->input('gaji_bpjs');
+        
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
