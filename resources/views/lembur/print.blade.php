@@ -215,7 +215,7 @@
                 </tr>
                 <tr>
                     <td>Jabatan</td>
-                    <td>: Application & Development Department Head</td>
+                    <td>: Application Development & Services / EIS Department Head</td>
                     <td>Kode Divisi</td>
                     <td>: 13410</td>
                 </tr>
@@ -296,7 +296,7 @@
         <div class="signature-block">
             <div style="text-align: center;">
                 Menyetujui<br>
-                Application & Development Department Head
+                Application Development & Services / EIS Department Head
                 
                 <div class="signer">DEDEK APRIYANI</div>
                 <div class="details">8913230864</div>
