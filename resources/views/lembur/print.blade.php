@@ -280,7 +280,7 @@
                         <td style="text-align: center;">1</td>
                         <td style="text-align: center;">{{ $lembur->user->nopeg }}</td>
                         <td>{{ $lembur->user->name }}</td>
-                        <td>Setara JJ 4A</td>
+                        <td>Setara MJL 13</td>
                         <td class="uraian-pekerjaan">
                             @foreach ($lembur->detailLemburs as $detail)
                                 <div>{{ $detail->uraian_pekerjaan }}</div>
