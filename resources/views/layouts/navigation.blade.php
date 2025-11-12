@@ -15,15 +15,33 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                <!-- GABUNGKAN REIMBURSMENT, CUTI DAN LEMBUR DALAM SATU MENU DROPDOWN-->
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
-                        {{ __('Reimbursements') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
-                        {{ __('Cuti') }}
-                    </x-nav-link>
+                    <x-dropdown align="left" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-slot name="trigger">
+                            <button class="h-16 flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                {{ __('Pengajuan') }}
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
+                                {{ __('Reimbursements') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
+                                {{ __('Cuti') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('lembur.index')" :active="request()->routeIs('lembur.*')">
+                                {{ __('Lembur') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('master-restaurants.index')" :active="request()->routeIs('master-restaurants.*')">
@@ -158,12 +176,32 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
-                {{ __('Reimbursements') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
-                {{ __('Cuti') }}
-            </x-responsive-nav-link>
+            <!-- GABUNGKAN REIMBURSMENT, CUTI DAN LEMBUR DALAM SATU MENU DROPDOWN-->
+            <x-dropdown align="left" class="w-full">
+                <x-slot name="trigger">
+                    <button class="w-full flex items-center ps-3 pe-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        {{ __('Pengajuan') }}
+                        <div class="ms-1">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-responsive-nav-link :href="route('reimbursements.index')" :active="request()->routeIs('reimbursements.*')">
+                        {{ __('Reimbursements') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('cuti.index')" :active="request()->routeIs('cuti.*')">
+                        {{ __('Cuti') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('lembur.index')" :active="request()->routeIs('lembur.*')">
+                        {{ __('Lembur') }}
+                    </x-responsive-nav-link>
+                </x-slot>
+            </x-dropdown>
+            
             <x-responsive-nav-link :href="route('master-restaurants.index')" :active="request()->routeIs('master-restaurants.*')">
                 {{ __('Data Restaurant') }}
             </x-responsive-nav-link>

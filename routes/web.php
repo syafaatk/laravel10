@@ -15,6 +15,7 @@ use App\Http\Controllers\LunchEventUserOrderController;
 use App\Http\Controllers\UserOrderDetailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\LemburController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +64,19 @@ Route::middleware('auth')->group(function () {
     Route::get('cuti/{cuti}/print', [CutiController::class, 'print'])->name('cuti.print');
     Route::patch('cuti/{cuti}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
     Route::patch('cuti/{cuti}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+
+    // Lembur (Overtime) Routes
+    Route::get('lembur', [LemburController::class, 'index'])->name('lembur.index');
+    Route::get('lembur/create', [LemburController::class, 'create'])->name('lembur.create');
+    Route::post('lembur', [LemburController::class, 'store'])->name('lembur.store');
+    Route::get('lembur/{lembur}', [LemburController::class, 'show'])->name('lembur.show');
+    Route::get('lembur/{lembur}/edit', [LemburController::class, 'edit'])->name('lembur.edit');
+    Route::put('lembur/{lembur}', [LemburController::class, 'update'])->name('lembur.update');
+    Route::delete('lembur/{lembur}', [LemburController::class, 'destroy'])->name('lembur.destroy');
+    Route::patch('lembur/{lembur}/approve', [LemburController::class, 'approve'])->name('lembur.approve');
+    Route::patch('lembur/{lembur}/reject', [LemburController::class, 'reject'])->name('lembur.reject');
+    Route::get('lembur/{lembur}/print', [LemburController::class, 'print'])->name('lembur.print');
+    
 
     Route::resource('master-restaurants', MasterRestaurantController::class)->names('master-restaurants');
     Route::resource('lunch-events', LunchEventController::class)->names('lunch-events');
