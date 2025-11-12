@@ -125,7 +125,7 @@
                                         @php $estimasi_uang_lembur_calculated = $durasiJam * 2 * $upahPerJam; @endphp
                                     @elseif ($durasiJam > 8)
                                         <p class="text-gray-900 ml-4">8 Jam Pertama: 8 x 2 x Upah Per Jam = 8 x 2 x Rp {{ number_format($upahPerJam, 0, ',', '.') }} = Rp {{ number_format(8 * 2 * $upahPerJam, 0, ',', '.') }}</p>
-                                        <p class="text-gray-900 ml-4">{{ $durasiJam - 8 }} Jam Berikutnya: {{ $durasiJam - 8 }} x 3 x Upah Per Jam = {{ $durasiJam - 8 }} x 3 x Rp {{ number_format(($durasiJam - 8) * 3 * $upahPerJam, 0, ',', '.') }}</p>
+                                        <p class="text-gray-900 ml-4">{{ $durasiJam - 8 }} Jam Berikutnya: {{ $durasiJam - 8 }} x 3 x Upah Per Jam = {{ $durasiJam - 8 }} x 3 x {{ number_format($upahPerJam, 0, ',', '.') }} = Rp {{ number_format(($durasiJam - 8) * 3 * $upahPerJam, 0, ',', '.') }}</p>
                                         @php $estimasi_uang_lembur_calculated = (8 * 2 * $upahPerJam) + (($durasiJam - 8) * 3 * $upahPerJam); @endphp
                                     @endif
                                 @elseif ($lembur->jenis == 'holiday')
