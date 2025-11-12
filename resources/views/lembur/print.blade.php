@@ -188,7 +188,7 @@
             line-height: 1.5;
         }
         .signature-block .signer {
-            margin-top: 40px; /* Jarak untuk tanda tangan */
+            margin-top: 60px; /* Jarak untuk tanda tangan */
             font-weight: bold;
         }
         .signature-block .details {
@@ -305,8 +305,23 @@
                 Yang Menugaskan<br>
                 PIC (Penanggung Jawab)
                 
-                <div class="signer">FITHRI HALIM AHMAD</div>
-                <div class="details">9520131577</div>
+                <div class="signer">
+                    @if ($lembur->approver)
+                            @php
+                                $approvers = [
+                                    '9520131577' => 'FITHRI HALIM AHMAD',
+                                    '8913230864' => 'DEDEK APRIYANI',
+                                    '8916131158' => 'ARYA REZA NUGRAHA',
+                                    '8520131736' => 'ASEP MARYANA',
+                                    '9824132111' => 'ZULFIKAR MURAKABIMAN',
+                                ];
+                            @endphp
+                            {{ $approvers[$lembur->approver] ?? $lembur->approver }}
+                    @else
+                        -
+                    @endif
+                </div>
+                <div class="details">{{ $lembur->approver }}</div>
             </div>
         </div>
     </div>
