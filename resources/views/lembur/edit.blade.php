@@ -69,23 +69,23 @@
                                     @foreach (old('uraian_pekerjaan') as $index => $uraian)
                                         <div class="input-group mb-2">
                                             <input type="text" class="form-control" name="uraian_pekerjaan[]" value="{{ $uraian }}" placeholder="Uraian pekerjaan" required>
-                                            <button type="button" class="btn btn-danger remove-uraian">Hapus</button>
+                                            <button type="button" class="btn btn-danger remove-uraian bg-danger">Hapus</button>
                                         </div>
                                     @endforeach
                                 @else
                                     @foreach ($lembur->detailLemburs as $detail)
                                         <div class="input-group mb-2">
                                             <input type="text" class="form-control" name="uraian_pekerjaan[]" value="{{ $detail->uraian_pekerjaan }}" placeholder="Uraian pekerjaan" required>
-                                            <button type="button" class="btn btn-danger remove-uraian">Hapus</button>
+                                            <button type="button" class="btn btn-danger remove-uraian bg-danger">Hapus</button>
                                         </div>
                                     @endforeach
                                 @endif
                             </div>
-                            <button type="button" class="btn btn-secondary mt-2" id="add-uraian">Tambah Uraian Pekerjaan</button>
+                            <button type="button" class="btn btn-secondary mt-2 bg-secondary" id="add-uraian">Tambah Uraian Pekerjaan</button>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Update Pengajuan Lembur</button>
-                        <a href="{{ route('lembur.index') }}" class="btn btn-secondary">Batal</a>
+                        <button type="submit" class="btn btn-primary bg-primary">Update Pengajuan Lembur</button>
+                        <a href="{{ route('lembur.index') }}" class="btn btn-secondary bg-secondary">Batal</a>
                     </form>
                 </div>
             </div>
