@@ -68,7 +68,7 @@
                                 <div class="mb-4">
                                     <label class="form-label font-semibold text-gray-600 block">Disetujui/Ditolak Oleh:</label>
                                     {{-- Catatan: Perhatikan variabel $lembur->approved. Jika relasi di model Anda bernama 'approver', gunakan $lembur->approver->name --}}
-                                    <p class="text-gray-900">{{ $lembur->approved->name ?? 'N/A' }} pada {{ $lembur->approved_at->format('d F Y H:i') ?? 'N/A' }}</p>
+                                    <p class="text-gray-900">{{ $lembur->approved->name ?? 'N/A' }} pada {{ $lembur->approved_at ?? 'N/A' }}</p>
                                 </div>
                             @endif
                         </div>
