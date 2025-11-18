@@ -98,7 +98,7 @@
                             <label class="form-label font-semibold text-gray-600 block mb-2">Rincian Perhitungan Uang Lembur:</label>
                             <div class="bg-gray-50 p-4 rounded-lg border">
                                 @php
-                                    $upahSebulan = Auth::user()->gaji_pokok + Auth::user()->gaji_tunjangan_makan + Auth::user()->gaji_tunjangan_tetap  ?? 9000000;
+                                    $upahSebulan = $lembur->user->gaji_pokok + $lembur->user->gaji_tunjangan_makan + $lembur->user->gaji_tunjangan_tetap  ?? 9000000;
                                     $upahPerJam = $upahSebulan / 173;
                                     $durasiJam = $lembur->durasi_jam;
                                     $estimasi_uang_lembur_calculated = 0;
@@ -161,9 +161,9 @@
                                     <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">❌ Tolak</button>
                                 </form>
                             @endif
-                            {{-- Tombol Cetak selalu tersedia untuk yang bisa approve, atau bisa juga disesuaikan dengan role lain --}}
-                            <a href="{{ route('lembur.print', $lembur->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out" target="_blank">🖨️ Cetak</a>
                         @endcan
+                        {{-- Tombol Cetak selalu tersedia untuk yang bisa approve, atau bisa juga disesuaikan dengan role lain --}}
+                        <a href="{{ route('lembur.print', $lembur->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out" target="_blank">🖨️ Cetak</a>
                     </div>
                 </div>
             </div>
