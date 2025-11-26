@@ -18,6 +18,7 @@ class LunchEventUserOrder extends Model
         'total_price',
         'notes',
         'status',
+        'type',
     ];
 
     public function lunchEvent()

@@ -113,40 +113,197 @@
                                 <!-- tampilkan user yang memesan -->
                                  
                                 <div class="py-4">
-                                    <dt class="text-base font-semibold mb-2">Orders :</dt>
+                                    <dt class="text-base font-semibold mb-4">Orders:</dt>
                                     <dd>
                                         @if ($lunchEventUserOrders->count() > 0)
-                                            <ul class="list-disc pl-5">
-                                                @foreach ($lunchEventUserOrders as $order)
-                                                    <li class="mb-2">
-                                                        <a href="" class="text-blue-600 hover:underline">
-                                                            Order by {{ $order->user->name }} - Status: {{ $order->status }} - Total: Rp{{ number_format($order->total_price, 0, ',', '.') }}
-                                                        </a>
-                                                        <!-- tampilkan list pesanannya -->
-                                                        <ul class="list-disc pl-5 text-gray-600">
-                                                            <li>Ditempat:</li>
-                                                            @forelse ($order->orderDetails ?? [] as $detail)
-                                                                @if ($detail->notes === 'ditempat')
-                                                                <ul>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }}) - {{$detail->notes}}</ul>
-                                                                @endif
-                                                            @empty
-                                                                {{-- Display a friendly message if the collection is null or empty --}}
-                                                                <li class="italic text-gray-500">No specific order items were found for this event.</li>
-                                                            @endforelse
-                                                            <li>Bungkus:</li>
-                                                            @forelse ($order->orderDetails ?? [] as $detail)
-                                                                @if ($detail->notes === 'bungkus')
-                                                                <ul>{{ $detail->quantity }} x {{ $detail->item_name }} (Rp{{ number_format($detail->price, 0, ',', '.') }}) - {{$detail->notes}}</ul>
-                                                                @endif
-                                                            @empty
-                                                                {{-- Display a friendly message if the collection is null or empty --}}
-                                                                <li class="italic text-gray-500">No specific order items were found for this event.</li>
-                                                            @endforelse
+                                            {{-- Summary Statistics --}}
+                                            <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                                <h5 class="font-semibold text-blue-900 mb-2">Order Summary</h5>
+                                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                                    <div>
+                                                        <p class="text-gray-600">Total Orders</p>
+                                                        <p class="text-xl font-bold text-blue-600">{{ $lunchEventUserOrders->count() }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-600">Total Items</p>
+                                                        <p class="text-xl font-bold text-blue-600">
+                                                            {{ $lunchEventUserOrders->sum(fn($o) => $o->orderDetails->sum('quantity')) }}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-600">Total Revenue</p>
+                                                        <p class="text-xl font-bold text-blue-600">
+                                                            Rp{{ number_format($lunchEventUserOrders->sum('total_price'), 0, ',', '.') }}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-600">Avg Order Value</p>
+                                                        <p class="text-xl font-bold text-blue-600">
+                                                            Rp{{ number_format($lunchEventUserOrders->avg('total_price'), 0, ',', '.') }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {{-- Build aggregated data: separate by order type and item type --}}
+                                            @php
+                                                $groups = [
+                                                    'ditempat' => ['makanan' => [], 'minuman' => []],
+                                                    'bungkus'  => ['makanan' => [], 'minuman' => []],
+                                                ];
+
+                                                // helper fn to guess item type if not present
+                                                $guessType = function($name) {
+                                                    return preg_match('/\b(air|es|teh|jus|juice|jeruk|kopi|capuchino|cappu|capuccino|kopi|latte|capuchino|es|mango)\b/i', $name)
+                                                        ? 'minuman' : 'makanan';
+                                                };
+
+                                                foreach ($lunchEventUserOrders as $order) {
+                                                    foreach ($order->orderDetails as $detail) {
+                                                        $orderNote = strtolower($detail->notes ?? '');
+                                                        $orderType = $orderNote === 'bungkus' ? 'bungkus' : 'ditempat';
+                                                        $itemType = $detail->type ?? $detail->type ?? $guessType($detail->item_name);
+
+                                                        $key = $detail->item_name . '|' . $detail->price . '|' . $itemType;
+
+                                                        if (!isset($groups[$orderType][$itemType][$key])) {
+                                                            $groups[$orderType][$itemType][$key] = [
+                                                                'item_name' => $detail->item_name,
+                                                                'price' => $detail->price,
+                                                                'quantity' => 0,
+                                                                'users' => [],
+                                                            ];
+                                                        }
+
+                                                        $groups[$orderType][$itemType][$key]['quantity'] += $detail->quantity;
+                                                        $groups[$orderType][$itemType][$key]['users'][] = $order->user->name;
+                                                    }
+                                                }
+
+                                                // Build formatted copy text per orderType
+                                                $copyTexts = [];
+                                                foreach (['ditempat','bungkus'] as $ot) {
+                                                    $lines = [];
+                                                    foreach (['makanan','minuman'] as $it) {
+                                                        if (!empty($groups[$ot][$it])) {
+                                                            foreach ($groups[$ot][$it] as $g) {
+                                                                $users = implode(', ', array_unique($g['users']));
+                                                                $price = number_format($g['price'], 0, ',', '.');
+                                                                $lines[] = "{$g['quantity']} x {$g['item_name']} (Rp{$price}) – {$users}";
+                                                            }
+                                                        }
+                                                    }
+                                                    $copyTexts[$ot] = implode("\n", $lines);
+                                                }
+                                            @endphp
+
+                                            {{-- Render Ditempat --}}
+                                            <div class="mb-6 p-4 bg-green-50 rounded-lg border border-green-300">
+                                                <div class="flex items-center justify-between">
+                                                    <h5 class="font-bold text-green-900 mb-3 text-lg">Makan Ditempat</h5>
+                                                    <div class="flex items-center space-x-2">
+                                                        <button class="px-3 py-1 text-sm bg-white border rounded hover:bg-gray-100" onclick="copySection('ditempat')">
+                                                            Copy Pesanan
+                                                        </button>
+                                                        @if(Auth::user()->hasRole('admin'))
+                                                            <span class="text-xs text-gray-500">Admin: dapat edit</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                @if(!empty($groups['ditempat']['makanan']))
+                                                    <div class="mb-3">
+                                                        <p class="font-semibold text-gray-800">Makanan</p>
+                                                        <ul class="mt-2 space-y-2">
+                                                            @foreach ($groups['ditempat']['makanan'] as $itemKey => $item)
+                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-green-100">
+                                                                    <div class="flex-1">
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
+                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                    </div>
+                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'ditempat')">Edit</button>
+                                                                    @endif
+                                                                </li>
+                                                            @endforeach
                                                         </ul>
-                                                    </li>
-                                                    
-                                                @endforeach
-                                            </ul>
+                                                    </div>
+                                                @endif
+
+                                                @if(!empty($groups['ditempat']['minuman']))
+                                                    <div>
+                                                        <p class="font-semibold text-gray-800">Minuman</p>
+                                                        <ul class="mt-2 space-y-2">
+                                                            @foreach ($groups['ditempat']['minuman'] as $itemKey => $item)
+                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-green-100">
+                                                                    <div class="flex-1">
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
+                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                    </div>
+                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'ditempat')">Edit</button>
+                                                                    @endif
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            {{-- Render Bungkus --}}
+                                            <div class="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-300">
+                                                <div class="flex items-center justify-between">
+                                                    <h5 class="font-bold text-orange-900 mb-3 text-lg">Bungkus</h5>
+                                                    <div class="flex items-center space-x-2">
+                                                        <button class="px-3 py-1 text-sm bg-white border rounded hover:bg-gray-100" onclick="copySection('bungkus')">
+                                                            Copy Pesanan
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                @if(!empty($groups['bungkus']['makanan']))
+                                                    <div class="mb-3">
+                                                        <p class="font-semibold text-gray-800">Makanan</p>
+                                                        <ul class="mt-2 space-y-2">
+                                                            @foreach ($groups['bungkus']['makanan'] as $itemKey => $item)
+                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-orange-100">
+                                                                    <div class="flex-1">
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
+                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                    </div>
+                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'bungkus')">Edit</button>
+                                                                    @endif
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+
+                                                @if(!empty($groups['bungkus']['minuman']))
+                                                    <div>
+                                                        <p class="font-semibold text-gray-800">Minuman</p>
+                                                        <ul class="mt-2 space-y-2">
+                                                            @foreach ($groups['bungkus']['minuman'] as $itemKey => $item)
+                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-orange-100">
+                                                                    <div class="flex-1">
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
+                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                    </div>
+                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'bungkus')">Edit</button>
+                                                                    @endif
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            {{-- Hidden copy texts used by JS --}}
+                                            <textarea id="copy-ditempat" class="hidden">{{ $copyTexts['ditempat'] }}</textarea>
+                                            <textarea id="copy-bungkus" class="hidden">{{ $copyTexts['bungkus'] }}</textarea>
+
                                         @else
                                             <p class="text-gray-500 italic">No orders yet for this event.</p>
                                         @endif
@@ -182,4 +339,136 @@
             </div>
         </div>
     </div>
+    {{-- Modal Edit Item --}}
+    <div id="editModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Edit Order Item</h3>
+                <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="editForm" method="POST" action="{{ route('lunch-event-user-orders.update-item', $lunchEvent->id) }}">
+                @csrf
+                @method('PUT')
+
+                <input type="hidden" id="itemKey" name="item_key">
+                <input type="hidden" id="itemType" name="type">
+
+                {{-- Nama Makanan/Minuman --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Makanan/Minuman</label>
+                    <input type="text" id="itemName" name="item_name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                {{-- Total Pesanan --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Total Pesanan (Qty)</label>
+                    <input type="number" id="itemQuantity" name="quantity" min="1" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                {{-- Harga --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Harga (Rp)</label>
+                    <input type="number" id="itemPrice" name="price" min="0" step="100" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                {{-- Tipe Item (Makanan/Minuman) --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
+                    <select id="itemTypeSelect" name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="makanan">Makanan</option>
+                        <option value="minuman">Minuman</option>
+                    </select>
+                </div>
+
+                {{-- Tipe Pemesanan (Ditempat/Bungkus) --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pemesanan</label>
+                    <select id="orderType" name="order_type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <!-- selected  -->
+                        <option value="ditempat">Makan Ditempat</option>
+                        <option value="bungkus">Bungkus</option>
+                    </select>
+                </div>
+
+                {{-- Tombol Action --}}
+                <div class="flex justify-between">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <div class="space-x-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                            Simpan
+                        </button>
+                        <button type="button" id="deleteBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onclick="deleteItem()">
+                            Hapus
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{-- JavaScript untuk Modal & Copy --}}
+    <script>
+        function openEditModal(itemKey, itemName, quantity, price, itemType) {
+            document.getElementById('itemKey').value = itemKey;
+            document.getElementById('itemName').value = itemName;
+            document.getElementById('itemQuantity').value = quantity;
+            document.getElementById('itemPrice').value = price;
+            document.getElementById('itemType').value = itemType;
+            document.getElementById('orderType').value = itemType;
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function deleteItem() {
+            if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
+                const form = document.getElementById('editForm');
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_method';
+                input.value = 'DELETE';
+                form.appendChild(input);
+                form.submit();
+            }
+        }
+
+        // Copy formatted section text to clipboard
+        function copySection(section) {
+            const id = section === 'ditempat' ? 'copy-ditempat' : 'copy-bungkus';
+            const ta = document.getElementById(id);
+            if (!ta) return;
+            const text = ta.value.trim();
+            if (!text) {
+                alert('Tidak ada item untuk disalin.');
+                return;
+            }
+            navigator.clipboard.writeText((section === 'ditempat' ? 'Makan Ditempat:\n' : 'Bungkus:\n') + text)
+                .then(() => {
+                    alert('Pesanan disalin ke clipboard.');
+                })
+                .catch(() => {
+                    // fallback
+                    ta.style.display = 'block';
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.style.display = 'none';
+                    alert('Pesanan disalin ke clipboard.');
+                });
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+    </script>
 </x-app-layout>

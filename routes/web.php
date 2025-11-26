@@ -87,7 +87,8 @@ Route::middleware('auth')->group(function () {
     Route::get('lunch-event-user-orders/{lunchEventUserOrder}/details/create', [UserOrderDetailController::class, 'create'])->name('user-order-details.create');
     Route::post('lunch-event-user-orders/{lunchEventUserOrder}/details', [UserOrderDetailController::class, 'store'])->name('user-order-details.store');
     Route::resource('user-order-details', UserOrderDetailController::class)->except(['create', 'store']);
-    
+    Route::put('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'updateItem'])->name('lunch-event-user-orders.update-item');
+    Route::delete('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'destroyItem'])->name('lunch-event-user-orders.destroy-item');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -110,7 +111,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('laporan-reimbursements/{laporanReimbursement}/edit', [LaporanReimbursementController::class, 'edit'])->name('laporan-reimbursements.edit');
     Route::put('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'update'])->name('laporan-reimbursements.update');
     Route::delete('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'destroy'])->name('laporan-reimbursements.destroy');
-    
+    Route::put('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'updateItem'])->name('lunch-event-user-orders.update-item');
+    Route::delete('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'destroyItem'])->name('lunch-event-user-orders.destroy-item');
+
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

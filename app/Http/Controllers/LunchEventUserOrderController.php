@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LunchEventUserOrder;
+use App\Models\UserOrderDetail;
 use App\Models\LunchEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,5 +108,66 @@ class LunchEventUserOrderController extends Controller
 
         return redirect()->route('lunch-events.show', $lunchEventUserOrder->lunchEvent->id)
                          ->with('success', 'Order deleted successfully.');
+    }
+
+    public function updateItem(Request $request, $lunchEventId)
+    {
+        // Only admin can edit aggregated items
+        if (!Auth::user() || !Auth::user()->hasRole('admin')) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'item_key' => 'required|string',
+            'item_name' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'order_type' => 'required|in:ditempat,bungkus',
+            'type' => 'required|string|in:makanan,minuman',
+        ]);
+
+        $lunchEvent = LunchEvent::findOrFail($lunchEventId);
+        list($oldItemName, $oldPrice) = explode('|', $validated['item_key']);
+
+        // Update semua order details yang match dengan item lama
+        UserOrderDetail::whereHas('order', function($q) use ($lunchEventId) {
+            $q->where('lunch_event_id', $lunchEventId);
+        })
+        ->where('item_name', $oldItemName)
+        ->where('price', $oldPrice)
+        ->update([
+            'item_name' => $validated['item_name'],
+            'price' => $validated['price'],
+            'notes' => $validated['order_type'],
+            'type' => $validated['type'],
+        ]);
+
+        return redirect()->route('lunch-events.show', $lunchEvent)
+                       ->with('success', 'Item updated successfully!');
+    }
+
+    public function destroyItem(Request $request, $lunchEventId)
+    {
+        // Only admin can delete aggregated items
+        if (!Auth::user() || !Auth::user()->hasRole('admin')) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'item_key' => 'required|string',
+        ]);
+
+        $lunchEvent = LunchEvent::findOrFail($lunchEventId);
+        list($itemName, $price) = explode('|', $validated['item_key']);
+
+        UserOrderDetail::whereHas('order', function($q) use ($lunchEventId) {
+            $q->where('lunch_event_id', $lunchEventId);
+        })
+        ->where('item_name', $itemName)
+        ->where('price', $price)
+        ->delete();
+
+        return redirect()->route('lunch-events.show', $lunchEvent)
+                       ->with('success', 'Item deleted successfully!');
     }
 }
