@@ -176,7 +176,7 @@
                                                         }
 
                                                         $groups[$orderType][$itemType][$key]['quantity'] += $detail->quantity;
-                                                        $groups[$orderType][$itemType][$key]['users'][] = $order->user->name;
+                                                        $groups[$orderType][$itemType][$key]['users'][] = $order->user->short_name;
                                                     }
                                                 }
 
@@ -198,7 +198,7 @@
                                             @endphp
 
                                             {{-- Render Ditempat --}}
-                                            <div class="mb-6 p-4 bg-green-50 rounded-lg border border-green-300">
+                                            <div class="mb-6 p-2 bg-green-50 rounded-lg border border-green-300">
                                                 <div class="flex items-center justify-between">
                                                     <h5 class="font-bold text-green-900 mb-3 text-lg">Makan Ditempat</h5>
                                                     <div class="flex items-center space-x-2">
@@ -216,10 +216,10 @@
                                                         <p class="font-semibold text-gray-800">Makanan</p>
                                                         <ul class="mt-2 space-y-2">
                                                             @foreach ($groups['ditempat']['makanan'] as $itemKey => $item)
-                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-green-100">
+                                                                <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-green-100">
                                                                     <div class="flex-1">
-                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
-                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }} 
+                                                                          :  Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600">  {{ implode(', ', array_unique($item['users'])) }}</div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'ditempat')">Edit</button>
@@ -235,10 +235,10 @@
                                                         <p class="font-semibold text-gray-800">Minuman</p>
                                                         <ul class="mt-2 space-y-2">
                                                             @foreach ($groups['ditempat']['minuman'] as $itemKey => $item)
-                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-green-100">
+                                                                <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-green-100">
                                                                     <div class="flex-1">
-                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
-                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}
+                                                                        : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'ditempat')">Edit</button>
@@ -266,10 +266,10 @@
                                                         <p class="font-semibold text-gray-800">Makanan</p>
                                                         <ul class="mt-2 space-y-2">
                                                             @foreach ($groups['bungkus']['makanan'] as $itemKey => $item)
-                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-orange-100">
+                                                                <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-orange-100">
                                                                     <div class="flex-1">
-                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
-                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }} 
+                                                                            : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'bungkus')">Edit</button>
@@ -285,10 +285,10 @@
                                                         <p class="font-semibold text-gray-800">Minuman</p>
                                                         <ul class="mt-2 space-y-2">
                                                             @foreach ($groups['bungkus']['minuman'] as $itemKey => $item)
-                                                                <li class="flex items-start justify-between p-3 bg-white rounded border border-orange-100">
+                                                                <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-orange-100">
                                                                     <div class="flex-1">
-                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}</div>
-                                                                        <div class="text-sm text-gray-600">Rp{{ number_format($item['price'], 0, ',', '.') }} • {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                        <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }} 
+                                                                            : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'bungkus')">Edit</button>
