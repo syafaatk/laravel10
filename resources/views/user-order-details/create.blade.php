@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             {{-- Two-column responsive layout: left = order form + details, right = menu --}}
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
@@ -111,56 +111,12 @@
                         </form>
                     </div>
 
-                    {{-- Current Order Details --}}
-                    <div class="bg-white shadow-sm rounded-lg border p-5">
-                        <h3 class="text-md font-semibold text-gray-800 mb-3">Current Order Details</h3>
-
-                        @if ($lunchEventUserOrder->orderDetails->count() > 0)
-                            <div class="w-full overflow-x-auto">
-                                <table class="w-full text-sm text-left">
-                                    <thead class="text-xs text-gray-500 uppercase bg-gray-50">
-                                        <tr>
-                                            <th class="px-3 py-2">Menu</th>
-                                            <th class="px-3 py-2">Type</th>
-                                            <th class="px-3 py-2 text-center">Qty</th>
-                                            <th class="px-3 py-2 text-right">Price</th>
-                                            <th class="px-3 py-2 text-right">Subtotal</th>
-                                            <th class="px-3 py-2 text-center">Notes</th>
-                                            <th class="px-3 py-2 text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y">
-                                        @foreach ($lunchEventUserOrder->orderDetails as $detail)
-                                            <tr class="hover:bg-gray-50">
-                                                <td class="px-3 py-2">{{ $detail->item_name }}</td>
-                                                <td class="px-3 py-2 capitalize">{{ $detail->type }}</td>
-                                                <td class="px-3 py-2 text-center">{{ $detail->quantity }}</td>
-                                                <td class="px-3 py-2 text-right">Rp{{ number_format($detail->price, 0, ',', '.') }}</td>
-                                                <td class="px-3 py-2 text-right font-medium">Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</td>
-                                                <td class="px-3 py-2 text-center capitalize">{{ $detail->notes }}</td>
-                                                <td class="px-3 py-2 text-center">
-                                                    <form action="{{ route('user-order-details.destroy', $detail->id) }}" method="POST" onsubmit="return confirm('Delete this item?');" class="inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-red-600 hover:text-red-800" title="Delete">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 00-.894.553L4 4H2a1 1 0 000 2v10a2 2 0 002 2h12a2 2 0 002-2V6a1 1 0 000-2h-2l-1.106-1.447A1 1 0 0014 2H6z"/></svg>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <p class="text-sm text-gray-500">No items added yet. Use the form above or pick from the menu on the right.</p>
-                        @endif
-                    </div>
+                    
                 </div>
 
                 {{-- RIGHT: Menu gallery & quick actions --}}
                 <div class="lg:col-span-3">
-                    <div class="bg-white shadow-sm rounded-lg border p-5">
+                    <div class="bg-white shadow-sm rounded-lg border p-5 mb-6">
                         <div class="flex items-center justify-between mb-4">
                             <div>
                                 <h3 class="text-lg font-semibold text-indigo-700">Restaurant Menu</h3>
@@ -219,6 +175,53 @@
                             <p class="text-sm text-gray-500 mt-4">No menu assets uploaded for this restaurant.</p>
                         @endif
                     </div>
+                    {{-- Current Order Details --}}
+                    <div class="bg-white shadow-sm rounded-lg border p-5">
+                        <h3 class="text-md font-semibold text-gray-800 mb-3">Current Order Details</h3>
+
+                        @if ($lunchEventUserOrder->orderDetails->count() > 0)
+                            <div class="w-full overflow-x-auto">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-2">Menu</th>
+                                            <th class="px-3 py-2">Type</th>
+                                            <th class="px-3 py-2 text-center">Qty</th>
+                                            <th class="px-3 py-2 text-right">Price</th>
+                                            <th class="px-3 py-2 text-right">Subtotal</th>
+                                            <th class="px-3 py-2 text-center">Notes</th>
+                                            <th class="px-3 py-2 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y">
+                                        @foreach ($lunchEventUserOrder->orderDetails as $detail)
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-3 py-2">{{ $detail->item_name }}</td>
+                                                <td class="px-3 py-2 capitalize">{{ $detail->type }}</td>
+                                                <td class="px-3 py-2 text-center">{{ $detail->quantity }}</td>
+                                                <td class="px-3 py-2 text-right">Rp{{ number_format($detail->price, 0, ',', '.') }}</td>
+                                                <td class="px-3 py-2 text-right font-medium">Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                                                <td class="px-3 py-2 text-center capitalize">{{ $detail->notes }}</td>
+                                                <td class="px-3 py-2 text-center">
+                                                    <form action="{{ route('user-order-details.destroy', $detail->id) }}" method="POST" onsubmit="return confirm('Delete this item?');" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-800" title="Delete">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 00-.894.553L4 4H2a1 1 0 000 2v10a2 2 0 002 2h12a2 2 0 002-2V6a1 1 0 000-2h-2l-1.106-1.447A1 1 0 0014 2H6z"/></svg>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p class="text-sm text-gray-500">No items added yet. Use the form above or pick from the menu on the right.</p>
+                        @endif
+                    </div>
+
+                    
                 </div>
             </div>
         </div>
@@ -243,7 +246,7 @@
 
     {{-- PDF modal: large, readable PDF viewer --}}
     <div id="menuPdfModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70">
-        <div class="bg-white rounded-lg max-w-6xl w-full h-[85vh] overflow-hidden">
+        <div class="bg-white rounded-lg max-w-8xl w-full h-full overflow-hidden">
             <div class="flex justify-between items-center p-3 border-b">
                 <h4 class="font-semibold">PDF Menu Preview</h4>
                 <button onclick="closePdfModal()" class="text-gray-600 hover:text-gray-900">&times;</button>
