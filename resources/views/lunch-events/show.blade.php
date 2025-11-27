@@ -222,7 +222,7 @@
                                                                           :  Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600">  {{ implode(', ', array_unique($item['users'])) }}</div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
-                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'ditempat')">Edit</button>
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'makanan','ditempat')">Edit</button>
                                                                     @endif
                                                                 </li>
                                                             @endforeach
@@ -241,7 +241,7 @@
                                                                         : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
-                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'ditempat')">Edit</button>
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'minuman','ditempat')">Edit</button>
                                                                     @endif
                                                                 </li>
                                                             @endforeach
@@ -272,7 +272,7 @@
                                                                             : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
-                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'bungkus')">Edit</button>
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'makanan','bungkus')">Edit</button>
                                                                     @endif
                                                                 </li>
                                                             @endforeach
@@ -291,7 +291,7 @@
                                                                             : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
                                                                     </div>
                                                                     @if(Auth::user()->hasRole('admin'))
-                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'bungkus')">Edit</button>
+                                                                        <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'minuman','bungkus')">Edit</button>
                                                                     @endif
                                                                 </li>
                                                             @endforeach
@@ -356,7 +356,8 @@
                 @method('PUT')
 
                 <input type="hidden" id="itemKey" name="item_key">
-                <input type="hidden" id="itemType" name="type">
+                <!-- <input type="hidden" id="itemType" name="type">
+                <input type="hidden" id="orderType" name="order_type"> -->
 
                 {{-- Nama Makanan/Minuman --}}
                 <div class="mb-4">
@@ -379,7 +380,7 @@
                 {{-- Tipe Item (Makanan/Minuman) --}}
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
-                    <select id="itemTypeSelect" name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="itemType" name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="makanan">Makanan</option>
                         <option value="minuman">Minuman</option>
                     </select>
@@ -397,14 +398,14 @@
 
                 {{-- Tombol Action --}}
                 <div class="flex justify-between">
-                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+                    <button type="button" onclick="closeEditModal()" class="px-2 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
                         Batal
                     </button>
                     <div class="space-x-2">
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        <button type="submit" class="px-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                             Simpan
                         </button>
-                        <button type="button" id="deleteBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onclick="deleteItem()">
+                        <button type="button" id="deleteBtn" class="px-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onclick="deleteItem()">
                             Hapus
                         </button>
                     </div>
@@ -414,13 +415,13 @@
     </div>
     {{-- JavaScript untuk Modal & Copy --}}
     <script>
-        function openEditModal(itemKey, itemName, quantity, price, itemType) {
+        function openEditModal(itemKey, itemName, quantity, price, itemType, orderType) {
             document.getElementById('itemKey').value = itemKey;
             document.getElementById('itemName').value = itemName;
             document.getElementById('itemQuantity').value = quantity;
             document.getElementById('itemPrice').value = price;
             document.getElementById('itemType').value = itemType;
-            document.getElementById('orderType').value = itemType;
+            document.getElementById('orderType').value = orderType;
             document.getElementById('editModal').classList.remove('hidden');
         }
 
