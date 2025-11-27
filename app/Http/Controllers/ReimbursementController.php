@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reimbursement;
+use App\Models\LaporanReimbursement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class ReimbursementController extends Controller
 {
@@ -17,14 +18,9 @@ class ReimbursementController extends Controller
 
     public function index()
     {
-        $user = Auth::user();
-        if ($user->hasRole('admin')) {
-            $reimbursements = Reimbursement::with('user')->latest()->get();
-        } else {
-            $reimbursements = Reimbursement::where('user_id', $user->id)->latest()->get();
-        }
-
-        return view('reimbursements.index', compact('reimbursements'));
+        $reimbursements = Reimbursement::with('user','laporanReimbursement')->get();
+        $laporanReimbursements = LaporanReimbursement::orderBy('start_date','desc')->get();
+        return view('reimbursements.index', compact('reimbursements','laporanReimbursements'));
     }
 
     public function create()
@@ -121,15 +117,46 @@ class ReimbursementController extends Controller
         abort(403);
     }
 
-    public function approve(Reimbursement $reimbursement)
+    public function approve(Request $request, Reimbursement $reimbursement)
     {
-        $reimbursement->update([
-            'status' => 'approved',
-            'processed_by' => Auth::id(),
-            'processed_at' => now(),
+        // only admin
+        if (!Auth::user() || !Auth::user()->hasRole('admin')) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'laporan_id' => 'nullable',
+            'new_laporan_title' => 'nullable|string|max:255',
+            'new_laporan_start' => 'nullable|date',
+            'new_laporan_end' => 'nullable|date',
         ]);
 
-        return redirect()->route('reimbursements.index')->with('success', 'Reimbursement approved.');
+        // decide laporan
+        $laporan = null;
+        if (!empty($data['laporan_id']) && $data['laporan_id'] !== '__new__') {
+            $laporan = LaporanReimbursement::find($data['laporan_id']);
+        } elseif (!empty($data['new_laporan_title'])) {
+            $laporan = LaporanReimbursement::create([
+                'title' => $data['new_laporan_title'],
+                'start_date' => $data['new_laporan_start'] ?? Carbon::now()->startOfMonth()->toDateString(),
+                'end_date' => $data['new_laporan_end'] ?? Carbon::now()->endOfMonth()->toDateString(),
+                // set other required fields or defaults if any
+            ]);
+        }
+
+        // Associate reimbursement to laporan (one-to-many)
+        if ($laporan) {
+            $reimbursement->laporan_reimbursement_id = $laporan->id;
+        } else {
+            $reimbursement->laporan_reimbursement_id = null; // if admin wants no laporan
+        }
+
+        $reimbursement->status = 'approved';
+        $reimbursement->processed_at = now();
+        $reimbursement->processed_by = Auth::id();
+        $reimbursement->save();
+
+        return redirect()->back()->with('success', 'Reimbursement berhasil diajukan ke QT dan terkait ke laporan.');
     }
 
     public function pending(Reimbursement $reimbursement)

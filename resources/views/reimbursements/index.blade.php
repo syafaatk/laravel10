@@ -48,6 +48,7 @@
                             @endif
                             <th>Amount</th>
                             <th>Status</th>
+                            <th>Laporan</th>
                             <th>Date</th>
                             <th>Date Approval</th>
                             <th>Actions</th>
@@ -70,46 +71,34 @@
                                         @if ($reimbursement->status == 'pending')
                                             <span class="badge badge-warning">Pengajuan</span>
                                         @elseif ($reimbursement->status == 'approved')
-                                            <span class="badge badge-success">Diajukan ke QT</span>
+                                            <span class="badge badge-success">Diajukan ke QT </span>
                                         @elseif ($reimbursement->status == 'done')
                                             <span class="badge badge-primary">Done</span>
                                         @else
                                             <span class="badge badge-danger">Rejected</span>
                                         @endif
                                     </td>
+                                    <td>
+                                        @if ($reimbursement->laporanReimbursement)
+                                            {{ $reimbursement->laporanReimbursement->title }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
                                     <td>{{ $reimbursement->created_at->format('d M Y') }}</td>
                                     <td>{{ $reimbursement->processed_at?->format('d M Y') ?? 'N/A' }}</td>
                                     <td>
                                         <a href="{{ route('reimbursements.show', $reimbursement) }}" class="btn btn-sm btn-info">View</a>
-                                        @if (Auth::user()->hasRole('admin') && $reimbursement->status == 'pending')
-                                            <form action="{{ route('reimbursements.approve', $reimbursement) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-success" style="background-color: green; color: white;">Diajukan ke QT</button>
-                                            </form>
-                                            <form action="{{ route('reimbursements.reject', $reimbursement) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-danger" style="background-color: red; color: white;">Reject</button>
-                                            </form>
-                                        @endif
 
-                                        @if (Auth::user()->hasRole('admin') && $reimbursement->status == 'approved')
-                                            <form action="{{ route('reimbursements.done', $reimbursement) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-success" style="background-color: green; color: white;">Done</button>
-                                            </form>
-                                        @endif
-                                        
-                                        {{-- FIX: This is now a stand-alone form, so the DELETE method works --}}
                                         @if (Auth::user()->hasRole('admin') && $reimbursement->status == 'pending')
-                                            <form action="{{ route('reimbursements.destroy', $reimbursement) }}" method="POST" class="d-inline">
+                                            <!-- Open modal to select laporan/reimbursement report -->
+                                            <button type="button" class="btn btn-sm btn-success bg-success" onclick="openApproveModal({{ $reimbursement->id }}, '{{ addslashes($reimbursement->title) }}')">
+                                                Diajukan ke QT
+                                            </button>
+                                            <form id="delete-form-{{ $reimbursement->id }}" action="{{ route('reimbursements.destroy', $reimbursement) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" style="background-color: red; color: white;" onclick="return confirm('Are you sure you want to delete this reimbursement request?')">
-                                                    Delete
-                                                </button>
+                                                <button type="submit" class="btn btn-sm btn-danger bg-danger" onclick="return confirm('Are you sure you want to delete this reimbursement request?')">Delete</button>
                                             </form>
                                         @endif
                                     </td>
@@ -121,6 +110,57 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Approve Modal (place near bottom of file, once) -->
+    <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <form id="approveForm" method="POST" action="">
+          @csrf
+          @method('PATCH')
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="approveModalLabel">Ajukan ke QT</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" name="reimbursement_id" id="approve_reimbursement_id">
+
+              <div class="mb-3">
+                <label for="laporan_id" class="form-label">Pilih Laporan Reimbursement</label>
+                <select id="laporan_id" name="laporan_id" class="form-select">
+                  <option value="">-- Pilih laporan (atau buat baru) --</option>
+                  @foreach($laporanReimbursements ?? [] as $lap)
+                    <option value="{{ $lap->id }}">{{ $lap->title }} ({{ $lap->start_date->format('d M Y') }} - {{ $lap->end_date->format('d M Y') }})</option>
+                  @endforeach
+                  <option value="__new__">Buat Laporan Baru...</option>
+                </select>
+              </div>
+
+              <div id="newLaporanContainer" class="d-none">
+                <div class="mb-3">
+                  <label for="new_laporan_title" class="form-label">Title Laporan</label>
+                  <input type="text" id="new_laporan_title" name="new_laporan_title" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label for="new_laporan_start" class="form-label">Start Date</label>
+                  <input type="date" id="new_laporan_start" name="new_laporan_start" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label for="new_laporan_end" class="form-label">End Date</label>
+                  <input type="date" id="new_laporan_end" name="new_laporan_end" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-text">Jika anda memilih "Buat Laporan Baru", isikan data laporan. Jika memilih laporan existing, reimbursement akan terkait ke laporan tersebut.</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary btn-primary">Ajukan</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
 
     @push('scripts')
@@ -178,6 +218,25 @@
                 // Manually submit the print form
                 $('#print-form').submit();
             });
+        });
+
+        function openApproveModal(reimbursementId, reimbursementTitle) {
+            // set form action (use route helper pattern)
+            const form = document.getElementById('approveForm');
+            // Set action to route with placeholder id (update below)
+            form.action = '{{ url("reimbursements") }}/' + reimbursementId + '/approve';
+            document.getElementById('approve_reimbursement_id').value = reimbursementId;
+            document.getElementById('laporan_id').value = '';
+            document.getElementById('newLaporanContainer').classList.add('d-none');
+            // show bootstrap modal
+            var approveModal = new bootstrap.Modal(document.getElementById('approveModal'));
+            approveModal.show();
+        }
+
+        document.getElementById('laporan_id').addEventListener('change', function() {
+            var val = this.value;
+            var container = document.getElementById('newLaporanContainer');
+            if (val === '__new__') container.classList.remove('d-none'); else container.classList.add('d-none');
         });
     </script>
     @endpush

@@ -24,6 +24,7 @@ class Reimbursement extends Model
         'status',
         'attachment',
         'attachment_note',
+        'laporan_reimbursement_id',
         'processed_by',
         'processed_at',
     ];
@@ -40,5 +41,10 @@ class Reimbursement extends Model
     public function processor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'processed_by');
+    }
+
+    public function laporanReimbursement(): BelongsTo
+    {
+        return $this->belongsTo(LaporanReimbursement::class, 'laporan_reimbursement_id');
     }
 }

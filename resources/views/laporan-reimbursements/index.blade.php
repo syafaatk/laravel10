@@ -40,7 +40,7 @@
                                         <form action="{{ route('admin.laporan-reimbursements.destroy', $laporan->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this report?')">Delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm bg-danger" onclick="return confirm('Are you sure you want to delete this report?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

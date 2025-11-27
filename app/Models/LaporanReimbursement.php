@@ -29,4 +29,9 @@ class LaporanReimbursement extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function reimbursements()
+    {
+        return $this->hasMany(Reimbursement::class, 'laporan_reimbursement_id');
+    }
 }
