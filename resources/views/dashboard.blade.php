@@ -219,6 +219,26 @@
                         </table>
                     </div>
                 </div>
+                @else
+                {{-- USER RECENT ACTIVITIES --}}
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">My Recent Activities</h3>
+                    <div class="space-y-3">
+                        @forelse ($myRecentActivities ?? [] as $activity)
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-800">{{ $activity['title'] ?? 'Activity' }}</p>
+                                    <p class="text-sm text-gray-600">{{ $activity['description'] ?? '' }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-gray-600">{{ $activity['date'] ?? now()->format('d M Y') }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-gray-500 text-center py-4">No recent activities</p>
+                        @endforelse
+                    </div>
+                </div>
                 @endif
             </div>    
 
@@ -276,26 +296,6 @@
                             <p class="text-gray-500 text-center py-4">No recent cuti requests</p>
                         @endforelse
                     </div>
-                </div>
-            </div>
-            @else
-            {{-- USER RECENT ACTIVITIES --}}
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">My Recent Activities</h3>
-                <div class="space-y-3">
-                    @forelse ($myRecentActivities ?? [] as $activity)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                            <div class="flex-1">
-                                <p class="font-medium text-gray-800">{{ $activity['title'] ?? 'Activity' }}</p>
-                                <p class="text-sm text-gray-600">{{ $activity['description'] ?? '' }}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm text-gray-600">{{ $activity['date'] ?? now()->format('d M Y') }}</p>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-gray-500 text-center py-4">No recent activities</p>
-                    @endforelse
                 </div>
             </div>
             @endif
