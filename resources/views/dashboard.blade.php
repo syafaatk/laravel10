@@ -6,10 +6,10 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             
             {{-- STATISTICS CARDS --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 mb-6">
                 @if (Auth::user()->hasRole('admin'))
                     <!-- Total Users -->
                     <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
@@ -159,7 +159,7 @@
             </div>
 
             {{-- CHARTS & RECENT ACTIVITY --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
                 <!-- Status Overview Chart -->
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Reimbursement Status Overview</h3>
@@ -250,6 +250,114 @@
                 </div>
             </div>
             @endif
+
+            {{-- REIMBURSEMENT BY MONTH TABLE --}}
+            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Transportation Reimbursement by Month</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">January</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">February</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">March</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">April</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">May</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">June</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">July</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">August</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">September</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">October</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">November</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">December</th>
+                                <th class="border border-gray-300 px-4 py-2 text-right font-semibold text-gray-800">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $currentYear = \Carbon\Carbon::now()->year;
+                                $employees = \App\Models\User::with(['reimbursements' => function($q) use ($currentYear) {
+                                    $q->whereYear('created_at', $currentYear)
+                                      ->where('tipe', '1')
+                                      ->where('status', 'approved');
+                                }])->get();
+                            @endphp
+
+                            @forelse ($employees as $employee)
+                                @php
+                                    $monthlyTotal = [];
+                                    $yearTotal = 0;
+                                    
+                                    for ($month = 1; $month <= 12; $month++) {
+                                        $monthTotal = $employee->reimbursements
+                                            ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
+                                            ->sum('amount');
+                                        $monthlyTotal[$month] = $monthTotal;
+                                        $yearTotal += $monthTotal;
+                                    }
+                                @endphp
+                                <tr class="hover:bg-gray-50 border-b border-gray-200">
+                                    <td class="border border-gray-300 px-4 py-2 font-medium text-gray-800 sticky left-0 bg-white">
+                                        {{ $employee->name }}
+                                    </td>
+                                    @for ($month = 1; $month <= 12; $month++)
+                                        <td class="border border-gray-300 px-4 py-2 text-center text-gray-700">
+                                            @if ($monthlyTotal[$month] > 0)
+                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">
+                                                    Rp{{ number_format($monthlyTotal[$month], 0, ',', '.') }}
+                                                </span>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </td>
+                                    @endfor
+                                    <td class="border border-gray-300 px-4 py-2 text-right font-bold text-gray-900 bg-blue-50">
+                                        Rp{{ number_format($yearTotal, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="14" class="border border-gray-300 px-4 py-4 text-center text-gray-500">
+                                        No transportation reimbursement data available for this year.
+                                    </td>
+                                </tr>
+                            @endforelse
+
+                            {{-- TOTAL ROW --}}
+                            @php
+                                $monthlyGrandTotal = [];
+                                $grandTotal = 0;
+                                for ($month = 1; $month <= 12; $month++) {
+                                    $monthSum = $employees->sum(function($emp) use ($month) {
+                                        return $emp->reimbursements
+                                            ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
+                                            ->sum('amount');
+                                    });
+                                    $monthlyGrandTotal[$month] = $monthSum;
+                                    $grandTotal += $monthSum;
+                                }
+                            @endphp
+                            <tr class="bg-gray-200 font-bold text-gray-900">
+                                <td class="border border-gray-300 px-4 py-2 sticky left-0 bg-gray-200">TOTAL</td>
+                                @for ($month = 1; $month <= 12; $month++)
+                                    <td class="border border-gray-300 px-4 py-2 text-center">
+                                        Rp{{ number_format($monthlyGrandTotal[$month], 0, ',', '.') }}
+                                    </td>
+                                @endfor
+                                <td class="border border-gray-300 px-4 py-2 text-right bg-blue-200">
+                                    Rp{{ number_format($grandTotal, 0, ',', '.') }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4 text-xs text-gray-600">
+                    <p>📊 <strong>Year:</strong> {{ $currentYear }}</p>
+                    <p>📝 <strong>Filter:</strong> Only approved transportation reimbursements are included.</p>
+                </div>
+            </div>
         </div>
     </div>
 
