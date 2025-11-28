@@ -87,6 +87,7 @@ class UserController extends Controller
             'ukuran_baju' => 'nullable|string|max:255',
             'tgl_masuk' => 'nullable|date',
             'attachment_ttd' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'attachment_foto_profile' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'nopeg' => 'nullable|integer|unique:users,nopeg,' . $user->id,
             'kontrak' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
@@ -101,7 +102,7 @@ class UserController extends Controller
         ]);
 
         $user->fill($request->only([
-            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan', 'norek', 'bank', 'gaji_tunjangan_tetap', 'gaji_tunjangan_makan', 'gaji_tunjangan_transport','gaji_tunjangan_lain', 'gaji_pokok', 'gaji_bpjs'
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan', 'norek', 'bank', 'gaji_tunjangan_tetap', 'gaji_tunjangan_makan', 'gaji_tunjangan_transport','gaji_tunjangan_lain', 'gaji_pokok', 'gaji_bpjs', 'attachment_foto_profile', 'attachment_ttd'
         ]));
 
         if ($request->hasFile('attachment_ttd')) {
@@ -110,6 +111,14 @@ class UserController extends Controller
                 Storage::delete('public/' . $user->attachment_ttd);
             }
             $user->attachment_ttd = $request->file('attachment_ttd')->store('attachments_ttd', 'public');
+        }
+
+        if ($request->hasFile('attachment_foto_profile')) {
+            // Delete old attachment if exists
+            if ($user->attachment_foto_profile) {
+                Storage::delete('public/' . $user->attachment_foto_profile);
+            }
+            $user->attachment_foto_profile = $request->file('attachment_foto_profile')->store('attachments_foto_profile', 'public');
         }
 
         $user->syncRoles($request->roles);

@@ -70,6 +70,7 @@ class DashboardController extends Controller
             }
 
             return view('dashboard', compact(
+                'user',
                 'totalUsers',
                 'totalReimbursements',
                 'pendingReimbursements',
@@ -141,6 +142,7 @@ class DashboardController extends Controller
                 ->take(5);
 
             return view('dashboard', compact(
+                'user',
                 'totalReimbursements',
                 'pendingReimbursements',
                 'approvedReimbursements',

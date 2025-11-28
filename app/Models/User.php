@@ -30,6 +30,7 @@ class User extends Authenticatable
         'ukuran_baju',
         'tgl_masuk',
         'attachment_ttd',
+        'attachment_foto_profile',
         'nopeg',
         'kontrak',
         'jabatan',
@@ -41,6 +42,7 @@ class User extends Authenticatable
         'gaji_tunjangan_lain',
         'gaji_pokok',
         'gaji_bpjs',
+        'last_login_at',
     ];
 
     /**
@@ -67,6 +69,8 @@ class User extends Authenticatable
         'ukuran_baju' => 'string',
         'tgl_masuk' => 'datetime',
         'attachment_ttd' => 'string',
+        'attachment_foto_profile' => 'string',
+        'last_login_at' => 'datetime',
     ];
 
     public function cutiApproved()

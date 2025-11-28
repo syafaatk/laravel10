@@ -23,11 +23,19 @@ return new class extends Migration
             $table->string('ukuran_baju')->nullable();
             $table->date('tgl_masuk')->nullable();
             $table->string('attachment_ttd')->nullable();
+            $table->string('attachment_foto_profile')->nullable();
             $table->integer('nopeg')->nullable()->unique();
             $table->string('kontrak')->nullable();
             $table->string('jabatan')->nullable(); // karyawan, admin, manager, hrd
             $table->string('norek')->nullable();
             $table->string('bank')->nullable();
+            $table->decimal('gaji_tunjangan_tetap', 15, 2)->nullable();
+            $table->decimal('gaji_tunjangan_makan', 15, 2)->nullable();
+            $table->decimal('gaji_tunjangan_transport', 15, 2)->nullable();
+            $table->decimal('gaji_tunjangan_lain', 15, 2)->nullable();
+            $table->decimal('gaji_pokok', 15, 2)->nullable();
+            $table->decimal('gaji_bpjs', 15, 2)->nullable();
+            $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

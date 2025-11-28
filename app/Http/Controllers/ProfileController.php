@@ -44,6 +44,13 @@ class ProfileController extends Controller
             }
             $request->user()->attachment_ttd = $request->file('attachment_ttd')->store('attachments_ttd', 'public');
         }
+        if ($request->hasFile('attachment_foto_profile')) {
+            // Delete old attachment if exists
+            if ($request->user()->attachment_foto_profile) {
+                Storage::delete('public/' . $request->user()->attachment_foto_profile);
+            }
+            $request->user()->attachment_foto_profile = $request->file('attachment_foto_profile')->store('attachments_foto_profile', 'public');
+        }
         $request->user()->nopeg = $request->input('nopeg');
         $request->user()->kontrak = $request->input('kontrak');
         $request->user()->jabatan = $request->input('jabatan');

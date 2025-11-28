@@ -8,6 +8,175 @@
     <div class="py-12">
         <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             
+            {{-- USER PROFILE SECTION --}}
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-lg p-6 mb-6 border-l-4 border-blue-600">
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-6 ml-7">
+                    <!-- Profile Photo lebih besar dan ketika versi mobile posisi foto ditengah-->
+                    <div class="flex justify-center md:justify-start flex-shrink-0">
+                        <img class="h-36 w-36 rounded-full object-cover border-4 border-white shadow-md" src="{{ $user->attachment_foto_profile ? asset('storage/' . $user->attachment_foto_profile) : asset('default-profile.png') }}" alt="{{ $user->name }}">
+                    </div>
+
+                    <!-- Profile Information -->
+                    <div class="flex-1">
+                        <div class="mb-4">
+                            <h1 class="text-3xl font-bold text-gray-900">{{ $user->name }}</h1>
+                            <p class="text-gray-600 mt-1">
+                                @php
+                                    $nopeg = $user->nopeg ?? '-';
+                                    $tglMasuk = $user->tgl_masuk ? \Carbon\Carbon::parse($user->tgl_masuk) : null;
+                                    $years = $tglMasuk ? $tglMasuk->diffInYears(\Carbon\Carbon::now()) : null;
+                                    $month = $tglMasuk ? $tglMasuk->addYears($years)->diffInMonths(\Carbon\Carbon::now()) : null;
+
+                                    $gajiParts = [
+                                        $user->gaji_tunjangan_tetap ?? 0,
+                                        $user->gaji_tunjangan_makan ?? 0,
+                                        $user->gaji_tunjangan_transport ?? 0,
+                                        $user->gaji_tunjangan_lain ?? 0,
+                                        $user->gaji_pokok ?? 0,
+                                        $user->gaji_bpjs ?? 0,
+                                    ];
+                                    $totalGaji = array_sum($gajiParts);
+
+                                    // safe sisa cuti calculation (default annual quota 12)
+                                    $usedDays = $user->cuti_approved_sum_days_requested ?? 0;
+                                    $annualQuota = $user->annual_cuti_quota ?? 12;
+                                    $remaining = max(0, $annualQuota - $usedDays);
+                                @endphp
+                                <span class="text-sm text-gray-500">NIP: <strong>{{ $user->nopeg ?? '-' }}</strong></span> |
+                                <span class="text-sm text-gray-500">Work Experience: <strong>{{ $years !== null ? $years . ' years' : '-' }} {{ $month !== null ? $month . ' months' : '' }}</strong></span>
+
+                            </p>
+                            <p class="text-gray-600 mt-1">
+                                @foreach($user->getRoleNames() as $role)
+                                    <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mr-2">
+                                        {{ ucfirst($role) }}
+                                    </span>
+                                @endforeach
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Email -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">EMAIL</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->email }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.8l.286 1.718a1 1 0 01-.490 1.022l-2.61 1.565a11.042 11.042 0 005.694 5.694l1.565-2.61a1 1 0 011.022-.49l1.718.286a1 1 0 01.8.986V17a1 1 0 01-1 1h-2C7.82 18 4 14.18 4 9.5V3z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">PHONE</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->no_wa ?? '-' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Jabatan -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">POSITION</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->jabatan ?? '-' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Bank -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">BANK</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->bank ?? '-' }} / {{ $user->norek ?? '-' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Info Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-300">
+                            <!-- Join Date -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">JOIN DATE</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->tgl_masuk ? $user->tgl_masuk->format('d M Y') : '-' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Member Since System -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">REGISTERED</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->created_at->format('d M Y') }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Last Login -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.3A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">LAST LOGIN</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ optional($user->last_login_at)->format('d M Y H:i') ?? 'Never' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Kontrak -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold">CONTRACT TYPE</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->kontrak ?? '-' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Profile Button -->
+                    <div class="flex-shrink-0">
+                        <a href="{{ route('profile.edit') }}" class="inline-flex items-center gap-2 px-2 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition font-medium shadow-lg">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             {{-- STATISTICS CARDS --}}
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-6 mb-6 ml-4 mr-4">
                 @if (Auth::user()->hasRole('admin'))
