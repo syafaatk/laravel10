@@ -80,73 +80,77 @@ class CutiController extends Controller
             'days_requested' => 'nullable|numeric|min:1',
             'reason' => 'required|string|max:1000',
         ]);
-        // admin bisa menambahkan cuti orang lain
-        if (Auth::user()->hasRole('admin')) {
-            $userId = $request->user_id;
-            $daysRequested = Carbon::parse($request->end_date)->diffInDays(Carbon::parse($request->start_date)) + 1;
-            $masterCuti = MasterCuti::find($request->master_cuti_id);
-            if (!$masterCuti) {
-                return back()->withErrors(['master_cuti_id' => 'Invalid leave type selected.'])->withInput();
-            }
-            if ($daysRequested > $masterCuti->days) {
-                return back()->withErrors(['end_date' => 'Requested days exceed available days for this leave type.'])->withInput();
-            }
-            // Cek sisa cuti yang tersedia
-            $usedDays = Cuti::where('user_id', $userId)
-                ->where('master_cuti_id', $masterCuti->id)
-                ->where('status', 'approved')
-                ->sum('days_requested');
-            $availableDays = $masterCuti->days - $usedDays;
-            if ($daysRequested > $availableDays) {
-                return back()->withErrors(['end_date' => 'Requested days exceed the remaining leave balance for this type for the selected user.'])->withInput();
-            }
 
-            Cuti::create([
-                'user_id' => $userId,
-                'master_cuti_id' => $request->master_cuti_id,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-                'days_requested' => $request->days_requested,
-                'reason' => $request->reason,
-                'status' => 'pending',
-            ]);
+        // target user
+        $userId = Auth::user()->hasRole('admin') && $request->user_id ? $request->user_id : Auth::id();
 
-            return redirect()->route('cuti.index')->with('success', 'Cuti request submitted successfully for the selected user.');
-            
+        $start = Carbon::parse($request->start_date)->startOfDay();
+        $end = Carbon::parse($request->end_date)->startOfDay();
+
+        // Build holiday list: prefer model Holiday / PublicHoliday if exists, otherwise use config arrays
+        $holidayDates = [];
+
+        if (class_exists(\App\Models\Holiday::class)) {
+            $holidayDates = \App\Models\Holiday::pluck('date')->map(fn($d) => Carbon::parse($d)->toDateString())->toArray();
+        } elseif (class_exists(\App\Models\PublicHoliday::class)) {
+            $holidayDates = \App\Models\PublicHoliday::pluck('date')->map(fn($d) => Carbon::parse($d)->toDateString())->toArray();
         } else {
-            $userId = Auth::id();
-            $daysRequested = Carbon::parse($request->end_date)->diffInDays(Carbon::parse($request->start_date)) + 1;
-            $masterCuti = MasterCuti::find($request->master_cuti_id);
-            if (!$masterCuti) {
-                return back()->withErrors(['master_cuti_id' => 'Invalid leave type selected.'])->withInput();
-            }
-            if ($daysRequested > $masterCuti->days) {
-                return back()->withErrors(['end_date' => 'Requested days exceed available days for this leave type.'])->withInput();
-            }
-            // Cek sisa cuti yang tersedia
-            $usedDays = Cuti::where('user_id', Auth::id())
-                ->where('master_cuti_id', $masterCuti->id)
-                ->where('status', 'approved')
-                ->sum('days_requested');
-            $availableDays = $masterCuti->days - $usedDays;
-            if ($daysRequested > $availableDays) {
-                return back()->withErrors(['end_date' => 'Requested days exceed your remaining leave balance for this type.'])->withInput();
-            }
-
-            Cuti::create([
-                'user_id' => Auth::id(),
-                'master_cuti_id' => $request->master_cuti_id,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-                'days_requested' => $request->days_requested,
-                'reason' => $request->reason,
-                'status' => 'pending',
-            ]);
-
-            return redirect()->route('cuti.index')->with('success', 'Cuti request submitted successfully.');
+            $holidayDates = array_map(fn($d) => Carbon::parse($d)->toDateString(), config('holidays.holidays', []));
         }
-        
-        
+
+        // Cuti bersama list from config (optional)
+        $cutiBersama = array_map(fn($d) => Carbon::parse($d)->toDateString(), config('holidays.cuti_bersama', []));
+
+        // compute business days excluding weekends, holidays, cuti bersama
+        $daysRequested = 0;
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            // skip saturday/sunday
+            if ($date->isWeekend()) {
+                continue;
+            }
+            $ds = $date->toDateString();
+            if (in_array($ds, $holidayDates) || in_array($ds, $cutiBersama)) {
+                continue;
+            }
+            $daysRequested++;
+        }
+
+        if ($daysRequested <= 0) {
+            return back()->withErrors(['start_date' => 'Periode cuti tidak mengandung hari kerja (Senin-Jumat).'])->withInput();
+        }
+
+        $masterCuti = MasterCuti::find($request->master_cuti_id);
+        if (!$masterCuti) {
+            return back()->withErrors(['master_cuti_id' => 'Invalid leave type selected.'])->withInput();
+        }
+
+        // If master type has a maximum days (annual/allowance), validate against it
+        if ($daysRequested > $masterCuti->days) {
+            return back()->withErrors(['end_date' => 'Requested days exceed available days for this leave type.'])->withInput();
+        }
+
+        // Check remaining balance (only approved leaves count)
+        $usedDays = Cuti::where('user_id', $userId)
+            ->where('master_cuti_id', $masterCuti->id)
+            ->where('status', 'approved')
+            ->sum('days_requested');
+
+        $availableDays = $masterCuti->days - $usedDays;
+        if ($daysRequested > $availableDays) {
+            return back()->withErrors(['end_date' => 'Requested days exceed the remaining leave balance for this type.'])->withInput();
+        }
+
+        Cuti::create([
+            'user_id' => $userId,
+            'master_cuti_id' => $request->master_cuti_id,
+            'start_date' => $start->toDateString(),
+            'end_date' => $end->toDateString(),
+            'days_requested' => $daysRequested,
+            'reason' => $request->reason,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('cuti.index')->with('success', 'Cuti request submitted successfully.');
     }
 
     public function show(Cuti $cuti)
