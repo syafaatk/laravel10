@@ -12,7 +12,19 @@ class LunchEventController extends Controller
 {
     public function index()
     {
-        $lunchEvents = LunchEvent::all();
+        $lunchEvents = LunchEvent::withCount('orders')
+            ->withSum('orders as total_items', 'quantity')
+            ->withSum('orders as total_revenue', 'total_price')
+            ->get();
+        // calculate avg order value
+        foreach ($lunchEvents as $event) {
+            if ($event->orders_count > 0) {
+                $event->avg_order_value = $event->total_revenue / $event->orders_count;
+            } else {
+                $event->avg_order_value = 0;
+            }
+        }
+
         return view('lunch-events.index', compact('lunchEvents'));
     }
 

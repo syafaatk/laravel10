@@ -69,13 +69,13 @@
                                     <td>Rp {{ number_format($reimbursement->amount, 2, ',', '.') }}</td>
                                     <td>
                                         @if ($reimbursement->status == 'pending')
-                                            <span class="badge badge-warning">Pengajuan</span>
+                                            <span class="badge text-bg-warning">Pengajuan</span>
                                         @elseif ($reimbursement->status == 'approved')
-                                            <span class="badge badge-success">Diajukan ke QT </span>
+                                            <span class="badge text-bg-success">Diajukan ke QT </span>
                                         @elseif ($reimbursement->status == 'done')
-                                            <span class="badge badge-primary">Done</span>
+                                            <span class="badge text-bg-primary">Done</span>
                                         @else
-                                            <span class="badge badge-danger">Rejected</span>
+                                            <span class="badge text-bg-danger">Rejected</span>
                                         @endif
                                     </td>
                                     <td>

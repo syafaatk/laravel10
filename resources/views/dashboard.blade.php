@@ -189,7 +189,7 @@
                 <div class="bg-white rounded-lg shadow-lg p-6 lg:col-span-2">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Remaining Cuti Days by Employee</h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse">
+                        <table class="w-full text-sm border-collapse" id="remainingCutiTable">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
@@ -405,6 +405,22 @@
 
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- datatable remainingCutiTable -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#remainingCutiTable').DataTable({
+                "paging":   true,
+                "ordering": true,
+                "info":     false,
+                "lengthMenu": [5, 10, 25, 50],
+                "pageLength": 5,
+                "lengthChange": false,
+            });
+        });
+    </script>
+
     <script>
         // Reimbursement Status Chart
         const statusCtx = document.getElementById('statusChart');

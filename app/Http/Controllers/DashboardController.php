@@ -138,7 +138,7 @@ class DashboardController extends Controller
                 ->merge($myReimbursements)
                 ->merge($myCutis)
                 ->sortByDesc('date')
-                ->take(10);
+                ->take(5);
 
             return view('dashboard', compact(
                 'totalReimbursements',

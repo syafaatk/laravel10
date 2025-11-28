@@ -33,8 +33,8 @@
                     <div class="mb-4">
                         <strong>Status:</strong>
                         <span class="badge {{
-                            $cuti->status == 'pending' ? 'badge-warning' :
-                            ($cuti->status == 'approved' ? 'badge-success' : 'badge-danger')
+                            $cuti->status == 'pending' ? 'text-bg-warning' :
+                            ($cuti->status == 'approved' ? 'text-bg-success' : 'text-bg-danger')
                         }}">
                             {{ ucfirst($cuti->status) }}
                         </span>

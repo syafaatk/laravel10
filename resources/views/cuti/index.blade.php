@@ -46,11 +46,11 @@
                                     <td>{{ $cuti->days_requested }}</td>
                                     <td>
                                         @if ($cuti->status == 'pending')
-                                            <span class="badge badge-warning">Pending on Leader</span>
+                                            <span class="badge text-bg-warning">Pending on Leader</span>
                                         @elseif ($cuti->status == 'approved')
-                                            <span class="badge badge-success">Approved</span>
+                                            <span class="badge text-bg-success">Approved</span>
                                         @else
-                                            <span class="badge badge-danger">Rejected</span>
+                                            <span class="badge text-bg-danger">Rejected</span>
                                         @endif
                                     </td>
                                     <td>

@@ -29,5 +29,10 @@ class LunchEvent extends Model
     {
         return $this->belongsTo(MasterRestaurant::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(LunchEventUserOrder::class);
+    }
     
 }

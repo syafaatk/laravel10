@@ -39,13 +39,13 @@
                                 <hr>
                                 <p>
                                     @if ($reimbursement->status == 'pending')
-                                        <span class="badge badge-warning" style="font-size: 1rem;">Pending</span>
+                                        <span class="badge text-bg-warning" style="font-size: 1rem;">Pending</span>
                                     @elseif ($reimbursement->status == 'approved')
-                                        <span class="badge badge-success" style="font-size: 1rem;">Approved</span>
+                                        <span class="badge text-bg-success" style="font-size: 1rem;">Approved</span>
                                     @elseif ($reimbursement->status == 'done')
-                                        <span class="badge badge-primary" style="font-size: 1rem;">Done</span>
+                                        <span class="badge text-bg-primary" style="font-size: 1rem;">Done</span>
                                     @else
-                                        <span class="badge badge-danger" style="font-size: 1rem;">Rejected</span>
+                                        <span class="badge text-bg-danger" style="font-size: 1rem;">Rejected</span>
                                     @endif
                                 </p>
                                 @if ($reimbursement->processed_at)
