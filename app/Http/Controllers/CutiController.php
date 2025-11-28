@@ -232,19 +232,36 @@ class CutiController extends Controller
     {
         // Otorisasi: User hanya bisa melihat miliknya, admin bisa melihat semua
         if (Auth::user()->hasRole('admin') || Auth::id() === $cuti->user_id) {
+            $report_data = [];
+            $report_data['form_number'] = str_pad($cuti->id, 3, '0', STR_PAD_LEFT);
             $report_data['form_number_month'] = $this->form_number_month(Carbon::now()->month);
             $report_data['cuti'] = $cuti;
             $report_data['master_cuti'] = MasterCuti::find($cuti->master_cuti_id);
             
             // Hanya cuti approved di tahun berjalan
             $currentYear = Carbon::now()->year;
-            $report_data['taken_leave_this_year'] = Cuti::where('user_id', $cuti->user_id)
-                ->where('master_cuti_id', $cuti->master_cuti_id)
-                ->where('status', 'approved')
-                ->whereYear('start_date', $currentYear)
-                ->sum('days_requested');
-            $report_data['remaining_leave'] = $report_data['master_cuti']->days - $report_data['taken_leave_this_year'];
-            $jatahCuti = $report_data['master_cuti']->days;
+            $cutiYear = Carbon::parse($cuti->start_date)->year;
+
+            // Jika cuti diambil di tahun setelah tahun berjalan, reset jatah ke 12
+            if ($cutiYear > $currentYear) {
+                $report_data['taken_leave_this_year'] = Cuti::where('user_id', $cuti->user_id)
+                    ->where('master_cuti_id', $cuti->master_cuti_id)
+                    ->where('status', 'approved')
+                    ->whereYear('start_date', $cutiYear)
+                    ->sum('days_requested');
+                $report_data['remaining_leave'] = $report_data['master_cuti']->days - $report_data['taken_leave_this_year'];
+                $jatahCuti = $report_data['master_cuti']->days ?? 12;
+            } else {
+                $report_data['taken_leave_this_year'] = Cuti::where('user_id', $cuti->user_id)
+                    ->where('master_cuti_id', $cuti->master_cuti_id)
+                    ->where('status', 'approved')
+                    ->whereYear('start_date', $currentYear)
+                    ->sum('days_requested');
+
+                $report_data['remaining_leave'] = $report_data['master_cuti']->days - $report_data['taken_leave_this_year'];
+                $jatahCuti = $report_data['master_cuti']->days ?? 12;
+            }
+
             return view('cuti.print', compact('cuti', 'report_data', 'jatahCuti'));
         }
 

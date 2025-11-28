@@ -32,10 +32,10 @@ return [
         '2025-03-01', // Hari Kesadaran Pembaca
         '2025-03-03', // Nyepi
         '2025-04-18', // Jumat Agung
-        '2025-04-21', // Hari Raya Idul Fitri (Libur Bersama 1)
-        '2025-04-22', // Hari Raya Idul Fitri (Libur Bersama 2)
-        '2025-04-23', // Hari Raya Idul Fitri (Libur Bersama 3)
-        '2025-04-24', // Hari Raya Idul Fitri (Libur Bersama 4)
+        '2025-04-02', // Hari Raya Idul Fitri (Libur Bersama 1)
+        '2025-04-03', // Hari Raya Idul Fitri (Libur Bersama 2)
+        '2025-04-04', // Hari Raya Idul Fitri (Libur Bersama 3)
+        '2025-04-07', // Hari Raya Idul Fitri (Libur Bersama 4)
         '2025-04-30', // Hari Raya Idul Adha
         '2025-05-01', // Hari Buruh
         '2025-05-09', // Kenaikan Isa Almasih

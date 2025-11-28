@@ -130,7 +130,7 @@
         </div>
         <p class="form-title" style="margin-top: 0px;">FORMULIR PERMOHONAN CUTI KARYAWAN</p>
         <div class="form-number" style="text-align: center;">
-            <p>Nomor : .... /Srt-Cuti/QT/{{ $report_data['form_number_month'] }}/{{ \Carbon\Carbon::now()->format('Y') }}</p>
+            <p>Nomor : {{ $report_data['form_number'] }} /Srt-Cuti/QT/{{ $report_data['form_number_month'] }}/{{ \Carbon\Carbon::now()->format('Y') }}</p>
         </div>
         
         <!-- surat cuti -->
