@@ -9,7 +9,7 @@
         <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             
             {{-- STATISTICS CARDS --}}
-            <div class="grid grid-cols-2 md:grid-cols-8 lg:grid-cols-8 gap-6 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-6 mb-6 ml-4 mr-4">
                 @if (Auth::user()->hasRole('admin'))
                     <!-- Total Users -->
                     <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
@@ -18,8 +18,8 @@
                                 <p class="text-blue-100 text-sm font-semibold">Total Users</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $totalUsers }}</h2>
                             </div>
-                            <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10.5 1.5H5.75A2.25 2.25 0 003.5 3.75v12.5A2.25 2.25 0 005.75 18.5h8.5a2.25 2.25 0 002.25-2.25V6.5m-10-5v5m5-5v5m-9 .75h14"></path></svg>
+                            <div class="bg-blue-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.5 1.5H5.75A2.25 2.25 0 003.5 3.75v12.5A2.25 2.25 0 005.75 18.5h8.5a2.25 2.25 0 002.25-2.25V6.5m-10-5v5m5-5v5m-9 .75h14"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -28,11 +28,11 @@
                     <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-green-100 text-sm font-semibold">Total Reimbursements</p>
+                                <p class="text-green-100 text-sm font-semibold">Total Reimburse</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $totalReimbursements }}</h2>
                             </div>
-                            <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M8.5 10.5A1.5 1.5 0 1010 9a1.5 1.5 0 00-1.5 1.5z"></path></svg>
+                            <div class="bg-green-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M8.5 10.5A1.5 1.5 0 1010 9a1.5 1.5 0 00-1.5 1.5z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -41,11 +41,11 @@
                     <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-orange-100 text-sm font-semibold">Pending Reimbursements</p>
+                                <p class="text-orange-100 text-sm font-semibold">Pending Reimburse</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $pendingReimbursements }}</h2>
                             </div>
-                            <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6h2v5H9V6zm0 6h2v2H9v-2z"></path></svg>
+                            <div class="bg-orange-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6h2v5H9V6zm0 6h2v2H9v-2z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -57,8 +57,8 @@
                                 <p class="text-purple-100 text-sm font-semibold">Total Cuti Requests</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $totalCutiRequests }}</h2>
                             </div>
-                            <div class="bg-purple-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
+                            <div class="bg-purple-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -70,8 +70,8 @@
                                 <p class="text-red-100 text-sm font-semibold">Pending Cuti</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $pendingCutiRequests }}</h2>
                             </div>
-                            <div class="bg-red-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"></path></svg>
+                            <div class="bg-red-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -80,11 +80,11 @@
                     <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-indigo-100 text-sm font-semibold">Approved Reimbursements</p>
+                                <p class="text-indigo-100 text-sm font-semibold">Approved Reimburse</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $approvedReimbursements ?? 0 }}</h2>
                             </div>
-                            <div class="bg-indigo-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                            <div class="bg-indigo-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -94,11 +94,11 @@
                     <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-blue-100 text-sm font-semibold">My Reimbursements</p>
+                                <p class="text-blue-100 text-sm font-semibold">My Reimburse</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $totalReimbursements }}</h2>
                             </div>
-                            <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M8.5 10.5A1.5 1.5 0 1010 9a1.5 1.5 0 00-1.5 1.5z"></path></svg>
+                            <div class="bg-blue-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M8.5 10.5A1.5 1.5 0 1010 9a1.5 1.5 0 00-1.5 1.5z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -110,8 +110,8 @@
                                 <p class="text-orange-100 text-sm font-semibold">Pending Requests</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $pendingReimbursements }}</h2>
                             </div>
-                            <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6h2v5H9V6zm0 6h2v2H9v-2z"></path></svg>
+                            <div class="bg-orange-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6h2v5H9V6zm0 6h2v2H9v-2z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -123,8 +123,8 @@
                                 <p class="text-green-100 text-sm font-semibold">Approved Requests</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $approvedReimbursements ?? 0 }}</h2>
                             </div>
-                            <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                            <div class="bg-green-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -136,8 +136,8 @@
                                 <p class="text-purple-100 text-sm font-semibold">My Cuti Requests</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $totalCutiRequests }}</h2>
                             </div>
-                            <div class="bg-purple-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
+                            <div class="bg-purple-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -149,8 +149,8 @@
                                 <p class="text-red-100 text-sm font-semibold">Pending Cuti</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $pendingCutiRequests }}</h2>
                             </div>
-                            <div class="bg-red-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"></path></svg>
+                            <div class="bg-red-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -162,8 +162,8 @@
                                 <p class="text-yellow-100 text-sm font-semibold">Remaining Cuti Days</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $remainingCutiDays }} / 12</h2>
                             </div>
-                            <div class="bg-yellow-400 bg-opacity-30 rounded-full p-3">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
+                            <div class="bg-yellow-400 bg-opacity-30 rounded-full p-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -301,110 +301,103 @@
             @endif
 
             {{-- REIMBURSEMENT BY MONTH TABLE --}}
-            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Transportation Reimbursement by Month</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">January</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">February</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">March</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">April</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">May</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">June</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">July</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">August</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">September</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">October</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">November</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">December</th>
-                                <th class="border border-gray-300 px-4 py-2 text-right font-semibold text-gray-800">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $currentYear = \Carbon\Carbon::now()->year;
-                                $employees = \App\Models\User::with(['reimbursements' => function($q) use ($currentYear) {
-                                    $q->whereYear('created_at', $currentYear)
-                                      ->where('tipe', '1')
-                                      ->where('status', 'approved');
-                                }])->get();
-                            @endphp
-
-                            @forelse ($employees as $employee)
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Transportation Reimbursement by Month</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">October</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">November</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">December</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-right font-semibold text-gray-800">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @php
-                                    $monthlyTotal = [];
-                                    $yearTotal = 0;
-                                    
-                                    for ($month = 1; $month <= 12; $month++) {
-                                        $monthTotal = $employee->reimbursements
-                                            ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
-                                            ->sum('amount');
-                                        $monthlyTotal[$month] = $monthTotal;
-                                        $yearTotal += $monthTotal;
+                                    $currentYear = \Carbon\Carbon::now()->year;
+                                    $employees = \App\Models\User::with(['reimbursements' => function($q) use ($currentYear) {
+                                        $q->whereYear('created_at', $currentYear)
+                                        ->where('tipe', '1')
+                                        ->where('status', 'approved');
+                                    }])->get();
+                                @endphp
+
+                                @forelse ($employees as $employee)
+                                    @php
+                                        $monthlyTotal = [];
+                                        $yearTotal = 0;
+                                        
+                                        for ($month = 10; $month <= 12; $month++) {
+                                            $monthTotal = $employee->reimbursements
+                                                ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
+                                                ->sum('amount');
+                                            $monthlyTotal[$month] = $monthTotal;
+                                            $yearTotal += $monthTotal;
+                                        }
+                                    @endphp
+                                    <tr class="hover:bg-gray-50 border-b border-gray-200">
+                                        <td class="border border-gray-300 px-4 py-2 font-medium text-gray-800 sticky left-0 bg-white">
+                                            {{ $employee->name }}
+                                        </td>
+                                        @for ($month = 10; $month <= 12; $month++)
+                                            <td class="border border-gray-300 px-4 py-2 text-center text-gray-700">
+                                                @if ($monthlyTotal[$month] > 0)
+                                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">
+                                                        Rp{{ number_format($monthlyTotal[$month], 0, ',', '.') }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-gray-400">-</span>
+                                                @endif
+                                            </td>
+                                        @endfor
+                                        <td class="border border-gray-300 px-4 py-2 text-right font-bold text-gray-900 bg-blue-50">
+                                            Rp{{ number_format($yearTotal, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="14" class="border border-gray-300 px-4 py-4 text-center text-gray-500">
+                                            No transportation reimbursement data available for this year.
+                                        </td>
+                                    </tr>
+                                @endforelse
+
+                                {{-- TOTAL ROW --}}
+                                @php
+                                    $monthlyGrandTotal = [];
+                                    $grandTotal = 0;
+                                    for ($month = 10; $month <= 12; $month++) {
+                                        $monthSum = $employees->sum(function($emp) use ($month) {
+                                            return $emp->reimbursements
+                                                ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
+                                                ->sum('amount');
+                                        });
+                                        $monthlyGrandTotal[$month] = $monthSum;
+                                        $grandTotal += $monthSum;
                                     }
                                 @endphp
-                                <tr class="hover:bg-gray-50 border-b border-gray-200">
-                                    <td class="border border-gray-300 px-4 py-2 font-medium text-gray-800 sticky left-0 bg-white">
-                                        {{ $employee->name }}
-                                    </td>
-                                    @for ($month = 1; $month <= 12; $month++)
-                                        <td class="border border-gray-300 px-4 py-2 text-center text-gray-700">
-                                            @if ($monthlyTotal[$month] > 0)
-                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">
-                                                    Rp{{ number_format($monthlyTotal[$month], 0, ',', '.') }}
-                                                </span>
-                                            @else
-                                                <span class="text-gray-400">-</span>
-                                            @endif
+                                <tr class="bg-gray-200 font-bold text-gray-900">
+                                    <td class="border border-gray-300 px-4 py-2 sticky left-0 bg-gray-200">TOTAL</td>
+                                    @for ($month = 10; $month <= 12; $month++)
+                                        <td class="border border-gray-300 px-4 py-2 text-center">
+                                            Rp{{ number_format($monthlyGrandTotal[$month], 0, ',', '.') }}
                                         </td>
                                     @endfor
-                                    <td class="border border-gray-300 px-4 py-2 text-right font-bold text-gray-900 bg-blue-50">
-                                        Rp{{ number_format($yearTotal, 0, ',', '.') }}
+                                    <td class="border border-gray-300 px-4 py-2 text-right bg-blue-200">
+                                        Rp{{ number_format($grandTotal, 0, ',', '.') }}
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="14" class="border border-gray-300 px-4 py-4 text-center text-gray-500">
-                                        No transportation reimbursement data available for this year.
-                                    </td>
-                                </tr>
-                            @endforelse
-
-                            {{-- TOTAL ROW --}}
-                            @php
-                                $monthlyGrandTotal = [];
-                                $grandTotal = 0;
-                                for ($month = 1; $month <= 12; $month++) {
-                                    $monthSum = $employees->sum(function($emp) use ($month) {
-                                        return $emp->reimbursements
-                                            ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
-                                            ->sum('amount');
-                                    });
-                                    $monthlyGrandTotal[$month] = $monthSum;
-                                    $grandTotal += $monthSum;
-                                }
-                            @endphp
-                            <tr class="bg-gray-200 font-bold text-gray-900">
-                                <td class="border border-gray-300 px-4 py-2 sticky left-0 bg-gray-200">TOTAL</td>
-                                @for ($month = 1; $month <= 12; $month++)
-                                    <td class="border border-gray-300 px-4 py-2 text-center">
-                                        Rp{{ number_format($monthlyGrandTotal[$month], 0, ',', '.') }}
-                                    </td>
-                                @endfor
-                                <td class="border border-gray-300 px-4 py-2 text-right bg-blue-200">
-                                    Rp{{ number_format($grandTotal, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="mt-4 text-xs text-gray-600">
-                    <p>📊 <strong>Year:</strong> {{ $currentYear }}</p>
-                    <p>📝 <strong>Filter:</strong> Only approved transportation reimbursements are included.</p>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 text-xs text-gray-600">
+                        <p>📊 <strong>Year:</strong> {{ $currentYear }}</p>
+                        <p>📝 <strong>Filter:</strong> Only approved transportation reimbursements are included.</p>
+                    </div>
                 </div>
             </div>
         </div>
