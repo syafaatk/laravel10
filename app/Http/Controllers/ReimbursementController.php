@@ -18,8 +18,16 @@ class ReimbursementController extends Controller
 
     public function index()
     {
-        $reimbursements = Reimbursement::with('user','laporanReimbursement')->get();
-        $laporanReimbursements = LaporanReimbursement::orderBy('start_date','desc')->get();
+        
+
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $reimbursements = Reimbursement::with('user','laporanReimbursement')->get();
+            $laporanReimbursements = LaporanReimbursement::orderBy('start_date','desc')->get();
+        } else {
+            $laporanReimbursements = LaporanReimbursement::orderBy('start_date','desc')->get();
+            $reimbursements = Reimbursement::where('user_id', $user->id)->with('laporanReimbursement')->latest()->get();
+        }
         return view('reimbursements.index', compact('reimbursements','laporanReimbursements'));
     }
 

@@ -22,17 +22,20 @@
                                 @if(Auth::user()->hasRole('admin'))
                                     <div class="mb-4">
                                         <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">Select User</label>
-                                        <select name="user_id" id="user_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('user_id') border-red-500 @enderror">
+                                        <select name="user_id" id="user_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg" onchange="updateUserRemainingCuti()">
                                             <option value="">-- Select User --</option>
                                             @foreach ($users as $user)
-                                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                                <option value="{{ $user->id }}" data-cuti='{{ json_encode($usersRemainingCuti[$user->id] ?? []) }}'>
                                                     {{ $user->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('user_id')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
+                                    </div>
+                                    
+                                    {{-- Info remaining cuti user yang dipilih --}}
+                                    <div id="userCutiInfo" class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
+                                        <p class="text-sm font-semibold text-blue-900 mb-2">Remaining Leave Balance:</p>
+                                        <div id="cutiInfoContent" class="text-xs text-blue-800"></div>
                                     </div>
                                 @else
                                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
@@ -321,6 +324,25 @@
                 html = '<div class="text-gray-500 text-xs">No holidays this month</div>';
             }
             document.getElementById('holidaysList').innerHTML = html;
+        }
+
+        function updateUserRemainingCuti() {
+            const select = document.getElementById('user_id');
+            const selectedOption = select.options[select.selectedIndex];
+            const cutiData = JSON.parse(selectedOption.getAttribute('data-cuti') || '{}');
+            const infoDiv = document.getElementById('userCutiInfo');
+            const contentDiv = document.getElementById('cutiInfoContent');
+            
+            if (Object.keys(cutiData).length > 0) {
+                let html = '';
+                Object.values(cutiData).forEach(cuti => {
+                    html += `<div class="mb-1"><strong>${cuti.name}:</strong> ${cuti.remaining} of ${cuti.total} days remaining</div>`;
+                });
+                contentDiv.innerHTML = html;
+                infoDiv.classList.remove('hidden');
+            } else {
+                infoDiv.classList.add('hidden');
+            }
         }
 
         // Event listeners for calendar navigation

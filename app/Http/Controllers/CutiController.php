@@ -50,15 +50,43 @@ class CutiController extends Controller
     public function create()
     {
         $masterCutis = MasterCuti::all();
-        // cek cuti yang sudah diajukan user saat ini dan kurangi dari available days
-        // jika admin dapat menambahkan cuti orang lain
+        
         if (Auth::user()->hasRole('admin')) {
             $users = \App\Models\User::all();
+            
+            // Admin: Calculate available days untuk setiap user yang dipilih
             foreach ($masterCutis as $masterCuti) {
-                $masterCuti->available_days = $masterCuti->days; // Admin sees total available days
+                // Hitung total digunakan dari semua users
+                $totalUsedDays = Cuti::where('master_cuti_id', $masterCuti->id)
+                    ->where('status', 'approved')
+                    ->sum('days_requested');
+                
+                // Available days = total - yang sudah dipakai
+                $masterCuti->available_days = $masterCuti->days - $totalUsedDays;
             }
-            return view('cuti.create', compact('masterCutis', 'users'));
-        }else{
+            
+            // Siapkan data remaining cuti per user untuk reference di form
+            $usersRemainingCuti = [];
+            foreach ($users as $user) {
+                $usersRemainingCuti[$user->id] = [];
+                foreach ($masterCutis as $masterCuti) {
+                    $usedDays = Cuti::where('user_id', $user->id)
+                        ->where('master_cuti_id', $masterCuti->id)
+                        ->where('status', 'approved')
+                        ->sum('days_requested');
+                    
+                    $usersRemainingCuti[$user->id][$masterCuti->id] = [
+                        'name' => $masterCuti->name,
+                        'total' => $masterCuti->days,
+                        'used' => $usedDays,
+                        'remaining' => $masterCuti->days - $usedDays
+                    ];
+                }
+            }
+            
+            return view('cuti.create', compact('masterCutis', 'users', 'usersRemainingCuti'));
+        } else {
+            // User regular: Calculate available days hanya untuk user tersebut
             foreach ($masterCutis as $masterCuti) {
                 $usedDays = Cuti::where('user_id', Auth::id())
                     ->where('master_cuti_id', $masterCuti->id)

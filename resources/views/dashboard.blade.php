@@ -9,7 +9,7 @@
         <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             
             {{-- STATISTICS CARDS --}}
-            <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-8 lg:grid-cols-8 gap-6 mb-6">
                 @if (Auth::user()->hasRole('admin'))
                     <!-- Total Users -->
                     <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
@@ -88,7 +88,6 @@
                             </div>
                         </div>
                     </div>
-
                 @else
                     <!-- User Dashboard Cards -->
                     <!-- My Reimbursements -->
@@ -155,6 +154,19 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Remaining Cuti Days -->
+                    <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-yellow-100 text-sm font-semibold">Remaining Cuti Days</p>
+                                <h2 class="text-3xl font-bold mt-2">{{ $remainingCutiDays }} / 12</h2>
+                            </div>
+                            <div class="bg-yellow-400 bg-opacity-30 rounded-full p-3">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
 
@@ -171,7 +183,44 @@
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Cuti Status Overview</h3>
                     <canvas id="cutiChart"></canvas>
                 </div>
-            </div>
+
+                <!-- only admin table sisa cuti semua pegawai dalam bentuk table -->
+                @if (Auth::user()->hasRole('admin'))
+                <div class="bg-white rounded-lg shadow-lg p-6 lg:col-span-2">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Remaining Cuti Days by Employee</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
+                                    @foreach ($remainingCutiDays as $cutiType)
+                                        <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">{{ $cutiType['name'] }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($employeesRemainingCuti as $employeeName => $cutiData)    
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="border border-gray-300 px-4 py-2 text-gray-700 sticky left-0 bg-white">{{ $employeeName }}</td>
+                                        @foreach ($cutiData as $cuti)
+                                            <td class="border border-gray-300 px-4 py-2 text-center text-gray-800">
+                                                <!-- tambahkan warna badge berdasarkan remaining_days -->
+                                                <span class="inline-block px-2 py-1 text-xs font-semibold rounded
+                                                    @if($cuti['remaining_days'] == 0) bg-red-100 text-red-800
+                                                    @elseif($cuti['remaining_days'] <= 3) bg-yellow-100 text-yellow-800
+                                                    @else bg-green-100 text-green-800 @endif">
+                                                    {{ $cuti['remaining_days'] }} days
+                                                </span>
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @endif
+            </div>    
 
             {{-- RECENT ACTIVITIES --}}
             @if (Auth::user()->hasRole('admin'))
