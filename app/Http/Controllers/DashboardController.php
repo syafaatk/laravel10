@@ -101,16 +101,13 @@ class DashboardController extends Controller
             $approvedCutiRequests = $user->cutis()->where('status', 'approved')->count();
             $rejectedCutiRequests = $user->cutis()->where('status', 'rejected')->count();
 
-            // Calculate remaining cuti days (sum all types)
-            $masterCutis = \App\Models\MasterCuti::all();
-            $remainingCutiDays = 0;
-            foreach ($masterCutis as $cutiType) {
-                $usedDays = Cuti::where('user_id', $user->id)
-                    ->where('master_cuti_id', $cutiType->id)
-                    ->where('status', 'approved')
-                    ->sum('days_requested');
-                $remainingCutiDays += max(0, $cutiType->days - $usedDays);
-            }
+            // Calculate remaining cuti days (cuti tahunan id 1)
+            $masterCutiTahunan = \App\Models\MasterCuti::find(1);
+            $usedCutiDays = $user->cutis()
+                ->where('master_cuti_id', 1)
+                ->where('status', 'approved')
+                ->sum('days_requested');
+            $remainingCutiDays = $masterCutiTahunan ? max(0, $masterCutiTahunan->days - $usedCutiDays) : 0;
 
             // My Recent Activities
             $myReimbursements = $user->reimbursements()
