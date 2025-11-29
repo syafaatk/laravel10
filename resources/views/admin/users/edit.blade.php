@@ -162,21 +162,6 @@
                             @enderror
                         </div>
 
-                        <!-- Kontrak -->
-                        <div>
-                            <label for="kontrak" class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kontrak</label>
-                            <select name="kontrak" id="kontrak" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('kontrak') border-red-500 @enderror">
-                                <option value="">-- Pilih Kontrak --</option>
-                                <option value="Join Development PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'Join Development PT Bukit Asam' ? 'selected' : '' }}>Join Development PT Bukit Asam</option>
-                                <option value="K3L PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'K3L PT Bukit Asam' ? 'selected' : '' }}>K3L PT Bukit Asam</option>
-                                <option value="Supply Chain PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'Supply Chain PT Bukit Asam' ? 'selected' : '' }}>Supply Chain PT Bukit Asam</option>
-                                <option value="SDMO PT Bukit Asam" {{ old('kontrak', $user->kontrak) == 'SDMO PT Bukit Asam' ? 'selected' : '' }}>SDMO PT Bukit Asam</option>
-                            </select>
-                            @error('kontrak')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         <!-- Tanggal Masuk -->
                         <div>
                             <label for="tgl_masuk" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Masuk</label>
@@ -261,77 +246,148 @@
                     </div>
                 </div>
 
-                {{-- SALARY INFORMATION --}}
+                {{-- CONTRACT HISTORY & SALARY INFORMATION --}}
                 <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-200 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20"><path d="M8.5 5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM9 6.5a3 3 0 11-6 0 3 3 0 016 0zm6 0a3 3 0 11-6 0 3 3 0 016 0zM12.5 16a.5.5 0 11-1 0 .5.5 0 011 0z"/></svg>
-                        Informasi Gaji & Tunjangan
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Gaji Pokok -->
-                        <div>
-                            <label for="gaji_pokok" class="block text-sm font-semibold text-gray-700 mb-2">Gaji Pokok</label>
-                            <input type="number" name="gaji_pokok" id="gaji_pokok" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_pokok') border-red-500 @enderror" value="{{ old('gaji_pokok', $user->gaji_pokok) }}" placeholder="5000000">
-                            @error('gaji_pokok')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Tunjangan Tetap -->
-                        <div>
-                            <label for="gaji_tunjangan_tetap" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Tetap</label>
-                            <input type="number" name="gaji_tunjangan_tetap" id="gaji_tunjangan_tetap" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_tetap') border-red-500 @enderror" value="{{ old('gaji_tunjangan_tetap', $user->gaji_tunjangan_tetap) }}" placeholder="500000">
-                            @error('gaji_tunjangan_tetap')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Tunjangan Makan -->
-                        <div>
-                            <label for="gaji_tunjangan_makan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Makan</label>
-                            <input type="number" name="gaji_tunjangan_makan" id="gaji_tunjangan_makan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_makan') border-red-500 @enderror" value="{{ old('gaji_tunjangan_makan', $user->gaji_tunjangan_makan) }}" placeholder="200000">
-                            @error('gaji_tunjangan_makan')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Tunjangan Transport & Tempat Tinggal -->
-                        <div>
-                            <label for="gaji_tunjangan_transport" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Transport + Tempat Tinggal</label>
-                            <input type="number" name="gaji_tunjangan_transport" id="gaji_tunjangan_transport" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_transport') border-red-500 @enderror" value="{{ old('gaji_tunjangan_transport', $user->gaji_tunjangan_transport) }}" placeholder="1000000">
-                            @error('gaji_tunjangan_transport')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Tunjangan Lain-Lain -->
-                        <div>
-                            <label for="gaji_tunjangan_lain" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Lain-Lain</label>
-                            <input type="number" name="gaji_tunjangan_lain" id="gaji_tunjangan_lain" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_lain') border-red-500 @enderror" value="{{ old('gaji_tunjangan_lain', $user->gaji_tunjangan_lain) }}" placeholder="300000">
-                            @error('gaji_tunjangan_lain')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- BPJS -->
-                        <div>
-                            <label for="gaji_bpjs" class="block text-sm font-semibold text-gray-700 mb-2">BPJS</label>
-                            <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_bpjs') border-red-500 @enderror" value="{{ old('gaji_bpjs', $user->gaji_bpjs) }}" placeholder="100000">
-                            @error('gaji_bpjs')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20"><path d="M8.5 5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM9 6.5a3 3 0 11-6 0 3 3 0 016 0zm6 0a3 3 0 11-6 0 3 3 0 016 0zM12.5 16a.5.5 0 11-1 0 .5.5 0 011 0z"/></svg>
+                            Informasi Gaji & Kontrak
+                        </h3>
+                        <button type="button" id="toggleNewKontrak" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Tambah Kontrak Baru
+                        </button>
                     </div>
 
-                    <!-- Total Summary -->
-                    @php
-                        $total = ($user->gaji_pokok ?? 0) + ($user->gaji_tunjangan_tetap ?? 0) + ($user->gaji_tunjangan_makan ?? 0) + ($user->gaji_tunjangan_transport ?? 0) + ($user->gaji_tunjangan_lain ?? 0) + ($user->gaji_bpjs ?? 0);
-                    @endphp
-                    <div class="mt-6 pt-6 border-t border-gray-200">
-                        <div class="bg-blue-50 rounded-lg p-4">
+                    <!-- Kontrak History -->
+                    @if ($user->detailKontrakUsers->count() > 0)
+                    <div class="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            {{ __('Contract History') }}
+                        </h4>
+                        <div class="space-y-3 max-h-64 overflow-y-auto">
+                            @foreach ($user->detailKontrakUsers->sortByDesc('created_at') as $detail)
+                            <div class="flex items-center justify-between p-3 bg-white rounded border border-blue-100 hover:shadow-md transition">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-gray-900">{{ $detail->kontrak ?? '-' }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        {{ $detail->tgl_mulai_kontrak ? $detail->tgl_mulai_kontrak->format('d M Y') : '-' }} 
+                                        @if ($detail->tgl_selesai_kontrak)
+                                            s/d {{ $detail->tgl_selesai_kontrak->format('d M Y') }}
+                                        @else
+                                            - {{ __('Ongoing') }}
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    @if ($detail->is_active)
+                                        <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold mb-1">{{ __('Active') }}</span>
+                                    @else
+                                        <span class="inline-block px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold mb-1">{{ __('Inactive') }}</span>
+                                    @endif
+                                    <p class="text-sm font-bold text-gray-900">Rp {{ number_format($detail->total_gaji, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Form Input Kontrak Baru / Edit Aktif -->
+                    <div id="kontrakFormContainer" class="pt-6 border-t border-gray-200">
+                        <h4 class="font-semibold text-gray-900 mb-4">{{ $detailKontrakAktif ? 'Update Kontrak Aktif' : 'Tambah Kontrak Baru' }}</h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <!-- Kontrak Type -->
+                            <div>
+                                <label for="kontrak" class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kontrak</label>
+                                <select name="kontrak" id="kontrak" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('kontrak') border-red-500 @enderror">
+                                    <option value="">-- Pilih Kontrak --</option>
+                                    <option value="Join Development PT Bukit Asam" {{ old('kontrak', $detailKontrakAktif?->kontrak) == 'Join Development PT Bukit Asam' ? 'selected' : '' }}>Join Development PT Bukit Asam</option>
+                                    <option value="K3L PT Bukit Asam" {{ old('kontrak', $detailKontrakAktif?->kontrak) == 'K3L PT Bukit Asam' ? 'selected' : '' }}>K3L PT Bukit Asam</option>
+                                    <option value="Supply Chain PT Bukit Asam" {{ old('kontrak', $detailKontrakAktif?->kontrak) == 'Supply Chain PT Bukit Asam' ? 'selected' : '' }}>Supply Chain PT Bukit Asam</option>
+                                    <option value="SDMO PT Bukit Asam" {{ old('kontrak', $detailKontrakAktif?->kontrak) == 'SDMO PT Bukit Asam' ? 'selected' : '' }}>SDMO PT Bukit Asam</option>
+                                </select>
+                                @error('kontrak')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Tgl Mulai Kontrak -->
+                            <div>
+                                <label for="tgl_mulai_kontrak" class="block text-sm font-semibold text-gray-700 mb-2">Tgl Mulai Kontrak *</label>
+                                <input type="date" name="tgl_mulai_kontrak" id="tgl_mulai_kontrak" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tgl_mulai_kontrak') border-red-500 @enderror" value="{{ old('tgl_mulai_kontrak', $detailKontrakAktif?->tgl_mulai_kontrak?->format('Y-m-d')) }}" required>
+                                @error('tgl_mulai_kontrak')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Tgl Selesai Kontrak -->
+                            <div>
+                                <label for="tgl_selesai_kontrak" class="block text-sm font-semibold text-gray-700 mb-2">Tgl Selesai Kontrak</label>
+                                <input type="date" name="tgl_selesai_kontrak" id="tgl_selesai_kontrak" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tgl_selesai_kontrak') border-red-500 @enderror" value="{{ old('tgl_selesai_kontrak', $detailKontrakAktif?->tgl_selesai_kontrak?->format('Y-m-d')) }}">
+                                @error('tgl_selesai_kontrak')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Salary Fields -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="gaji_pokok" class="block text-sm font-semibold text-gray-700 mb-2">Gaji Pokok</label>
+                                <input type="number" name="gaji_pokok" id="gaji_pokok" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_pokok') border-red-500 @enderror" value="{{ old('gaji_pokok', $detailKontrakAktif?->gaji_pokok) }}" placeholder="5000000" onchange="calculateTotal()">
+                                @error('gaji_pokok')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_tunjangan_tetap" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Tetap</label>
+                                <input type="number" name="gaji_tunjangan_tetap" id="gaji_tunjangan_tetap" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_tetap') border-red-500 @enderror" value="{{ old('gaji_tunjangan_tetap', $detailKontrakAktif?->gaji_tunjangan_tetap) }}" placeholder="500000" onchange="calculateTotal()">
+                                @error('gaji_tunjangan_tetap')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_tunjangan_makan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Makan</label>
+                                <input type="number" name="gaji_tunjangan_makan" id="gaji_tunjangan_makan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_makan') border-red-500 @enderror" value="{{ old('gaji_tunjangan_makan', $detailKontrakAktif?->gaji_tunjangan_makan) }}" placeholder="200000" onchange="calculateTotal()">
+                                @error('gaji_tunjangan_makan')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_tunjangan_transport" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Transport + Tempat Tinggal</label>
+                                <input type="number" name="gaji_tunjangan_transport" id="gaji_tunjangan_transport" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_transport') border-red-500 @enderror" value="{{ old('gaji_tunjangan_transport', $detailKontrakAktif?->gaji_tunjangan_transport) }}" placeholder="1000000" onchange="calculateTotal()">
+                                @error('gaji_tunjangan_transport')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_tunjangan_lain" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Lain-Lain</label>
+                                <input type="number" name="gaji_tunjangan_lain" id="gaji_tunjangan_lain" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_lain') border-red-500 @enderror" value="{{ old('gaji_tunjangan_lain', $detailKontrakAktif?->gaji_tunjangan_lain) }}" placeholder="300000" onchange="calculateTotal()">
+                                @error('gaji_tunjangan_lain')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_bpjs" class="block text-sm font-semibold text-gray-700 mb-2">BPJS</label>
+                                <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_bpjs') border-red-500 @enderror" value="{{ old('gaji_bpjs', $detailKontrakAktif?->gaji_bpjs) }}" placeholder="100000" onchange="calculateTotal()">
+                                @error('gaji_bpjs')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Total Summary -->
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
                             <p class="text-sm text-gray-600 mb-1">Total Gaji & Tunjangan</p>
-                            <p class="text-2xl font-bold text-blue-600">Rp {{ number_format($total, 0, ',', '.') }}</p>
+                            <p class="text-2xl font-bold text-blue-600" id="totalSalary">Rp 0</p>
                         </div>
                     </div>
                 </div>
@@ -359,7 +415,27 @@
                 placeholder: 'Pilih roles',
                 allowClear: true
             });
+
+            calculateTotal();
+
+            // Toggle form visibility
+            $('#toggleNewKontrak').click(function() {
+                $('#kontrakFormContainer').slideToggle();
+            });
         });
+
+        function calculateTotal() {
+            const gaji_pokok = parseInt(document.getElementById('gaji_pokok').value) || 0;
+            const gaji_tunjangan_tetap = parseInt(document.getElementById('gaji_tunjangan_tetap').value) || 0;
+            const gaji_tunjangan_makan = parseInt(document.getElementById('gaji_tunjangan_makan').value) || 0;
+            const gaji_tunjangan_transport = parseInt(document.getElementById('gaji_tunjangan_transport').value) || 0;
+            const gaji_tunjangan_lain = parseInt(document.getElementById('gaji_tunjangan_lain').value) || 0;
+            const gaji_bpjs = parseInt(document.getElementById('gaji_bpjs').value) || 0;
+
+            const total = gaji_pokok + gaji_tunjangan_tetap + gaji_tunjangan_makan + gaji_tunjangan_transport + gaji_tunjangan_lain + gaji_bpjs;
+            
+            document.getElementById('totalSalary').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
     </script>
     @endpush
 </x-app-layout>
