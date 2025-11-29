@@ -117,5 +117,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Lembur::class, 'approved_by');
     }
+
+    public function detailKontrakUsers()
+    {
+        return $this->hasMany(DetailKontrakUser::class);
+    }
+
+    public function detailKontrakUserActive()
+    {
+        return $this->hasOne(DetailKontrakUser::class)->where('is_active', true);
+    }
+
+    public function getTotalGajiAttribute()
+    {
+        $detail = $this->detailKontrakUserActive;
+        return $detail ? $detail->total_gaji : 0;
+    }
+
     
 }

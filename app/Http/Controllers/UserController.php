@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\DetailKontrakUser;
 use App\Models\Cuti;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
-
 
 class UserController extends Controller
 {
@@ -69,7 +69,10 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+        $detailKontrakAktif = $user->detailKontrakUserActive;
+        $detailKontrakHistory = $user->detailKontrakUsers()->orderByDesc('created_at')->get();
+        
+        return view('admin.users.edit', compact('user', 'roles', 'detailKontrakAktif', 'detailKontrakHistory'));
     }
 
     /**
@@ -93,6 +96,8 @@ class UserController extends Controller
             'jabatan' => 'nullable|string|max:255',
             'norek' => 'nullable|string|max:255',
             'bank' => 'nullable|string|max:255',
+            'tgl_mulai_kontrak' => 'nullable|date',
+            'tgl_selesai_kontrak' => 'nullable|date|after:tgl_mulai_kontrak',
             'gaji_tunjangan_tetap' => 'nullable|integer|min:0',
             'gaji_tunjangan_makan' => 'nullable|integer|min:0',
             'gaji_tunjangan_transport' => 'nullable|integer|min:0',
@@ -101,12 +106,13 @@ class UserController extends Controller
             'gaji_bpjs' => 'nullable|integer|min:0',
         ]);
 
+        // Update user basic info
         $user->fill($request->only([
-            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'kontrak', 'jabatan', 'norek', 'bank', 'gaji_tunjangan_tetap', 'gaji_tunjangan_makan', 'gaji_tunjangan_transport','gaji_tunjangan_lain', 'gaji_pokok', 'gaji_bpjs', 'attachment_foto_profile', 'attachment_ttd'
+            'name', 'email', 'address', 'no_wa', 'motor', 'ukuran_baju', 'tgl_masuk', 'nopeg', 'jabatan', 'norek', 'bank'
         ]));
 
+        // Handle file uploads
         if ($request->hasFile('attachment_ttd')) {
-            // Delete old attachment if exists
             if ($user->attachment_ttd) {
                 Storage::delete('public/' . $user->attachment_ttd);
             }
@@ -114,7 +120,6 @@ class UserController extends Controller
         }
 
         if ($request->hasFile('attachment_foto_profile')) {
-            // Delete old attachment if exists
             if ($user->attachment_foto_profile) {
                 Storage::delete('public/' . $user->attachment_foto_profile);
             }
@@ -122,10 +127,76 @@ class UserController extends Controller
         }
 
         $user->syncRoles($request->roles);
-
         $user->save();
+
+        // Logic untuk update kontrak
+        $detailKontrakAktif = $user->detailKontrakUserActive;
+        $tglMulaiKontrakBaru = \Carbon\Carbon::parse($request->input('tgl_mulai_kontrak'));
+
+        // Jika ada kontrak aktif dan data kontrak berubah, tutup kontrak lama
+        if ($detailKontrakAktif) {
+            $kontrakBerubah = $detailKontrakAktif->kontrak !== $request->input('kontrak') ||
+                              \Carbon\Carbon::parse($detailKontrakAktif->tgl_mulai_kontrak)->format('Y-m-d') !== $tglMulaiKontrakBaru->format('Y-m-d') ||
+                              $detailKontrakAktif->gaji_pokok != ($request->input('gaji_pokok') ?? 0);
+
+            if ($kontrakBerubah) {
+                // Tutup kontrak lama dengan tanggal sebelum kontrak baru dimulai
+                $detailKontrakAktif->update([
+                    'tgl_selesai_kontrak' => $tglMulaiKontrakBaru->copy()->subDay(),
+                    'is_active' => false,
+                ]);
+
+                // Buat kontrak baru
+                DetailKontrakUser::create([
+                    'user_id' => $user->id,
+                    'kontrak' => $request->input('kontrak'),
+                    'tgl_mulai_kontrak' => $tglMulaiKontrakBaru,
+                    'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak'),
+                    'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
+                    'gaji_tunjangan_tetap' => $request->input('gaji_tunjangan_tetap') ?? 0,
+                    'gaji_tunjangan_makan' => $request->input('gaji_tunjangan_makan') ?? 0,
+                    'gaji_tunjangan_transport' => $request->input('gaji_tunjangan_transport') ?? 0,
+                    'gaji_tunjangan_lain' => $request->input('gaji_tunjangan_lain') ?? 0,
+                    'gaji_bpjs' => $request->input('gaji_bpjs') ?? 0,
+                    'is_active' => true,
+                ]);
+
+                return redirect()->route('admin.users.edit', $user->id)
+                    ->with('success', 'User updated successfully. New contract created and previous contract closed.');
+            } else {
+                // Update kontrak yang ada jika tidak ada perubahan signifikan
+                $detailKontrakAktif->update([
+                    'kontrak' => $request->input('kontrak'),
+                    'tgl_mulai_kontrak' => $tglMulaiKontrakBaru,
+                    'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak'),
+                    'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
+                    'gaji_tunjangan_tetap' => $request->input('gaji_tunjangan_tetap') ?? 0,
+                    'gaji_tunjangan_makan' => $request->input('gaji_tunjangan_makan') ?? 0,
+                    'gaji_tunjangan_transport' => $request->input('gaji_tunjangan_transport') ?? 0,
+                    'gaji_tunjangan_lain' => $request->input('gaji_tunjangan_lain') ?? 0,
+                    'gaji_bpjs' => $request->input('gaji_bpjs') ?? 0,
+                ]);
+            }
+        } else {
+            // Buat kontrak baru jika belum ada
+            DetailKontrakUser::create([
+                'user_id' => $user->id,
+                'kontrak' => $request->input('kontrak'),
+                'tgl_mulai_kontrak' => $tglMulaiKontrakBaru,
+                'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak'),
+                'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
+                'gaji_tunjangan_tetap' => $request->input('gaji_tunjangan_tetap') ?? 0,
+                'gaji_tunjangan_makan' => $request->input('gaji_tunjangan_makan') ?? 0,
+                'gaji_tunjangan_transport' => $request->input('gaji_tunjangan_transport') ?? 0,
+                'gaji_tunjangan_lain' => $request->input('gaji_tunjangan_lain') ?? 0,
+                'gaji_bpjs' => $request->input('gaji_bpjs') ?? 0,
+                'is_active' => true,
+            ]);
+        }
+
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
+
     /**
      * Remove the specified resource from storage.
      */
