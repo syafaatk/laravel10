@@ -36,52 +36,35 @@ class LemburController extends Controller
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'keterangan' => 'nullable|string|max:1000',
             'approver' => 'nullable|string|max:255',
-            'estimasi_uang_lembur' => 'nullable|decimal',
             'uraian_pekerjaan.*' => 'required|string|max:1000',
         ]);
 
         $jamMulai = Carbon::parse($request->jam_mulai);
         $jamSelesai = Carbon::parse($request->jam_selesai);
-        // jika tipe weekend dan holiday maka durasiJam dikurang 1 jam
+        
+        // Jika tipe weekend dan holiday maka durasiJam dikurang 1 jam
         if ($request->jenis == 'weekend' || $request->jenis == 'holiday') {
             $durasiJam = $jamSelesai->diffInHours($jamMulai) - 1;
         } else {
             $durasiJam = $jamSelesai->diffInHours($jamMulai);
         }
 
-        // logic perhitungan estimasi uang lembur
-        $estimasi_uang_lembur = 0;	
-        //weekday
-        // Jam Pertama: 1,5 x upah 1 Jam				1,5 x 1/173 x Upah Sebulan	
-        // Jam Kedua dst: 2 x upah 1 Jam				2 x 1/173 x Upah Sebulan	
-                                            
-        //weekend
-        // Jam Pertama s.d. Jam Kedelapan: 2 x upah 1 Jam				2 x 1/173 x Upah Sebulan	
-        // Jam Kesembilan dst.: 3 x upah 1 Jam				3 x 1/173 x Upah Sebulan	
-                                            
-        //holiday
-        // Jam Pertama s.d. Jam Kedelapan: 3 x upah 1 Jam				3 x 1/173 x Upah Sebulan	
+        // Get upah sebulan dari detail kontrak aktif user
+        $user = Auth::user();
+        $detailKontrak = $user->detailKontrakUserActive;
+        
+        if (!$detailKontrak) {
+            return redirect()->back()->with('error', 'User belum memiliki kontrak aktif. Silakan hubungi admin.');
+        }
 
-        // Asumsi upah sebulan adalah 3.000.000 (contoh)
-        // Anda bisa mendapatkan ini dari model User atau konfigurasi lain
-        $upahSebulan =Auth::user()->gaji_pokok + Auth::user()->gaji_tunjangan_makan + Auth::user()->gaji_tunjangan_tetap  ?? 9000000; // Default jika tidak ada gaji pokok
+        $upahSebulan = $detailKontrak->gaji_pokok + 
+                       $detailKontrak->gaji_tunjangan_tetap + 
+                       $detailKontrak->gaji_tunjangan_makan;
+        
         $upahPerJam = $upahSebulan / 173; // 1/173 x Upah Sebulan
 
-        if ($request->jenis == 'weekday') {
-            if ($durasiJam == 1) {
-                $estimasi_uang_lembur = 1.5 * $upahPerJam;
-            } elseif ($durasiJam > 1) {
-                $estimasi_uang_lembur = (1.5 * $upahPerJam) + (($durasiJam - 1) * 2 * $upahPerJam);
-            }
-        } elseif ($request->jenis == 'weekend') {
-            if ($durasiJam >= 1 && $durasiJam <= 8) {
-                $estimasi_uang_lembur = $durasiJam * 2 * $upahPerJam;
-            } elseif ($durasiJam > 8) {
-                $estimasi_uang_lembur = (8 * 2 * $upahPerJam) + (($durasiJam - 8) * 3 * $upahPerJam);
-            }
-        } elseif ($request->jenis == 'holiday') {
-            $estimasi_uang_lembur = $durasiJam * 3 * $upahPerJam;
-        }
+        // Logic perhitungan estimasi uang lembur
+        $estimasi_uang_lembur = $this->hitungUangLembur($request->jenis, $durasiJam, $upahPerJam);
 
         $lembur = Lembur::create([
             'user_id' => Auth::id(),
@@ -97,10 +80,12 @@ class LemburController extends Controller
         ]);
 
         foreach ($request->uraian_pekerjaan as $uraian) {
-            DetailLembur::create([
-                'lembur_id' => $lembur->id,
-                'uraian_pekerjaan' => $uraian,
-            ]);
+            if (!empty($uraian)) {
+                DetailLembur::create([
+                    'lembur_id' => $lembur->id,
+                    'uraian_pekerjaan' => $uraian,
+                ]);
+            }
         }
 
         return redirect()->route('lembur.index')->with('success', 'Pengajuan lembur berhasil disimpan.');
@@ -146,25 +131,21 @@ class LemburController extends Controller
             $durasiJam = $jamSelesai->diffInHours($jamMulai);
         }
 
-        $upahSebulan = Auth::user()->gaji_pokok + Auth::user()->gaji_tunjangan_makan + Auth::user()->gaji_tunjangan_tetap  ?? 9000000;
-        $upahPerJam = $upahSebulan / 173; 
-        $estimasi_uang_lembur = 0;
-
-        if ($request->jenis == 'weekday') {
-            if ($durasiJam == 1) {
-                $estimasi_uang_lembur = 1.5 * $upahPerJam;
-            } elseif ($durasiJam > 1) {
-                $estimasi_uang_lembur = (1.5 * $upahPerJam) + (($durasiJam - 1) * 2 * $upahPerJam);
-            }
-        } elseif ($request->jenis == 'weekend') {
-            if ($durasiJam >= 1 && $durasiJam <= 8) {
-                $estimasi_uang_lembur = $durasiJam * 2 * $upahPerJam;
-            } elseif ($durasiJam > 8) {
-                $estimasi_uang_lembur = (8 * 2 * $upahPerJam) + (($durasiJam - 8) * 3 * $upahPerJam);
-            }
-        } elseif ($request->jenis == 'holiday') {
-            $estimasi_uang_lembur = $durasiJam * 3 * $upahPerJam;
+        // Get upah sebulan dari detail kontrak aktif user
+        $user = Auth::user();
+        $detailKontrak = $user->detailKontrakUserActive;
+        
+        if (!$detailKontrak) {
+            return redirect()->back()->with('error', 'User belum memiliki kontrak aktif. Silakan hubungi admin.');
         }
+
+        $upahSebulan = $detailKontrak->gaji_pokok + 
+                       $detailKontrak->gaji_tunjangan_tetap + 
+                       $detailKontrak->gaji_tunjangan_makan;
+        
+        $upahPerJam = $upahSebulan / 173;
+        
+        $estimasi_uang_lembur = $this->hitungUangLembur($request->jenis, $durasiJam, $upahPerJam);
 
         $lembur->update([
             'tanggal' => $request->tanggal,
@@ -180,14 +161,15 @@ class LemburController extends Controller
         // Update detail lembur
         $lembur->detailLemburs()->delete(); // Hapus semua detail lama
         foreach ($request->uraian_pekerjaan as $uraian) {
-            DetailLembur::create([
-                'lembur_id' => $lembur->id,
-                'uraian_pekerjaan' => $uraian,
-            ]);
+            if (!empty($uraian)) {
+                DetailLembur::create([
+                    'lembur_id' => $lembur->id,
+                    'uraian_pekerjaan' => $uraian,
+                ]);
+            }
         }
 
         return redirect()->route('lembur.index')->with('success', 'Pengajuan lembur berhasil diperbarui.');
-        
     }
 
     public function destroy(Lembur $lembur)
@@ -232,5 +214,50 @@ class LemburController extends Controller
         }
         abort(403);
     }
-    
+
+    /**
+     * Hitung uang lembur berdasarkan jenis dan durasi
+     * 
+     * @param string $jenis (weekday, weekend, holiday)
+     * @param int $durasiJam
+     * @param float $upahPerJam
+     * @return float
+     */
+    private function hitungUangLembur($jenis, $durasiJam, $upahPerJam)
+    {
+        $estimasi = 0;
+
+        /**
+         * Perhitungan Lembur:
+         * 
+         * WEEKDAY:
+         * - Jam Pertama: 1,5 x upah 1 jam
+         * - Jam Kedua dst: 2 x upah 1 jam
+         * 
+         * WEEKEND:
+         * - Jam 1-8: 2 x upah 1 jam
+         * - Jam 9 dst: 3 x upah 1 jam
+         * 
+         * HOLIDAY:
+         * - Semua jam: 3 x upah 1 jam
+         */
+
+        if ($jenis == 'weekday') {
+            if ($durasiJam == 1) {
+                $estimasi = 1.5 * $upahPerJam;
+            } elseif ($durasiJam > 1) {
+                $estimasi = (1.5 * $upahPerJam) + (($durasiJam - 1) * 2 * $upahPerJam);
+            }
+        } elseif ($jenis == 'weekend') {
+            if ($durasiJam >= 1 && $durasiJam <= 8) {
+                $estimasi = $durasiJam * 2 * $upahPerJam;
+            } elseif ($durasiJam > 8) {
+                $estimasi = (8 * 2 * $upahPerJam) + (($durasiJam - 8) * 3 * $upahPerJam);
+            }
+        } elseif ($jenis == 'holiday') {
+            $estimasi = $durasiJam * 3 * $upahPerJam;
+        }
+
+        return round($estimasi, 0);
+    }
 }

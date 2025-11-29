@@ -160,7 +160,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 font-semibold">CONTRACT TYPE</p>
-                                    <p class="font-medium text-gray-900 text-sm">{{ $user->kontrak ?? '-' }}</p>
+                                    <p class="font-medium text-gray-900 text-sm">{{ $user->detailKontrakUserActive->kontrak ?? '-' }}</p>
                                 </div>
                             </div>
                         </div>

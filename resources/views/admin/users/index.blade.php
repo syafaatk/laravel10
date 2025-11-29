@@ -50,14 +50,15 @@
                                         $tglMasuk = $user->tgl_masuk ? \Carbon\Carbon::parse($user->tgl_masuk) : null;
                                         $years = $tglMasuk ? $tglMasuk->diffInYears(\Carbon\Carbon::now()) : null;
                                         $month = $tglMasuk ? $tglMasuk->addYears($years)->diffInMonths(\Carbon\Carbon::now()) : null;
-
+                                        $kontrakDetail = $user->detailKontrakUserActive;
+                                        $kontrak = $user->detailKontrakUserActive->kontrak;
                                         $gajiParts = [
-                                            $user->gaji_tunjangan_tetap ?? 0,
-                                            $user->gaji_tunjangan_makan ?? 0,
-                                            $user->gaji_tunjangan_transport ?? 0,
-                                            $user->gaji_tunjangan_lain ?? 0,
-                                            $user->gaji_pokok ?? 0,
-                                            $user->gaji_bpjs ?? 0,
+                                            $kontrakDetail->gaji_tunjangan_tetap ?? 0,
+                                            $kontrakDetail->gaji_tunjangan_makan ?? 0,
+                                            $kontrakDetail->gaji_tunjangan_transport ?? 0,
+                                            $kontrakDetail->gaji_tunjangan_lain ?? 0,
+                                            $kontrakDetail->gaji_pokok ?? 0,
+                                            $kontrakDetail->gaji_bpjs ?? 0,
                                         ];
                                         $totalGaji = array_sum($gajiParts);
 
@@ -69,7 +70,7 @@
                                     <tr>
                                         <td class="align-middle">{{ $nopeg }}</td>
                                         <td class="align-middle">{{ $user->name }}</td>
-                                        <td class="align-middle">{{ $user->kontrak ?? '-' }}</td>
+                                        <td class="align-middle">{{ $kontrak ? $kontrak : '-' }}</td>
                                         <td class="align-middle">{{ $user->jabatan ?? '-' }}</td>
                                         <td class="align-middle">{{ $user->ukuran_baju ?? '-' }}</td>
                                         <td class="align-middle">{{ $user->motor ? 'Yes' : 'No' }}</td>

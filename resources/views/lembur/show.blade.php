@@ -98,7 +98,7 @@
                             <label class="form-label font-semibold text-gray-600 block mb-2">Rincian Perhitungan Uang Lembur:</label>
                             <div class="bg-gray-50 p-4 rounded-lg border">
                                 @php
-                                    $upahSebulan = $lembur->user->gaji_pokok + $lembur->user->gaji_tunjangan_makan + $lembur->user->gaji_tunjangan_tetap  ?? 9000000;
+                                    $upahSebulan = $lembur->user->detailKontrakUserActive->gaji_pokok + $lembur->user->detailKontrakUserActive->gaji_tunjangan_makan + $lembur->user->detailKontrakUserActive->gaji_tunjangan_tetap  ?? 9000000;
                                     $upahPerJam = $upahSebulan / 173;
                                     $durasiJam = $lembur->durasi_jam;
                                     $estimasi_uang_lembur_calculated = 0;
