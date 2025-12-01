@@ -18,8 +18,6 @@ class ReimbursementController extends Controller
 
     public function index()
     {
-        
-
         $user = Auth::user();
         if ($user->hasRole('admin')) {
             $reimbursements = Reimbursement::with('user','laporanReimbursement')->get();
@@ -143,12 +141,16 @@ class ReimbursementController extends Controller
         $laporan = null;
         if (!empty($data['laporan_id']) && $data['laporan_id'] !== '__new__') {
             $laporan = LaporanReimbursement::find($data['laporan_id']);
+            // amount update
+            $laporan->amount += $reimbursement->amount;
+            $laporan->save();
         } elseif (!empty($data['new_laporan_title'])) {
             $laporan = LaporanReimbursement::create([
                 'title' => $data['new_laporan_title'],
                 'start_date' => $data['new_laporan_start'] ?? Carbon::now()->startOfMonth()->toDateString(),
                 'end_date' => $data['new_laporan_end'] ?? Carbon::now()->endOfMonth()->toDateString(),
-                // set other required fields or defaults if any
+                // amount initial
+                'amount' => $reimbursement->amount,
             ]);
         }
 
