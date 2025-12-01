@@ -292,6 +292,8 @@
                                 @else
                                     - {{ __('Ongoing') }}
                                 @endif
+                                <!-- masa kontrak dalam tahun dan bulan -->
+                                ({{ $detail->tgl_mulai_kontrak ? $detail->tgl_selesai_kontrak->locale('id')->diffForHumans($detail->tgl_mulai_kontrak ?? now(), ['parts' => 3, 'short' => false, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) : '-' }})
                             </p>
                         </div>
                         <div class="text-right">
