@@ -146,6 +146,11 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get();
 
+            $myContract = $user->detailKontrakUsers()
+                ->orderByDesc('tgl_mulai_kontrak')
+                ->limit(5)
+                ->get();
+
             return view('dashboard', compact(
                 'user',
                 'totalReimbursements',
@@ -160,7 +165,8 @@ class DashboardController extends Controller
                 'myRecentActivities',
                 'remainingCutiDays',
                 'currentYear',
-                'myAssets'
+                'myAssets',
+                'myContract'
             ));
         }
     }

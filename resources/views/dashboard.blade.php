@@ -596,6 +596,41 @@
                         <p>📝 <strong>Filter:</strong> Only approved transportation reimbursements are included.</p>
                     </div>
                 </div>
+                <!-- list contract -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Employee Contracts</h3>
+                    <div class="space-y-3">
+                        @forelse ($myContract ?? [] as $contract)
+                        <!-- if status is_active = 1 bg-green-100 -->
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded {{ $contract->is_active ? 'bg-green-100' : 'bg-gray-50' }}">
+                                <!-- bagi 2 kolom -->
+                                <div class="flex-1>
+                                    <p class="font-medium text-gray-800">{{ $contract->user->name }}</p>
+                                    <p class="text-sm text-gray-600">Contract Type: {{ $contract->kontrak }}</p>
+                                    <p class="text-sm text-gray-600">Start Date: {{ $contract->tgl_mulai_kontrak->format('d M Y') }}</p>
+                                    <p class="text-sm text-gray-600">End Date: {{ $contract->tgl_selesai_kontrak ? $contract->tgl_selesai_kontrak->format('d M Y') : 'N/A' }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <!-- difforhuman -->
+                                    <p class="text-sm text-gray-600">Duration: {{ $contract->tgl_mulai_kontrak->locale('id')->diffForHumans($contract->tgl_selesai_kontrak->locale('id') ?? now(), ['parts' => 3, 'short' => false,  'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) }}</p>
+                                    <!-- sisa durasi -->
+                                     <p class="text-sm text-gray-600">Remaining Duration: 
+                                        @if($contract->tgl_selesai_kontrak > now())
+                                            {{ now()->locale('id')->diffForHumans($contract->tgl_selesai_kontrak->locale('id'), ['parts' => 3, 'short' => false,  'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) }}
+                                        @else
+                                            Selesai
+                                        @endif
+                                    <p class="text-sm text-gray-600">Status: {{ $contract->is_active ? 'Active' : 'Inactive' }}</p>
+                                    <!-- detail gaji -->
+                                    <p class="text-sm text-gray-600">Total Salary: Rp {{ number_format($contract->gaji_pokok + $contract->gaji_tunjangan_tetap + $contract->gaji_tunjangan_makan + $contract->gaji_tunjangan_transport + $contract->gaji_tunjangan_lain + $contract->gaji_bpjs, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-gray-500 text-center py-4">No employee contracts available.</p>
+                            
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
     </div>
