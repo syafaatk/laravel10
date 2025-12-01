@@ -151,6 +151,7 @@ class ReimbursementController extends Controller
                 'end_date' => $data['new_laporan_end'] ?? Carbon::now()->endOfMonth()->toDateString(),
                 // amount initial
                 'amount' => $reimbursement->amount,
+                'status' => 'pending',
             ]);
         }
 
