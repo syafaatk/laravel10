@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Lembur;
+use App\Models\MasterAsset;
 
 
 class User extends Authenticatable
@@ -105,7 +106,7 @@ class User extends Authenticatable
     
     public function assetAssign()
     {
-        return $this->hasMany(AssetAssign::class);
+        return $this->hasMany(MasterAsset::class, 'assigned_to');
     }
 
     public function lemburs()

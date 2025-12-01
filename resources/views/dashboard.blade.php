@@ -276,7 +276,7 @@
                     <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-orange-100 text-sm font-semibold">Pending Requests</p>
+                                <p class="text-orange-100 text-sm font-semibold">Pending Reimburse</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $pendingReimbursements }}</h2>
                             </div>
                             <div class="bg-orange-400 bg-opacity-30 rounded-full p-1">
@@ -289,7 +289,7 @@
                     <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-green-100 text-sm font-semibold">Approved Requests</p>
+                                <p class="text-green-100 text-sm font-semibold">Approved Reimburse</p>
                                 <h2 class="text-3xl font-bold mt-2">{{ $approvedReimbursements ?? 0 }}</h2>
                             </div>
                             <div class="bg-green-400 bg-opacity-30 rounded-full p-1">
@@ -329,7 +329,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-yellow-100 text-sm font-semibold">Remaining Cuti Days</p>
-                                <h2 class="text-3xl font-bold mt-2">{{ $remainingCutiDays }} / 12</h2>
+                                <h2 class="text-3xl font-bold mt-2">{{ $remainingCutiDays }} days left</h2>
                             </div>
                             <div class="bg-yellow-400 bg-opacity-30 rounded-full p-1">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
@@ -405,6 +405,34 @@
                             </div>
                         @empty
                             <p class="text-gray-500 text-center py-4">No recent activities</p>
+                        @endforelse
+                    </div>
+                </div>
+                {{-- ASSET USER RECENT ACTIVITIES --}}
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">My Asset Activities</h3>
+                    <div class="space-y-3">
+                        @forelse ($myAssets ?? [] as $activity)
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-800">{{ $activity['name'] ?? 'Activity' }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        {{ $activity['type'] ?? '' }} •
+                                        Rp. {{ number_format($activity['purchase_price'] ?? 0, 0, ',', '.') }}
+                                        <span class="inline-block px-2 py-1 text-xs font-semibold rounded
+                                            @if($activity['status'] == 'assigned') bg-green-100 text-green-800
+                                            @elseif($activity['status'] == 'returned') bg-blue-100 text-blue-800
+                                            @else bg-red-100 text-red-800 @endif">
+                                            {{ ucfirst($activity['status'] ?? 'unknown') }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-gray-600">{{ $activity['date'] ?? now()->format('d M Y') }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-gray-500 text-center py-4">No asset activities</p>
                         @endforelse
                     </div>
                 </div>

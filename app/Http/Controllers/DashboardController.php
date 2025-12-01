@@ -141,6 +141,11 @@ class DashboardController extends Controller
                 ->sortByDesc('date')
                 ->take(5);
 
+            $myAssets = $user->assetAssign()
+                ->latest()
+                ->limit(5)
+                ->get();
+
             return view('dashboard', compact(
                 'user',
                 'totalReimbursements',
@@ -154,7 +159,8 @@ class DashboardController extends Controller
                 'rejectedCutiRequests',
                 'myRecentActivities',
                 'remainingCutiDays',
-                'currentYear'
+                'currentYear',
+                'myAssets'
             ));
         }
     }

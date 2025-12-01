@@ -98,6 +98,13 @@ class ProfileController extends Controller
             } else {
                 // Jika tidak ada perubahan, hanya update kontrak aktif
                 $detailKontrakAktif->tgl_selesai_kontrak = $request->input('tgl_selesai_kontrak') ? Carbon::parse($request->input('tgl_selesai_kontrak')) : null;
+                $detailKontrakAktif->kontrak = $request->input('kontrak');
+                $detailKontrakAktif->gaji_pokok = $request->input('gaji_pokok') ?? 0;
+                $detailKontrakAktif->gaji_tunjangan_tetap = $request->input('gaji_tunjangan_tetap') ?? 0;
+                $detailKontrakAktif->gaji_tunjangan_makan = $request->input('gaji_tunjangan_makan') ?? 0;
+                $detailKontrakAktif->gaji_tunjangan_transport = $request->input('gaji_tunjangan_transport') ?? 0;
+                $detailKontrakAktif->gaji_tunjangan_lain = $request->input('gaji_tunjangan_lain') ?? 0;
+                $detailKontrakAktif->gaji_bpjs = $request->input('gaji_bpjs') ?? 0;
                 $detailKontrakAktif->save();
             }
         } elseif (!$detailKontrakAktif && $tglMulaiKontrakBaru) {
