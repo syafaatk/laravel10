@@ -281,31 +281,34 @@
                     {{ __('Contract History') }}
                 </h4>
                 <div class="space-y-3 max-h-64 overflow-y-auto">
-                    @foreach ($user->detailKontrakUsers->sortByDesc('tgl_mulai_kontrak') as $detail)
-                    <div class="flex items-center justify-between p-3 bg-white rounded border border-blue-100 hover:shadow-md transition">
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-900">{{ $detail->kontrak ?? '-' }}</p>
-                            <p class="text-sm text-gray-600">
-                                {{ $detail->tgl_mulai_kontrak ? $detail->tgl_mulai_kontrak->format('d M Y') : '-' }} 
-                                @if ($detail->tgl_selesai_kontrak)
-                                    s/d {{ $detail->tgl_selesai_kontrak->format('d M Y') }}
-                                @else
-                                    - {{ __('Ongoing') }}
-                                @endif
-                                <!-- masa kontrak dalam tahun dan bulan -->
-                                ({{ $detail->tgl_mulai_kontrak ? $detail->tgl_selesai_kontrak->locale('id')->diffForHumans($detail->tgl_mulai_kontrak ?? now(), ['parts' => 3, 'short' => false, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) : '-' }})
-                            </p>
-                        </div>
-                        <div class="text-right">
-                            @if ($detail->is_active)
-                                <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold mb-1">{{ __('Active') }}</span>
+                @foreach ($user->detailKontrakUsers->sortByDesc('tgl_mulai_kontrak') as $detail)
+                <div class="flex items-center justify-between p-3 bg-white rounded border border-blue-100 hover:shadow-md transition">
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-900">{{ $detail->kontrak ?? '-' }}</p>
+                        <p class="text-sm text-gray-600">
+                            {{ $detail->tgl_mulai_kontrak ? $detail->tgl_mulai_kontrak->format('d M Y') : '-' }} 
+                            @if ($detail->tgl_selesai_kontrak)
+                                s/d {{ $detail->tgl_selesai_kontrak->format('d M Y') }}
                             @else
-                                <span class="inline-block px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold mb-1">{{ __('Inactive') }}</span>
+                                s/d {{ __('Ongoing') }}
                             @endif
-                            <p class="text-sm font-bold text-gray-900">Rp {{ number_format($detail->total_gaji, 0, ',', '.') }}</p>
-                        </div>
+                    ({{ $detail->tgl_mulai_kontrak 
+                                ? ($detail->tgl_selesai_kontrak ?? now())
+                                ->locale('id')
+                                ->diffForHumans($detail->tgl_mulai_kontrak, ['parts' => 3, 'short' => false, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) 
+                                : '-' }})
+                        </p>
                     </div>
-                    @endforeach
+                    <div class="text-right">
+                        @if ($detail->is_active)
+                            <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold mb-1">{{ __('Active') }}</span>
+                        @else
+                            <span class="inline-block px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold mb-1">{{ __('Inactive') }}</span>
+                        @endif
+                        <p class="text-sm font-bold text-gray-900">Rp {{ number_format($detail->total_gaji, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+                @endforeach
                 </div>
             </div>
             @endif
