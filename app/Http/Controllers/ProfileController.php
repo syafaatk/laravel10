@@ -21,7 +21,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user();
-        $detailKontrakAktif = $user->detailKontrakUserActive->orderByDesc('tgl_mulai_kontrak')->first();
+        $detailKontrakAktif = $user->detailKontrakUserActive;
         
         return view('profile.edit', compact('user', 'detailKontrakAktif'));
     }
