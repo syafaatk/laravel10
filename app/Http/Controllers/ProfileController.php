@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class ProfileController extends Controller
 {
@@ -20,7 +21,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user();
-        $detailKontrakAktif = $user->detailKontrakUserActive;
+        $detailKontrakAktif = $user->detailKontrakUserActive->first();
         
         return view('profile.edit', compact('user', 'detailKontrakAktif'));
     }

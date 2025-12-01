@@ -126,7 +126,7 @@ class User extends Authenticatable
 
     public function detailKontrakUserActive()
     {
-        return $this->hasOne(DetailKontrakUser::class)->where('is_active', true);
+        return $this->hasOne(DetailKontrakUser::class)->where('is_active', true)->orderByDesc('tgl_mulai_kontrak');
     }
 
     public function getTotalGajiAttribute()
