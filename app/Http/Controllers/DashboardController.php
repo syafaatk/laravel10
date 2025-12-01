@@ -68,6 +68,10 @@ class DashboardController extends Controller
                     ];
                 }
             }
+            $myContract = $user->detailKontrakUsers()
+                ->orderByDesc('tgl_mulai_kontrak')
+                ->limit(5)
+                ->get();
 
             return view('dashboard', compact(
                 'user',
@@ -85,7 +89,8 @@ class DashboardController extends Controller
                 'recentCuti',
                 'currentYear',
                 'remainingCutiDays',
-                'employeesRemainingCuti'
+                'employeesRemainingCuti',
+                'myContract'
             ));
         }
         
