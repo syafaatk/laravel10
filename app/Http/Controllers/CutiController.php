@@ -353,6 +353,14 @@ class CutiController extends Controller
             $holidayDates = array_map(fn($d) => Carbon::parse($d)->toDateString(), config('holidays.holidays', []));
         }
 
+        // sisa cuti per user
+        foreach ($users as $user) {
+            $totalTaken = Cuti::where('user_id', $user->id)
+                ->where('status', 'approved')
+                ->sum('days_requested');
+            $user->sisa_cuti = 12 - $totalTaken; // assuming total cuti per year is 12 days
+        }
+
         return view('cuti.report', compact('startDate', 'endDate', 'dateRange', 'users', 'cutiData', 'holidayDates'));
     }
     
