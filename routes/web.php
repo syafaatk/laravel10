@@ -16,6 +16,8 @@ use App\Http\Controllers\UserOrderDetailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LemburController;
+use App\Http\Controllers\KontrakController;
+use App\Http\Controllers\PengunduranController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +38,8 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -64,6 +68,16 @@ Route::middleware('auth')->group(function () {
     Route::get('cuti/{cuti}/print', [CutiController::class, 'print'])->name('cuti.print');
     Route::patch('cuti/{cuti}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
     Route::patch('cuti/{cuti}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+
+    // Pengunduran Diri (Resignation) Routes
+    Route::get('pengunduran', [PengunduranController::class, 'index'])->name('pengunduran.index');
+    Route::get('pengunduran/create', [PengunduranController::class, 'create'])->name('pengunduran.create');
+    Route::post('pengunduran', [PengunduranController::class, 'store'])->name('pengunduran.store');
+    Route::get('pengunduran/{pengunduran}', [PengunduranController::class, 'show'])->name('pengunduran.show');
+    Route::patch('pengunduran/{pengunduran}/approve', [PengunduranController::class, 'approve'])->name('pengunduran.approve');
+    Route::patch('pengunduran/{pengunduran}/reject', [PengunduranController::class, 'reject'])->name('pengunduran.reject');
+    Route::get('pengunduran/{pengunduran}/print', [PengunduranController::class, 'print'])->name('pengunduran.print');
+    Route::delete('pengunduran/{pengunduran}', [PengunduranController::class, 'destroy'])->name('pengunduran.destroy');
 
     // Lembur (Overtime) Routes
     Route::get('lembur', [LemburController::class, 'index'])->name('lembur.index');
@@ -95,6 +109,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class);
     //route ajax_index
     Route::get('ajax-cuti-details', [CutiController::class, 'ajax_index'])->name('ajax-cuti-details');
+    Route::view('dashboard-kontrak', 'kontrak_dashboard')->name('dashboard-kontrak');
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('penilaian', PenilaianPegawaiController::class)->names('penilaian');

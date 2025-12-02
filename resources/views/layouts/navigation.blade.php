@@ -41,6 +41,9 @@
                             <x-dropdown-link :href="route('lembur.index')" :active="request()->routeIs('lembur.*')">
                                 {{ __('Lembur') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('pengunduran.index')" :active="request()->routeIs('pengunduran.*')">
+                                {{ __('Pengunduran Diri') }}
+                            </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -73,6 +76,9 @@
                             <div class="block px-4 py-2 text-xs text-gray-400">
                                 {{ __('Administrasi & Data Utama') }}
                             </div>
+                            <x-dropdown-link :href="route('admin.dashboard-kontrak')" :active="request()->routeIs('admin.dashboard-kontrak')">
+                                {{ __('Dashboard Kontrak') }}
+                            </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')">
                                 {{ __('Roles') }}
                             </x-dropdown-link>

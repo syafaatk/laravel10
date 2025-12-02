@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Lembur;
 use App\Models\MasterAsset;
-
+use App\Models\Laporan;
 
 class User extends Authenticatable
 {
@@ -135,5 +135,24 @@ class User extends Authenticatable
         return $detail ? $detail->total_gaji : 0;
     }
 
-    
+    public function userLaporans()
+    {
+        return $this->hasMany(Laporan::class);
+    }
+
+    public function userKontrakDetails()
+    {
+        return $this->hasMany(KontrakDetail::class);
+    }
+
+    public function pengundurans()
+    {
+        return $this->hasMany(Pengunduran::class);
+    }
+
+    public function processedPengundurans()
+    {
+        return $this->hasMany(Pengunduran::class, 'processed_by');
+    }
+
 }
