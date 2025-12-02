@@ -28,11 +28,13 @@
                 <th rowspan="3">No</th>
                 <th rowspan="{{ count($dateRange) + 1 }}">Nama Pegawai</th>
                 <th rowspan="3">Kontrak</th>
-                <th rowspan="{{ count($dateRange) + 1 }}">Sisa Cuti</th>
+                <th colspan="2" style="text-align: center;">Sisa Cuti</th>
                 <th colspan="{{ count($dateRange) }}" style="text-align: center;">Periode: {{ $startDate->format('d F Y') }} sampai {{ $endDate->format('d F Y') }}</th>
                 <th rowspan="3">Jumlah Cuti</th>
             </tr>
             <tr>
+                <th rowspan="2">{{ Carbon\Carbon::now()->year }}</th>
+                <th rowspan="2">{{ Carbon\Carbon::now()->year + 1 }}</th>
                 @foreach ($dateRange as $date)
                 <!-- format indonesia bahasa -->
                     <th>{{ $date->locale('id')->isoFormat('ddd') }}</th>
@@ -50,7 +52,8 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->detailKontrakUserActive->kontrak }}</td>
-                    <td>{{ $user->sisa_cuti }} hari</td>
+                    <td>{{ $user->sisa_cuti_tahun_ini }} hari</td>
+                    <td>{{ $user->sisa_cuti_tahun_depan }} hari</td>
                     @foreach ($dateRange as $date)
                         @if (isset($cutiData[$user->id]) && in_array($date->format('Y-m-d'), $cutiData[$user->id]))
                             @if ($date->isWeekend())

@@ -357,9 +357,16 @@ class CutiController extends Controller
         foreach ($users as $user) {
             $totalTaken = Cuti::where('user_id', $user->id)
                 ->where('status', 'approved')
+                ->whereYear('start_date', Carbon::now()->year)
                 ->where('master_cuti_id', '1') // assuming '1' is the ID for annual leave
                 ->sum('days_requested');
-            $user->sisa_cuti = 12 - $totalTaken; // assuming total cuti per year is 12 days
+            $user->sisa_cuti_tahun_ini = 12 - $totalTaken; // assuming total cuti per year is 12 days
+            $totalTakenNextYear = Cuti::where('user_id', $user->id)
+                ->where('status', 'approved')
+                ->whereYear('start_date', Carbon::now()->year + 1)
+                ->where('master_cuti_id', '1') // assuming '1' is the ID for annual leave
+                ->sum('days_requested');
+            $user->sisa_cuti_tahun_depan = 12 - $totalTakenNextYear; // assuming total cuti per year is 12 days
         }
 
         return view('cuti.report', compact('startDate', 'endDate', 'dateRange', 'users', 'cutiData', 'holidayDates'));
