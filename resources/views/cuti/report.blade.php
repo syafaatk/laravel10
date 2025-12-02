@@ -67,7 +67,18 @@
                             <td></td>
                         @endif
                     @endforeach
-                    <td>{{ isset($cutiData[$user->id]) ? count($cutiData[$user->id]) : 0 }} hari</td>
+                    <!-- abaikan menghitung weekend dan holiday -->
+                    <td>
+                        {{
+                            isset($cutiData[$user->id]) ?
+                            count(array_filter($cutiData[$user->id], function($cutiDate) use ($startDate, $endDate, $holidayDates) {
+                                $date = \Carbon\Carbon::parse($cutiDate);
+                                return $date->between($startDate, $endDate) &&
+                                       !$date->isWeekend() &&
+                                       !in_array($date->format('Y-m-d'), $holidayDates);
+                            })) : 0
+                        }} hari
+                    </td>
                 </tr>
             @endforeach
         </tbody>
