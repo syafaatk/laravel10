@@ -53,6 +53,8 @@
                         @if (isset($cutiData[$user->id]) && in_array($date->format('Y-m-d'), $cutiData[$user->id]))
                             @if ($date->isWeekend())
                             <td style="text-align: center; background-color: #e74040ff;">x</td>
+                            @elseif (in_array($date->format('Y-m-d'), $holidayDates))
+                            <td style="text-align: center; background-color: #f2d024ff;">x</td>
                             @else
                             <td style="text-align: center; background-color: #08c952ff;">&#10003;</td>
                             @endif
