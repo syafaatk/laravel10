@@ -46,6 +46,10 @@ return [
         '2025-08-17', // Hari Kemerdekaan RI
         '2025-12-25', // Natal
         '2025-12-26', // Cuti Bersama
+
+        //2026
+        '2026-01-01', // Tahun Baru
+        '2026-01-16', // Isra dan Miraj
     ],
 
     // Cuti Bersama tambahan (opsional - jika berbeda dari holidays)
