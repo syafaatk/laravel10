@@ -90,7 +90,7 @@
         <tfoot>
             <!-- legenda warna -->
             <tr>
-                <td colspan="{{ count($dateRange) + 4 }}">
+                <td colspan="{{ count($dateRange) + 6 }}">
                     <strong>Legenda Warna:</strong>
                     <span style="background-color: #08c952ff; padding: 2px 6px; border: 1px solid black;">&#10003; : Hari Cuti</span>
                     <span style="background-color: #e74040ff; padding: 2px 6px; border: 1px solid black;">x : Akhir Pekan (Sabtu & Minggu)</span>
