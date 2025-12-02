@@ -122,6 +122,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('laporan-reimbursements/generate', [LaporanReimbursementController::class, 'generate'])->name('laporan-reimbursements.generate');
     Route::post('laporan-reimbursements', [LaporanReimbursementController::class, 'store'])->name('laporan-reimbursements.store');
     Route::get('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'show'])->name('laporan-reimbursements.show');
+
+    Route::get('laporan-cuti/search', [CutiController::class, 'search'])->name('laporan-cuti.search');
+    Route::post('laporan-cuti/generate', [CutiController::class, 'generate'])->name('laporan-cuti.generate');
     // edit
     Route::get('laporan-reimbursements/{laporanReimbursement}/edit', [LaporanReimbursementController::class, 'edit'])->name('laporan-reimbursements.edit');
     Route::put('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'update'])->name('laporan-reimbursements.update');

@@ -287,5 +287,73 @@ class CutiController extends Controller
 
         return $months[$month] ?? '';
     }
+
+    // generate cuti report - form filter
+    public function search()
+    {
+        return view('cuti.search');
+    }
+
+    public function generate(Request $request)
+    {   
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
+
+        // Generate date range array
+        $dateRange = [];
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $dateRange[] = $date->copy();
+        }
+
+        // Get all users join kontrak order by kontrak
+        $users = \App\Models\User::with('detailKontrakUserActive')
+            ->whereHas('detailKontrakUserActive')
+            ->get()
+            ->sortBy(function($user) {
+                return $user->detailKontrakUserActive->kontrak;
+            });
+
+        // Get cuti data within the date range
+        $cutis = Cuti::where(function($query) use ($startDate, $endDate) {
+                $query->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
+                      ->orWhereBetween('end_date', [$startDate->toDateString(), $endDate->toDateString()])
+                      ->orWhere(function($q) use ($startDate, $endDate) {
+                          $q->where('start_date', '<=', $startDate->toDateString())
+                            ->where('end_date', '>=', $endDate->toDateString());
+                      });
+            })
+            ->where('status', 'approved')
+            ->get();
+
+        // Prepare cuti data for easy lookup
+        $cutiData = [];
+        foreach ($cutis as $cuti) {
+            $current = Carbon::parse($cuti->start_date);
+            $cutiEnd = Carbon::parse($cuti->end_date);
+            while ($current->lte($cutiEnd)) {
+                if ($current->gte($startDate) && $current->lte($endDate)) {
+                    $cutiData[$cuti->user_id][] = $current->toDateString();
+                }
+                $current->addDay();
+            }
+        }
+
+        // get holiday list
+        $holidayDates = [];
+        if (class_exists(\App\Models\Holiday::class)) {
+            $holidayDates = \App\Models\Holiday::pluck('date')->map(fn($d) => Carbon::parse($d)->toDateString())->toArray();
+        } elseif (class_exists(\App\Models\PublicHoliday::class)) {
+            $holidayDates = \App\Models\PublicHoliday::pluck('date')->map(fn($d) => Carbon::parse($d)->toDateString())->toArray();
+        } else {
+            $holidayDates = array_map(fn($d) => Carbon::parse($d)->toDateString(), config('holidays.holidays', []));
+        }
+
+        return view('cuti.report', compact('startDate', 'endDate', 'dateRange', 'users', 'cutiData', 'holidayDates'));
+    }
     
 }

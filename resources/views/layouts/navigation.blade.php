@@ -126,6 +126,9 @@
                             <x-dropdown-link :href="route('admin.laporan-reimbursements.search')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
                                 {{ __('Generate Reimbursements') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.laporan-cuti.search')" :active="request()->routeIs('admin.laporan-cuti.*')">
+                                {{ __('Generate Cuti') }}
+                            </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
                 </div>
