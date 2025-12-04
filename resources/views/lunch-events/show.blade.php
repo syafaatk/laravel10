@@ -72,43 +72,79 @@
 
                                 <!-- tampilkan gambar menu -->
                                 <div class="py-4">
-                                    <dt class="text-base font-semibold mb-2">Menu :</dt>
-                                    <dd>
-                                        @if ($lunchEvent->restaurant)
-                                            <!-- tampilkan menu 1 -7 jika ada-->
-                                             
-                                            @for ($i = 1; $i <= 7; $i++)
+                                    <div id="menuGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        @for ($i = 1; $i <= 7; $i++)
+                                            @php
+                                                $menuImage = 'menu_' . $i;
+                                            @endphp
+                                            @if ($lunchEvent->restaurant->$menuImage)
                                                 @php
-                                                    $menuImage = 'menu_' . $i;
+                                                    $filePath = $lunchEvent->restaurant->$menuImage;
+                                                    $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                                                    $fileUrl = asset('storage/restaurants/' . $filePath);
+                                                    $isImage = in_array($fileExtension, ['jpg','jpeg','png','gif','webp']);
+                                                    $assetType = $isImage ? 'image' : ($fileExtension == 'pdf' ? 'pdf' : 'other');
                                                 @endphp
-                                                @if ($lunchEvent->restaurant->$menuImage)
-                                                <!-- jika format gambar tampilkan gambar jika format pdf tampilkan icon pdf-->
-                                                 
-                                                    @php
-                                                        $fileExtension = pathinfo($lunchEvent->restaurant->$menuImage, PATHINFO_EXTENSION);
-                                                    @endphp
 
-                                                    @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                                                        <a href="{{ asset('storage/restaurants/' . $lunchEvent->restaurant->$menuImage) }}" target="_blank">
-                                                            <img src="{{ asset('storage/restaurants/' . $lunchEvent->restaurant->$menuImage) }}" alt="Menu {{ $i }}" class="w-full h-auto object-cover rounded-md mb-2">
-                                                        </a>
+                                                <div class="menu-card group border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                                                    data-title="Menu asset {{ $i }}"
+                                                    data-type="{{ $assetType }}">
+                                                    @if ($isImage)
+                                                        <div class="relative">
+                                                            <img src="{{ $fileUrl }}" alt="menu {{ $i }}"
+                                                                class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-[1.03]">
+                                                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                                                            <div class="absolute top-2 left-2 inline-flex items-center px-2 py-1 rounded-full text-[10px] font-medium bg-black/60 text-white">
+                                                                Image Menu {{ $i }}
+                                                            </div>
+                                                            <div class="absolute bottom-2 right-2">
+                                                                <button type="button"
+                                                                        onclick="openImageModal('{{ $fileUrl }}')"
+                                                                        class="inline-flex items-center px-2.5 py-1.5 rounded-full text-[11px] font-medium bg-white/90 text-gray-800 shadow-sm hover:bg-white">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                                        <path d="M4 3a2 2 0 00-2 2v10.5A1.5 1.5 0 003.5 17H14a2 2 0 002-2V5a2 2 0 00-2-2H4z" />
+                                                                        <path d="M6 11l1.5-2 1.75 2.333L11 9l3 4H6z" />
+                                                                    </svg>
+                                                                    View Image
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="p-3">
+                                                            <p class="text-sm font-medium text-gray-900">Menu asset {{ $i }}</p>
+                                                            <p class="text-xs text-gray-500 mt-1">
+                                                                Klik tombol <span class="font-semibold">View Image</span> untuk melihat detail.
+                                                            </p>
+                                                        </div>
                                                     @elseif ($fileExtension == 'pdf')
-                                                        <a href="{{ asset('storage/restaurants/' . $lunchEvent->restaurant->$menuImage) }}" target="_blank" class="flex items-center text-blue-600 hover:underline mb-2">
-                                                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-1-9h2V7h-2v2z"/>
-                                                            </svg>
-                                                            View Menu {{ $i }} (PDF)
-                                                        </a>
+                                                        <div class="p-4 h-40 flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+                                                            <div class="flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm mb-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-rose-500" viewBox="0 0 24 24" fill="currentColor">
+                                                                    <path d="M6 2a2 2 0 00-2 2v16c0 1.1.9 2 2 2h12a2 2 0 002-2V8.828A2 2 0 0019.414 7L15 2.586A2 2 0 0013.586 2H6z" />
+                                                                    <path d="M9 15h1v-1H9v1zm0-2h1v-2H9v2zm2 2h1v-3h-1v3zm2 0h2v-1h-1v-.5h1v-1h-1V13h1v-1h-2v3zm-5 2h8v1H8v-1z" class="text-white" />
+                                                                </svg>
+                                                            </div>
+                                                            <p class="text-sm font-semibold text-gray-800">PDF Menu {{ $i }}</p>
+                                                            <p class="text-[11px] text-gray-500 text-center mt-1">
+                                                                Klik untuk membuka PDF dalam tampilan besar.
+                                                            </p>
+                                                            <button type="button"
+                                                                    onclick="openPdfModal('{{ $fileUrl }}')"
+                                                                    class="mt-3 inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-medium bg-white text-gray-800 border border-gray-200 shadow-sm hover:bg-gray-50">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                                    <path d="M4 4h12v2H4V4zm0 4h12v2H4V8zm0 4h8v2H4v-2z" />
+                                                                </svg>
+                                                                View PDF
+                                                            </button>
+                                                        </div>
                                                     @else
-                                                        <p class="text-gray-500 italic">Unsupported file type for Menu {{ $i }}.</p>
+                                                        <div class="p-3 h-40 flex items-center justify-center bg-gray-50">
+                                                            <p class="text-sm text-gray-500">Unsupported asset</p>
+                                                        </div>
                                                     @endif
-                                                @endif
-                                            @endfor
-                                            
-                                        @else
-                                            <p class="text-gray-500 italic">No menu image available.</p>
-                                        @endif
-                                    </dd>
+                                                </div>
+                                            @endif
+                                        @endfor
+                                    </div>
                                 </div>
                                 <!-- tampilkan user yang memesan -->
                                  
@@ -413,8 +449,101 @@
             </form>
         </div>
     </div>
+
+    {{-- Image modal for viewing menu --}}
+    <div id="menuImageModal"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="relative bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-xl">
+            <div class="flex justify-between items-center px-4 py-3 border-b border-gray-100 bg-gray-50/80">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M4 3a2 2 0 00-2 2v10.5A1.5 1.5 0 003.5 17H14a2 2 0 002-2V5a2 2 0 00-2-2H4z" />
+                            <path d="M6 11l1.5-2 1.75 2.333L11 9l3 4H6z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-900">Menu Preview</h4>
+                        <p class="text-[11px] text-gray-500">Scroll bila gambar memanjang ke bawah.</p>
+                    </div>
+                </div>
+                <button onclick="closeImageModal()"
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100">
+                    <span class="sr-only">Close</span>
+                    &times;
+                </button>
+            </div>
+            <div id="menuPreviewContent" class="p-4 max-h-[80vh] overflow-auto bg-gray-50">
+                <img id="menuPreviewImg" src="" alt="Menu Preview"
+                     class="w-full object-contain rounded-lg shadow-sm">
+            </div>
+        </div>
+    </div>
+
+    {{-- PDF modal: large, readable PDF viewer --}}
+    <div id="menuPdfModal"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="relative bg-white rounded-2xl max-w-6xl w-full h-[90vh] overflow-hidden shadow-2xl">
+            <div class="flex justify-between items-center px-4 py-3 border-b border-gray-100 bg-gray-50/90">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full bg-rose-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-rose-600" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 2a2 2 0 00-2 2v16c0 1.1.9 2 2 2h12a2 2 0 002-2V8.828A2 2 0 0019.414 7L15 2.586A2 2 0 0013.586 2H6z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-900">PDF Menu Preview</h4>
+                        <p class="text-[11px] text-gray-500">
+                            Kamu dapat zoom dari browser (Ctrl + Scroll / pinch).
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closePdfModal()"
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100">
+                    <span class="sr-only">Close</span>
+                    &times;
+                </button>
+            </div>
+            <div class="p-3 h-[calc(100%-48px)] bg-slate-50">
+                <iframe id="menuPdfFrame" src="" class="w-full h-full border border-slate-200 rounded-xl bg-white"
+                        title="PDF Viewer"></iframe>
+            </div>
+        </div>
+    </div>
     {{-- JavaScript untuk Modal & Copy --}}
     <script>
+        function openImageModal(url) {
+            document.getElementById('menuPreviewImg').src = url;
+            document.getElementById('menuImageModal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('menuImageModal').classList.add('hidden');
+            document.getElementById('menuPreviewImg').src = '';
+        }
+
+        function openPdfModal(url) {
+            const frame = document.getElementById('menuPdfFrame');
+            frame.src = url;
+            document.getElementById('menuPdfModal').classList.remove('hidden');
+        }
+
+        function closePdfModal() {
+            const frame = document.getElementById('menuPdfFrame');
+            frame.src = '';
+            document.getElementById('menuPdfModal').classList.add('hidden');
+        }
+
+        // ESC untuk menutup modal
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+                closePdfModal();
+            }
+        });
+        
+        
+        
         function openEditModal(itemKey, itemName, quantity, price, itemType, orderType) {
             document.getElementById('itemKey').value = itemKey;
             document.getElementById('itemName').value = itemName;
