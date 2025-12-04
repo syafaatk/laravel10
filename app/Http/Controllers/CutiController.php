@@ -237,6 +237,14 @@ class CutiController extends Controller
             $report_data['form_number_month'] = $this->form_number_month(Carbon::now()->month);
             $report_data['cuti'] = $cuti;
             $report_data['master_cuti'] = MasterCuti::find($cuti->master_cuti_id);
+
+            // Kalender berdasarkan bulan start_date cuti
+            $calendarStart = $cuti->start_date->copy()->startOfMonth();
+            $calendarEnd   = $cuti->start_date->copy()->endOfMonth();
+
+            // Mulai dari awal minggu pertama (Senin)
+            $currentCal = $calendarStart->copy()->startOfWeek(Carbon::MONDAY);
+            $lastCal    = $calendarEnd->copy()->endOfWeek(Carbon::SUNDAY);
             
             // Hanya cuti approved di tahun berjalan
             $currentYear = Carbon::now()->year;
@@ -262,7 +270,9 @@ class CutiController extends Controller
                 $jatahCuti = $report_data['master_cuti']->days ?? 12;
             }
 
-            return view('cuti.print', compact('cuti', 'report_data', 'jatahCuti'));
+            return view('cuti.print', compact('cuti', 'report_data', 'jatahCuti', 'currentCal', 'lastCal', 'calendarStart', 'calendarEnd'))
+                ->with('holidayDates', config('holidays.holidays', []))
+                ->with('cutiBersama', config('holidays.cuti_bersama', []));
         }
 
         abort(403);

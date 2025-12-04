@@ -54,7 +54,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('cuti.show', $cuti) }}" class="btn btn-sm btn-info">Lihat</a>
                                         <!-- print if approved -->
                                         @if ($cuti->status == 'approved')
                                             <a href="{{ route('cuti.print', $cuti) }}" class="btn btn-sm btn-secondary" target="_blank">Print</a>
