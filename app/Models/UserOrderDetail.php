@@ -10,6 +10,7 @@ class UserOrderDetail extends Model
     use HasFactory;
     protected $fillable = [
         'lunch_event_user_order_id',
+        'type',
         'item_name',
         'quantity',
         'price',
