@@ -53,7 +53,7 @@
                         {{ __('Data Restaurant') }}
                     </x-nav-link>
                     <x-nav-link :href="route('lunch-events.index')" :active="request()->routeIs('lunch-events.*')">
-                        {{ __('Makan Siang') }} </x-nav-link>
+                        {{ __('Makan Makan') }} </x-nav-link>
                 </div>
                 
                 @if(Auth::user()->hasRole('admin'))

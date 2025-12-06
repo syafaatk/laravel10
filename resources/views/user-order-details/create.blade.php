@@ -41,6 +41,12 @@
                                         {{ $lunchEventUserOrder->lunchEvent->restaurant->name ?? '-' }}
                                     </span>
                                 </p>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Deskripsi:<hr>
+                                    <span class="font-medium text-gray-900 text-xl">
+                                        {{ $lunchEventUserOrder->lunchEvent->description ?? '-' }}
+                                    </span>
+                                </p>
                             </div>
 
                             <div class="text-right">

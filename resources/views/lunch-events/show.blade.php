@@ -368,6 +368,12 @@
                             @else
                                 <p class="text-gray-500 italic">No associated restaurant details to display.</p>
                             @endif
+                            <h4 class="text-lg font-semibold mt-6 mb-2 text-indigo-600">Total Pesanan/orang </h4>
+                            <div class="text-md font-bold text-indigo-800">
+                                @foreach($lunchEventUserOrders as $order)
+                                    <p class="mb-1">{{ $order->user->short_name }} : Rp{{ number_format($order->total_price, 0, ',', '.') }}</p>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                     
