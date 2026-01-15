@@ -4,21 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Our Application</title>
+    <title>Welcome to Qtasnim x PT Bukit Asam</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
 </head>
 <body class="bg-gray-100 text-gray-800">
     <header class="bg-white shadow">
         <div class="container mx-auto px-4 py-6 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-blue-600">Our Application</h1>
+            <h1 class="text-3xl font-bold text-blue-600">Qtasnim x PT Bukit Asam</h1>
             <nav>
                 <a href="#features" class="text-gray-600 hover:text-blue-600 mx-4">Features</a>
                 <a href="#about" class="text-gray-600 hover:text-blue-600 mx-4">About</a>
                 <a href="#contact" class="text-gray-600 hover:text-blue-600 mx-4">Contact</a>
                 <!-- login button if not logged in logout button if logged in -->
                 @if (Auth::check())
-                    <a href="{{ route('logout') }}" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition">Logout</a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition">Logout</button>
+                    </form>
                 @else
                     <a href="{{ route('login') }}" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Login</a>
                 @endif
@@ -27,7 +30,7 @@
     </header>
     <main class="container mx-auto px-4 py-12">
         <section class="text-center mb-12">
-            <h2 class="text-4xl font-bold mb-4">Welcome to Our Application</h2>
+            <h2 class="text-4xl font-bold mb-4">Welcome to Qtasnim x PT Bukit Asam</h2>
             <p class="text-lg text-gray-600 mb-6">Discover the features and benefits of using our app.</p>
             <a href="#features" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition">Get Started</a>
         </section>
@@ -78,7 +81,7 @@
     </main>
     <footer class="bg-white shadow mt-12">
         <div class="container mx-auto px-4 py-6 text-center text-gray-600">
-            &copy; 2025 Our Application. All rights reserved.
+            &copy; 2025 Qtasnim x PT Bukit Asam. All rights reserved.
         </div>
     </footer>
 </body>

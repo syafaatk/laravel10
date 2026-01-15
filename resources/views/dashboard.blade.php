@@ -508,7 +508,7 @@
                                     <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
                                     @php
                                         $endDate = \Carbon\Carbon::now();
-                                        $startDate = \Carbon\Carbon::now()->subMonths(3)->startOfMonth();
+                                        $startDate = \Carbon\Carbon::now()->subMonths(2)->startOfMonth();
                                         $period = \Carbon\CarbonPeriod::create($startDate, '1 month', $endDate);
                                         $months = iterator_to_array($period);
                                     @endphp
