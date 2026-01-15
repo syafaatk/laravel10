@@ -76,7 +76,7 @@ class User extends Authenticatable
 
     public function cutiApproved()
     {
-        return $this->hasMany(Cuti::class)->where('status', 'approved')->where('master_cuti_id', 1);
+        return $this->hasMany(Cuti::class)->where('status', 'approved')->where('master_cuti_id', 1)->whereYear('start_date', now()->year);
     }
 
     public function reimbursements()

@@ -3,10 +3,49 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Pengajuan Cuti') }}
         </h2>
+        <!-- filter tahun -->
+        <form method="GET" action="{{ route('cuti.index') }}" class="mt-4">
+            <div class="row g-3">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2">
+                <label for="year" class="form-label mb-0 fw-semibold">Filter by Year:</label>
+                <select name="year" id="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                    @for ($year = date('Y'); $year >= date('Y') - 5; $year--)
+                    <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endfor
+                </select>
+                </div>
+            </div>
+            
+            <!-- jika admin tampilkan filter pegawai-->
+            @if (Auth::user()->hasRole('admin'))
+                <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2">
+                    <label for="user_id_filter" class="form-label mb-0 fw-semibold">Filter by Employee:</label>
+                    <select name="user_id_filter" id="user_id_filter" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All Employees</option>
+                    @foreach ($users as $userFilter)
+                        <option value="{{ $userFilter->id }}" {{ request('user_id_filter') == $userFilter->id ? 'selected' : '' }}>
+                        {{ $userFilter->name }} - Cuti Approved: {{ $userFilter->cutiApproved->sum('days_requested') }} / 12 Hari
+                        </option>
+                    @endforeach
+                    </select>
+                </div>
+                </div>
+            @endif
+            </div>
+        </form>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- total cuti yang sudah diambil tahun {{ request('year') }} -->
+            <div class="mb-4 p-4 bg-white shadow-sm rounded-lg">
+                <h3 class="text-lg font-semibold mb-2">Total Cuti Tahunan yang Sudah Diambil Tahun {{ request('year', date('Y')) }}:</h3>
+                <p class="text-gray-700">
+                    {{ $totalCutiApproved }} Hari dari 12 Hari
+                </p>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">

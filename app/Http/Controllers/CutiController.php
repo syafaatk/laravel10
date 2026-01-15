@@ -11,15 +11,28 @@ use Carbon\Carbon;
 
 class CutiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $year = $request->input('year', Carbon::now()->year);
+        $pegawai_id = $request->input('user_id_filter', null);
+        $cutis = [];
+
         if ($user->hasRole('admin')) {
-            $cutis = Cuti::with(['user', 'masterCuti'])->latest()->get();
+            $cutis = Cuti::with(['user', 'masterCuti'])->whereYear('start_date', $year)->where('user_id', $pegawai_id)->latest()->get();
         } else {
-            $cutis = Cuti::where('user_id', $user->id)->with(['user', 'masterCuti'])->latest()->get();
+            $cutis = Cuti::where('user_id', $user->id)->with(['user', 'masterCuti'])->whereYear('start_date', $year)->latest()->get();
         }
-        return view('cuti.index', compact('cutis'));
+        // get total cuti approved where year = selected year
+        $totalCutiApproved = 0;
+        // get from user->cutiApproved
+        if ($user->hasRole('admin')) {
+            $totalCutiApproved = $user->cutiApproved->sum('days_requested');
+        } else {
+            $totalCutiApproved = $user->cutis()->where('status', 'approved')->where('master_cuti_id', 1)->whereYear('start_date', $year)->sum('days_requested');
+        }
+        $users = \App\Models\User::all();
+        return view('cuti.index', compact('cutis','users', 'totalCutiApproved'));
     }
 
     public function ajax_index(Request $request)
@@ -50,32 +63,34 @@ class CutiController extends Controller
     public function create()
     {
         $masterCutis = MasterCuti::all();
+        $user = Auth::user();
+        $currentYear = Carbon::now()->year;
         
-        if (Auth::user()->hasRole('admin')) {
+        if ($user->hasRole('admin')) {
             $users = \App\Models\User::all();
             
             // Admin: Calculate available days untuk setiap user yang dipilih
-            foreach ($masterCutis as $masterCuti) {
-                // Hitung total digunakan dari semua users
+            $masterCutis = $masterCutis->map(function($masterCuti) use ($currentYear) {
                 $totalUsedDays = Cuti::where('master_cuti_id', $masterCuti->id)
                     ->where('status', 'approved')
+                    ->whereYear('start_date', $currentYear)
                     ->sum('days_requested');
-                
-                // Available days = total - yang sudah dipakai
                 $masterCuti->available_days = $masterCuti->days - $totalUsedDays;
-            }
+                return $masterCuti;
+            });
             
             // Siapkan data remaining cuti per user untuk reference di form
             $usersRemainingCuti = [];
-            foreach ($users as $user) {
-                $usersRemainingCuti[$user->id] = [];
+            foreach ($users as $userItem) {
+                $usersRemainingCuti[$userItem->id] = [];
                 foreach ($masterCutis as $masterCuti) {
-                    $usedDays = Cuti::where('user_id', $user->id)
+                    $usedDays = Cuti::where('user_id', $userItem->id)
                         ->where('master_cuti_id', $masterCuti->id)
                         ->where('status', 'approved')
+                        ->whereYear('start_date', $currentYear)
                         ->sum('days_requested');
                     
-                    $usersRemainingCuti[$user->id][$masterCuti->id] = [
+                    $usersRemainingCuti[$userItem->id][$masterCuti->id] = [
                         'name' => $masterCuti->name,
                         'total' => $masterCuti->days,
                         'used' => $usedDays,
@@ -87,13 +102,15 @@ class CutiController extends Controller
             return view('cuti.create', compact('masterCutis', 'users', 'usersRemainingCuti'));
         } else {
             // User regular: Calculate available days hanya untuk user tersebut
-            foreach ($masterCutis as $masterCuti) {
-                $usedDays = Cuti::where('user_id', Auth::id())
+            $masterCutis = $masterCutis->map(function($masterCuti) use ($user, $currentYear) {
+                $usedDays = Cuti::where('user_id', $user->id)
                     ->where('master_cuti_id', $masterCuti->id)
                     ->where('status', 'approved')
+                    ->whereYear('start_date', $currentYear)
                     ->sum('days_requested');
                 $masterCuti->available_days = $masterCuti->days - $usedDays;
-            }
+                return $masterCuti;
+            });
             return view('cuti.create', compact('masterCutis'));
         }
     }
@@ -157,10 +174,12 @@ class CutiController extends Controller
             return back()->withErrors(['end_date' => 'Requested days exceed available days for this leave type.'])->withInput();
         }
 
-        // Check remaining balance (only approved leaves count)
+        // Check remaining balance (only approved leaves count for current year)
+        $currentYear = Carbon::now()->year;
         $usedDays = Cuti::where('user_id', $userId)
             ->where('master_cuti_id', $masterCuti->id)
             ->where('status', 'approved')
+            ->whereYear('start_date', $currentYear)
             ->sum('days_requested');
 
         $availableDays = $masterCuti->days - $usedDays;
