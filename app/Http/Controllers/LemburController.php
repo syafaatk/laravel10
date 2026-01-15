@@ -13,6 +13,10 @@ class LemburController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }    
         $user = Auth::user();
         if ($user->hasRole('admin')) {
             $lemburs = Lembur::with(['user', 'approved'])->latest()->get();

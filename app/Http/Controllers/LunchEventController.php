@@ -12,6 +12,10 @@ class LunchEventController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }
         $lunchEvents = LunchEvent::withCount('orders')
             ->withSum('orders as total_items', 'quantity')
             ->withSum('orders as total_revenue', 'total_price')

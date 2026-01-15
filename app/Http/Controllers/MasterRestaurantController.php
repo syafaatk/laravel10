@@ -10,6 +10,10 @@ class MasterRestaurantController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }
         $masterRestaurants = MasterRestaurant::all();
         return view('admin.master-restaurants.index', compact('masterRestaurants'));
     }

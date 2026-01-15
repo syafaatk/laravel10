@@ -7,6 +7,8 @@ use App\Models\LaporanReimbursement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class ReimbursementController extends Controller
 {
@@ -18,6 +20,10 @@ class ReimbursementController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }
         $user = Auth::user();
         if ($user->hasRole('admin')) {
             $reimbursements = Reimbursement::with('user','laporanReimbursement')->get();

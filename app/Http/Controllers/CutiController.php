@@ -13,6 +13,10 @@ class CutiController extends Controller
 {
     public function index(Request $request)
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }
         $user = Auth::user();
         $year = $request->input('year', Carbon::now()->year);
         $pegawai_id = $request->input('user_id_filter', null);

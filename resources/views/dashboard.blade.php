@@ -506,93 +506,108 @@
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-800 sticky left-0 bg-gray-100">Employee Name</th>
-                                    <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">October</th>
-                                    <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">November</th>
-                                    <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">December</th>
+                                    @php
+                                        $endDate = \Carbon\Carbon::now();
+                                        $startDate = \Carbon\Carbon::now()->subMonths(3)->startOfMonth();
+                                        $period = \Carbon\CarbonPeriod::create($startDate, '1 month', $endDate);
+                                        $months = iterator_to_array($period);
+                                    @endphp
+                                    @foreach ($months as $month)
+                                        <th class="border border-gray-300 px-4 py-2 text-center font-semibold text-gray-800">{{ $month->format('F Y') }}</th>
+                                    @endforeach
                                     <th class="border border-gray-300 px-4 py-2 text-right font-semibold text-gray-800">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                    $currentYear = \Carbon\Carbon::now()->year;
-                                    $employees = \App\Models\User::with(['reimbursements' => function($q) use ($currentYear) {
-                                        $q->whereYear('created_at', $currentYear)
-                                        ->where('tipe', '1')
-                                        ->where('status', 'approved');
+                                    $employees = \App\Models\User::with(['reimbursements' => function($q) use ($startDate, $endDate) {
+                                        $q->whereBetween('created_at', [$startDate, $endDate])
+                                            ->where('tipe', '1')
+                                            ->where('status', 'approved');
                                     }])->get();
                                 @endphp
 
                                 @forelse ($employees as $employee)
                                     @php
                                         $monthlyTotal = [];
-                                        $yearTotal = 0;
+                                        $periodTotal = 0;
                                         
-                                        for ($month = 10; $month <= 12; $month++) {
-                                            $monthTotal = $employee->reimbursements
-                                                ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
-                                                ->sum('amount');
-                                            $monthlyTotal[$month] = $monthTotal;
-                                            $yearTotal += $monthTotal;
+                                        foreach ($months as $month) {
+                                            $monthlyTotal[$month->format('Y-m')] = 0;
+                                        }
+
+                                        foreach ($employee->reimbursements as $reimbursement) {
+                                            $monthKey = \Carbon\Carbon::parse($reimbursement->created_at)->format('Y-m');
+                                            if (isset($monthlyTotal[$monthKey])) {
+                                                $monthlyTotal[$monthKey] += $reimbursement->amount;
+                                                $periodTotal += $reimbursement->amount;
+                                            }
                                         }
                                     @endphp
                                     <tr class="hover:bg-gray-50 border-b border-gray-200">
                                         <td class="border border-gray-300 px-4 py-2 font-medium text-gray-800 sticky left-0 bg-white">
                                             {{ $employee->name }}
                                         </td>
-                                        @for ($month = 10; $month <= 12; $month++)
+                                        @foreach ($months as $month)
+                                            @php $monthKey = $month->format('Y-m'); @endphp
                                             <td class="border border-gray-300 px-4 py-2 text-center text-gray-700">
-                                                @if ($monthlyTotal[$month] > 0)
+                                                @if (isset($monthlyTotal[$monthKey]) && $monthlyTotal[$monthKey] > 0)
                                                     <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">
-                                                        Rp{{ number_format($monthlyTotal[$month], 0, ',', '.') }}
+                                                        Rp{{ number_format($monthlyTotal[$monthKey], 0, ',', '.') }}
                                                     </span>
                                                 @else
                                                     <span class="text-gray-400">-</span>
                                                 @endif
                                             </td>
-                                        @endfor
+                                        @endforeach
                                         <td class="border border-gray-300 px-4 py-2 text-right font-bold text-gray-900 bg-blue-50">
-                                            Rp{{ number_format($yearTotal, 0, ',', '.') }}
+                                            Rp{{ number_format($periodTotal, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="14" class="border border-gray-300 px-4 py-4 text-center text-gray-500">
-                                            No transportation reimbursement data available for this year.
+                                        <td colspan="{{ count($months) + 2 }}" class="border border-gray-300 px-4 py-4 text-center text-gray-500">
+                                            No transportation reimbursement data available for this period.
                                         </td>
                                     </tr>
                                 @endforelse
 
                                 {{-- TOTAL ROW --}}
-                                @php
-                                    $monthlyGrandTotal = [];
-                                    $grandTotal = 0;
-                                    for ($month = 10; $month <= 12; $month++) {
-                                        $monthSum = $employees->sum(function($emp) use ($month) {
-                                            return $emp->reimbursements
-                                                ->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->month === $month)
-                                                ->sum('amount');
-                                        });
-                                        $monthlyGrandTotal[$month] = $monthSum;
-                                        $grandTotal += $monthSum;
-                                    }
-                                @endphp
-                                <tr class="bg-gray-200 font-bold text-gray-900">
-                                    <td class="border border-gray-300 px-4 py-2 sticky left-0 bg-gray-200">TOTAL</td>
-                                    @for ($month = 10; $month <= 12; $month++)
-                                        <td class="border border-gray-300 px-4 py-2 text-center">
-                                            Rp{{ number_format($monthlyGrandTotal[$month], 0, ',', '.') }}
+                                @if($employees->isNotEmpty())
+                                    @php
+                                        $monthlyGrandTotal = [];
+                                        foreach ($months as $month) {
+                                            $monthlyGrandTotal[$month->format('Y-m')] = 0;
+                                        }
+
+                                        $allReimbursements = $employees->pluck('reimbursements')->flatten();
+                                        foreach ($allReimbursements as $reimbursement) {
+                                            $monthKey = \Carbon\Carbon::parse($reimbursement->created_at)->format('Y-m');
+                                            if (isset($monthlyGrandTotal[$monthKey])) {
+                                                $monthlyGrandTotal[$monthKey] += $reimbursement->amount;
+                                            }
+                                        }
+                                        $grandTotal = array_sum($monthlyGrandTotal);
+                                    @endphp
+                                    <tr class="bg-gray-200 font-bold text-gray-900">
+                                        <td class="border border-gray-300 px-4 py-2 sticky left-0 bg-gray-200">TOTAL</td>
+                                        @foreach ($months as $month)
+                                            @php $monthKey = $month->format('Y-m'); @endphp
+                                            <td class="border border-gray-300 px-4 py-2 text-center">
+                                                Rp{{ number_format($monthlyGrandTotal[$monthKey] ?? 0, 0, ',', '.') }}
+                                            </td>
+                                        @endforeach
+                                        <td class="border border-gray-300 px-4 py-2 text-right bg-blue-200">
+                                            Rp{{ number_format($grandTotal, 0, ',', '.') }}
                                         </td>
-                                    @endfor
-                                    <td class="border border-gray-300 px-4 py-2 text-right bg-blue-200">
-                                        Rp{{ number_format($grandTotal, 0, ',', '.') }}
-                                    </td>
-                                </tr>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                     
                     <div class="mt-4 text-xs text-gray-600">
-                        <p>📊 <strong>Year:</strong> {{ $currentYear }}</p>
+                        <p>📊 <strong>Period:</strong> {{ $startDate->format('F Y') }} - {{ $endDate->format('F Y') }}</p>
                         <p>📝 <strong>Filter:</strong> Only approved transportation reimbursements are included.</p>
                     </div>
                 </div>

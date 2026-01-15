@@ -8,11 +8,17 @@ use App\Models\Cuti;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }
+
         $user = Auth::user();
         $currentYear = Carbon::now()->year;
 

@@ -20,6 +20,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        if (!Gate::allows('view-user')) {
+            // return redirect()->403 with error message
+            abort(403);
+        }
         $user = $request->user();
         $detailKontrakAktif = $user->detailKontrakUserActive;
         
