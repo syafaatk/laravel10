@@ -19,7 +19,11 @@ class CutiController extends Controller
         $cutis = [];
 
         if ($user->hasRole('admin')) {
-            $cutis = Cuti::with(['user', 'masterCuti'])->whereYear('start_date', $year)->where('user_id', $pegawai_id)->latest()->get();
+            $query = Cuti::with(['user', 'masterCuti'])->whereYear('start_date', $year);
+            if ($pegawai_id) {
+                $query->where('user_id', $pegawai_id);
+            }
+            $cutis = $query->latest()->get();
         } else {
             $cutis = Cuti::where('user_id', $user->id)->with(['user', 'masterCuti'])->whereYear('start_date', $year)->latest()->get();
         }
@@ -27,7 +31,12 @@ class CutiController extends Controller
         $totalCutiApproved = 0;
         // get from user->cutiApproved
         if ($user->hasRole('admin')) {
-            $totalCutiApproved = $user->cutiApproved->sum('days_requested');
+            if ($pegawai_id) {
+                $totalCutiApproved = Cuti::where('user_id', $pegawai_id)->where('status', 'approved')->whereYear('start_date', $year)->sum('days_requested');
+            } else {
+                // When viewing all employees, don't sum all cutis, keep it 0 or calculate per employee in view
+                $totalCutiApproved = 0;
+            }
         } else {
             $totalCutiApproved = $user->cutis()->where('status', 'approved')->where('master_cuti_id', 1)->whereYear('start_date', $year)->sum('days_requested');
         }
