@@ -32,7 +32,7 @@ class CutiController extends Controller
         // get from user->cutiApproved
         if ($user->hasRole('admin')) {
             if ($pegawai_id) {
-                $totalCutiApproved = Cuti::where('user_id', $pegawai_id)->where('status', 'approved')->whereYear('start_date', $year)->sum('days_requested');
+                $totalCutiApproved = Cuti::where('user_id', $pegawai_id)->where('status', 'approved')->where('master_cuti_id', 1)->whereYear('start_date', $year)->sum('days_requested');
             } else {
                 // When viewing all employees, don't sum all cutis, keep it 0 or calculate per employee in view
                 $totalCutiApproved = 0;
