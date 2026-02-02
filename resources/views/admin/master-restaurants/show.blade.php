@@ -135,7 +135,13 @@
 
                                     <div class="p-4 flex-grow">
                                         @php 
-                                            $attachments = (isset($event->reimbursements) && $event->reimbursements) ? $event->reimbursements->where('status', 'done')->filter(fn($r) => $r->attachment || $r->attachment_note) : collect();
+                                        <!-- status approved or done -->
+                                        $attachments = collect();
+                                        if($event->status == 'approved' || $event->status == 'done') {
+                                            $attachments = $event->reimbursements->where('status', 'approved')->filter(fn($r) => $r->attachment || $r->attachment_note);
+                                        } else {
+                                            $attachments = $event->reimbursements->where('status', 'pending')->filter(fn($r) => $r->attachment || $r->attachment_note);
+                                        }
                                         @endphp
 
                                         @if($attachments->count() > 0)
