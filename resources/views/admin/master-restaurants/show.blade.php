@@ -135,7 +135,6 @@
 
                                     <div class="p-4 flex-grow">
                                         @php 
-                                        <!-- status approved or done -->
                                         $attachments = collect();
                                         if($event->status == 'approved' || $event->status == 'done') {
                                             $attachments = $event->reimbursements->where('status', 'approved')->filter(fn($r) => $r->attachment || $r->attachment_note);
