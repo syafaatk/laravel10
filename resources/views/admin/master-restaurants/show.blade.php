@@ -136,10 +136,10 @@
                                     <div class="p-4 flex-grow">
                                         @php 
                                         $attachments = collect();
-                                        if($event->status == 'approved' || $event->status == 'done') {
+                                        if($attachments = $event->reimbursements->where('status', 'approved')) {
                                             $attachments = $event->reimbursements->where('status', 'approved')->filter(fn($r) => $r->attachment || $r->attachment_note);
-                                        } else {
-                                            $attachments = $event->reimbursements->where('status', 'pending')->filter(fn($r) => $r->attachment || $r->attachment_note);
+                                        } elseif ($attachments = $event->reimbursements->where('status', 'done')) {
+                                            $attachments = $event->reimbursements->where('status', 'done')->filter(fn($r) => $r->attachment || $r->attachment_note);
                                         }
                                         @endphp
 
