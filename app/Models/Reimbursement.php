@@ -27,6 +27,7 @@ class Reimbursement extends Model
         'laporan_reimbursement_id',
         'processed_by',
         'processed_at',
+        'lunch_event_id',
     ];
 
     protected $casts = [
@@ -46,5 +47,10 @@ class Reimbursement extends Model
     public function laporanReimbursement(): BelongsTo
     {
         return $this->belongsTo(LaporanReimbursement::class, 'laporan_reimbursement_id');
+    }
+
+    public function lunchEvent(): BelongsTo
+    {
+        return $this->belongsTo(LunchEvent::class);
     }
 }

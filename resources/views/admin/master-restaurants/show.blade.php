@@ -108,6 +108,126 @@
                             </div>
                         @endif
                     </div>
+                     
+                    <h3 class="mt-5 text-xl font-semibold mb-6 border-b pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Lunch Events History & Evidence
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @if(isset($masterRestaurant->restaurantEvent) && $masterRestaurant->restaurantEvent && count($masterRestaurant->restaurantEvent))
+                            @foreach ($masterRestaurant->restaurantEvent as $event)
+                                <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
+                                    <div class="p-4 border-b border-gray-50 bg-gray-50/50">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-bold text-gray-900 leading-tight">{{ $event->name }}</h4>
+                                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                    {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y') }}
+                                                </p>
+                                            </div>
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full {{ $event->status == 'done' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700' }}">
+                                                {{ $event->status }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 flex-grow">
+                                        @php 
+                                            $attachments = (isset($event->reimbursements) && $event->reimbursements) ? $event->reimbursements->where('status', 'approved')->filter(fn($r) => $r->attachment || $r->attachment_note) : collect();
+                                        @endphp
+
+                                        @if($attachments->count() > 0)
+                                            <div class="space-y-3">
+                                                <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Evidence Gallery</p>
+                                                <div class="grid grid-cols-4 gap-2">
+                                                    @foreach($attachments as $reimbursement)
+                                                        {{-- Handle Receipt Image --}}
+                                                        @if($reimbursement->attachment && in_array(pathinfo($reimbursement->attachment, PATHINFO_EXTENSION), ['png', 'jpeg', 'jpg', 'gif', 'webp']))
+                                                            <div class="relative aspect-square group cursor-pointer overflow-hidden rounded-lg border border-gray-200" 
+                                                                onclick="openModal('{{ asset('storage/' . $reimbursement->attachment) }}', 'Receipt - {{ $event->name }}')">
+                                                                <img src="{{ asset('storage/' . $reimbursement->attachment) }}" 
+                                                                    class="w-full h-full object-cover transition duration-300 group-hover:scale-110" alt="Receipt">
+                                                                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                                                <div class="absolute top-0 right-0 p-0.5 bg-indigo-600 rounded-bl-lg">
+                                                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        {{-- Handle Event Photo Image --}}
+                                                        @if($reimbursement->attachment_note && in_array(pathinfo($reimbursement->attachment_note, PATHINFO_EXTENSION), ['png', 'jpeg', 'jpg', 'gif', 'webp']))
+                                                            <div class="relative aspect-square group cursor-pointer overflow-hidden rounded-lg border border-gray-200" 
+                                                                onclick="openModal('{{ asset('storage/' . $reimbursement->attachment_note) }}', 'Event Photo - {{ $event->name }}')">
+                                                                <img src="{{ asset('storage/' . $reimbursement->attachment_note) }}" 
+                                                                    class="w-full h-full object-cover transition duration-300 group-hover:scale-110" alt="Event Photo">
+                                                                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                                                <div class="absolute top-0 right-0 p-0.5 bg-amber-500 rounded-bl-lg">
+                                                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812-1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="h-24 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-xl">
+                                                <svg class="w-8 h-8 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                <p class="text-[10px] text-gray-400 mt-2">No evidence uploaded</p>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="p-4 pt-0">
+                                        <a href="{{ route('lunch-events.show', $event->id) }}" 
+                                        class="flex items-center justify-center w-full py-2 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-lg hover:bg-indigo-100 transition-colors group">
+                                            View Full Details
+                                            <svg class="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="col-span-full py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                                <p class="text-gray-500">No lunch events recorded for this restaurant.</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div id="imageModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal()">
+                        <div class="relative max-w-5xl w-full flex flex-col items-center" onclick="event.stopPropagation()">
+                            <button class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors" onclick="closeModal()">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                            <img id="modalImage" src="" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl">
+                            <div class="mt-4 bg-white/10 px-4 py-2 rounded-full backdrop-blur-md">
+                                <p id="modalCaption" class="text-white font-medium text-sm"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function openModal(imageSrc, caption) {
+                            document.getElementById('modalImage').src = imageSrc;
+                            document.getElementById('modalCaption').innerText = caption;
+                            const modal = document.getElementById('imageModal');
+                            modal.classList.remove('hidden');
+                            document.body.style.overflow = 'hidden'; // prevent scroll
+                        }
+
+                        function closeModal() {
+                            const modal = document.getElementById('imageModal');
+                            modal.classList.add('hidden');
+                            document.body.style.overflow = 'auto';
+                        }
+
+                        // Close on ESC key
+                        document.addEventListener('keydown', function(event) {
+                            if (event.key === "Escape") closeModal();
+                        });
+                    </script>
+                    
                     
                 </div>
             </div>

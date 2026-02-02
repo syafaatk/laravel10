@@ -50,7 +50,26 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
+        $detailKontrak = DetailKontrakUser::create([
+            'user_id' => $user->id,
+            'kontrak' => $request->input('kontrak') ?? null,
+            'jabatan' => $request->input('jabatan') ?? null,
+            'norek' => $request->input('norek') ?? null,
+            'bank' => $request->input('bank') ?? null,
+            'tgl_mulai_kontrak' => $request->input('tgl_mulai_kontrak') ?? null,
+            'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak') ?? null,
+            'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
+            'gaji_tunjangan_tetap' => $request->input('gaji_tunjangan_tetap') ?? 0,
+            'gaji_tunjangan_makan' => $request->input('gaji_tunjangan_makan') ?? 0,
+            'gaji_tunjangan_transport' => $request->input('gaji_tunjangan_transport') ?? 0,
+            'gaji_tunjangan_lain' => $request->input('gaji_tunjangan_lain') ?? 0,
+            'gaji_bpjs' => $request->input('gaji_bpjs') ?? 0,
+            'is_active' => true,
+        ]);
+
+
         $user->assignRole($request->roles);
+        
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }

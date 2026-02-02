@@ -21,6 +21,11 @@
                         <!-- <a href="{{ route('lunch-events.edit', $lunchEvent->id) }}" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">
                             {{ __('Edit Event') }}
                         </a> -->
+                        @if($lunchEvent->reimbursements->whereIn('status', ['approved', 'done'])->isEmpty())
+                            <a href="{{ route('reimbursements.create', ['lunch_event_id' => $lunchEvent->id]) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                {{ __('Create Reimbursement') }}
+                            </a>
+                        @endif
                         <a href="{{ route('lunch-events.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
                             {{ __('Back to List') }}
                         </a>
@@ -368,6 +373,32 @@
                             @else
                                 <p class="text-gray-500 italic">No associated restaurant details to display.</p>
                             @endif
+
+                            {{-- Reimbursement Proofs --}}
+                            @if($lunchEvent->reimbursements->isNotEmpty())
+                                <h4 class="text-lg font-semibold mt-6 mb-2 text-indigo-600">Reimbursement Proofs</h4>
+                                @foreach($lunchEvent->reimbursements as $reimbursement)
+                                    @if($reimbursement->attachment)
+                                        <div class="mt-3">
+                                            <p class="text-xs font-semibold text-gray-600 mb-1">Receipt ({{ $reimbursement->user->name ?? 'User' }})</p>
+                                            <img src="{{ asset('storage/' . $reimbursement->attachment) }}" 
+                                                 alt="Reimbursement Receipt" 
+                                                 class="w-full h-auto object-cover rounded-md shadow-sm cursor-pointer hover:opacity-90 transition"
+                                                 onclick="openImageModal('{{ asset('storage/' . $reimbursement->attachment) }}')">
+                                        </div>
+                                    @endif
+                                    @if($reimbursement->attachment_note)
+                                        <div class="mt-3">
+                                            <p class="text-xs font-semibold text-gray-600 mb-1">Proof ({{ $reimbursement->user->name ?? 'User' }})</p>
+                                            <img src="{{ asset('storage/' . $reimbursement->attachment_note) }}" 
+                                                 alt="Reimbursement Proof" 
+                                                 class="w-full h-auto object-cover rounded-md shadow-sm cursor-pointer hover:opacity-90 transition"
+                                                 onclick="openImageModal('{{ asset('storage/' . $reimbursement->attachment_note) }}')">
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
+
                             <h4 class="text-lg font-semibold mt-6 mb-2 text-indigo-600">Total Pesanan/orang </h4>
                             <div class="text-md font-bold text-indigo-800">
                                 @foreach($lunchEventUserOrders as $order)

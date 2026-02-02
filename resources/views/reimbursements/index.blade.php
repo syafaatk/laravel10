@@ -101,6 +101,16 @@
                                                 <button type="submit" class="btn btn-sm btn-danger bg-danger" onclick="return confirm('Are you sure you want to delete this reimbursement request?')">Delete</button>
                                             </form>
                                         @endif
+                                        @if (Auth::user()->hasRole('admin') && $reimbursement->status == 'approved')
+                                            <form id="delete-form-{{ $reimbursement->id }}" action="{{ route('reimbursements.destroy', $reimbursement) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger bg-danger" onclick="return confirm('Are you sure you want to delete this reimbursement request?')">Delete</button>
+                                            </form>
+                                            <!-- update -->
+                                            <a href="{{ route('reimbursements.edit', $reimbursement) }}" class="btn btn-sm btn-warning">Update</a>
+                                        @endif
+                                        
                                     </td>
                                 </tr>
                             @endforeach

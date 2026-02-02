@@ -34,5 +34,10 @@ class LunchEvent extends Model
     {
         return $this->hasMany(LunchEventUserOrder::class);
     }
+
+    public function reimbursements()
+    {
+        return $this->hasMany(Reimbursement::class);
+    }
     
 }

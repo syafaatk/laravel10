@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::get('reimbursements', [ReimbursementController::class, 'index'])->name('reimbursements.index');
     Route::get('reimbursements/create', [ReimbursementController::class, 'create'])->name('reimbursements.create');
     Route::post('reimbursements', [ReimbursementController::class, 'store'])->name('reimbursements.store');
+    Route::get('reimbursements/{reimbursement}/edit', [ReimbursementController::class, 'edit'])->name('reimbursements.edit');
+    Route::put('reimbursements/{reimbursement}', [ReimbursementController::class, 'update'])->name('reimbursements.update');
     Route::get('reimbursements/{reimbursement}', [ReimbursementController::class, 'show'])->name('reimbursements.show');
     Route::patch('reimbursements/{reimbursement}/approve', [App\Http\Controllers\ReimbursementController::class, 'approve'])->name('reimbursements.approve');
     Route::patch('reimbursements/{reimbursement}/reject', [ReimbursementController::class, 'reject'])->name('reimbursements.reject');

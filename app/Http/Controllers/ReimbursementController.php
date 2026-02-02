@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reimbursement;
 use App\Models\LaporanReimbursement;
+use App\Models\LunchEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -37,7 +38,67 @@ class ReimbursementController extends Controller
 
     public function create()
     {
-        return view('reimbursements.create');
+        // cek apakah lunch event id sudah pernah diajukan di reimbursement, jangan ditampilkan lagi
+        $usedLunchEventIds = Reimbursement::whereNotNull('lunch_event_id')
+            ->whereIn('status', ['approved', 'done'])
+            ->pluck('lunch_event_id')
+            ->toArray();
+            
+        $lunchEvents = LunchEvent::latest()->whereNotIn('id', $usedLunchEventIds)->get();
+        return view('reimbursements.create', compact('lunchEvents'));
+    }
+
+    public function edit(Reimbursement $reimbursement)
+    {
+        // Hanya admin yang bisa mengedit
+        if (Auth::user()->hasRole('admin')) {
+            $lunchEvents = LunchEvent::latest()->get();
+            return view('reimbursements.edit', compact('reimbursement', 'lunchEvents'));
+        }
+
+        abort(403);
+    }
+    public function update(Request $request, Reimbursement $reimbursement)
+    {
+        // Hanya admin yang bisa mengupdate
+        if (Auth::user()->hasRole('admin')) {
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'tipe' => 'required|in:1,2,3',
+                'description' => 'required|string|max:1000',
+                'amount' => 'required|numeric|min:0|max:10000000',
+                'lunch_event_id' => [
+                    'required_if:tipe,2',
+                    'exists:lunch_events,id',
+                    function ($attribute, $value, $fail) use ($reimbursement) {
+                        $event = LunchEvent::find($value);
+                        if ($event === null) {
+                            $fail('The selected Lunch Event does not exist.');
+                        }
+                        // jika sudah dipakai di reimbursement lain yang sudah approved/done, tidak bisa diganti
+                        $used = Reimbursement::where('lunch_event_id', $value)
+                            ->where('id', '!=', $reimbursement->id)
+                            ->whereIn('status', ['approved', 'done'])
+                            ->exists();
+                        if ($used) {
+                            $fail('The selected Lunch Event is already used by another reimbursement.');
+                        }
+                    },
+                ],
+            ]);
+
+            $reimbursement->update([
+                'title' => $request->title,
+                'tipe' => $request->tipe,
+                'description' => $request->description,
+                'amount' => $request->amount,
+                'lunch_event_id' => $request->lunch_event_id,
+            ]);
+
+            return redirect()->route('reimbursements.index')->with('success', 'Reimbursement updated successfully.');
+        }
+
+        abort(403);
     }
 
     public function destroy(Reimbursement $reimbursement)
@@ -95,6 +156,16 @@ class ReimbursementController extends Controller
             'amount' => 'required|numeric|min:0|max:10000000',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
             'attachment_note' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
+            'lunch_event_id' => [
+                'required_if:tipe,2',
+                'exists:lunch_events,id',
+                function ($attribute, $value, $fail) {
+                    $event = LunchEvent::find($value);
+                    if ($event && $event->created_at < now()->subDays(30)) {
+                        $fail('The selected Lunch Event is no longer valid for reimbursement (expired).');
+                    }
+                },
+            ],
         ]);
 
         $path = null;
@@ -114,6 +185,7 @@ class ReimbursementController extends Controller
             'amount' => $request->amount,
             'attachment' => $path,
             'attachment_note' => $path_note,
+            'lunch_event_id' => $request->lunch_event_id,
         ]);
 
         return redirect()->route('reimbursements.index')->with('success', 'Reimbursement request submitted successfully.');

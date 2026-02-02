@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\LaunchEvent;
+use App\Models\LunchEvent;
 
 class MasterRestaurant extends Model
 {
@@ -31,7 +31,7 @@ class MasterRestaurant extends Model
 
     public function restaurantEvent()
     {
-        return $this->hasMany(LaunchEvent::class, 'restaurant_id', 'id');
+        return $this->hasMany(LunchEvent::class, 'restaurant_id', 'id');
     }
     
 }
