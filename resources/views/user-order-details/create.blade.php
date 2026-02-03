@@ -359,7 +359,6 @@
         function openOrderModal() {
             const modal = document.getElementById('orderModal');
             modal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
         }
 
         function closeOrderModal() {
