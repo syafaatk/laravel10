@@ -69,6 +69,7 @@ class ReimbursementController extends Controller
                 'amount' => 'required|numeric|min:0|max:10000000',
                 'lunch_event_id' => [
                     'required_if:tipe,2',
+                    'nullable',
                     'exists:lunch_events,id',
                     function ($attribute, $value, $fail) use ($reimbursement) {
                         $event = LunchEvent::find($value);
@@ -149,15 +150,44 @@ class ReimbursementController extends Controller
 
     public function store(Request $request)
     {
+        
+
         $request->validate([
             'title' => 'required|string|max:255',
+            // cek kembali apakah user_id sudah pernah mengajukan reimbursement di bulan yang sama untuk tipe transportasi
+            'user_id' => [
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->tipe == 1) { // transportasi
+                        $existing = Reimbursement::where('user_id', Auth::id())
+                            ->where('tipe', 1)
+                            ->whereMonth('created_at', Carbon::now()->month)
+                            ->whereYear('created_at', Carbon::now()->year)
+                            ->first();
+                        if ($existing && $existing->amount >= 200000) {
+                            $fail('You have already submitted a transportation reimbursement for this month. Amount: Rp ' . number_format($existing->amount, 0, ',', '.'));
+                        }
+                    }
+                },
+            ],
+            
             'tipe' => 'required|in:1,2,3',
+            'amount' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:10000000',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (in_array($request->tipe, [1, 3]) && $value > 200000) {
+                        $fail('The amount for Transportasi or Lain-lain cannot exceed Rp 200.000.');
+                    }
+                },
+            ],
             'description' => 'required|string|max:1000',
-            'amount' => 'required|numeric|min:0|max:10000000',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
             'attachment_note' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:20480',
             'lunch_event_id' => [
                 'required_if:tipe,2',
+                'nullable',
                 'exists:lunch_events,id',
                 function ($attribute, $value, $fail) {
                     $event = LunchEvent::find($value);

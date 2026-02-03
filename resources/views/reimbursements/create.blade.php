@@ -10,6 +10,16 @@
             <div class="card">
                 <div class="card-header">
                     <span>Fill the form below</span>
+                    <!-- error message-->
+                    @if ($errors->any())
+                        <div class="alert alert-danger mt-2">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
                 <div class="card-body">
                     <form action="{{ route('reimbursements.store') }}" method="POST" enctype="multipart/form-data">
@@ -21,9 +31,9 @@
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
                         </div>
-
+                        <!-- user id -->
+                        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                         <!-- tipe -->
-                         
                         <div class="form-group">
                             <label for="tipe">Tipe</label>
                             <select name="tipe" id="tipe" class="form-control @error('tipe') is-invalid @enderror" required>
@@ -62,6 +72,40 @@
                             @enderror
                         </div>
 
+                        <!-- tampilkan pesan jika tipe transportasi dipilih maka maksimal 200000 amount -->
+                         
+                        <div id="transport_warning" class="alert alert-info mt-2" style="display: none;">
+                            <small><strong>Info:</strong> Untuk tipe Transportasi dan lain lain, maksimal pengajuan adalah Rp 200.000/bulan.</small>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const tipeSelect = document.getElementById('tipe');
+                                const transportWarning = document.getElementById('transport_warning');
+                                const amountInput = document.getElementById('amount');
+
+                                function checkTipe() {
+                                    if (tipeSelect.value == '1') {
+                                        transportWarning.style.display = 'block';
+                                    }else if (tipeSelect.value == '3') {
+                                        transportWarning.style.display = 'block';
+                                    } else {
+                                        transportWarning.style.display = 'none';
+                                    }
+                                }
+
+                                tipeSelect.addEventListener('change', checkTipe);
+                                checkTipe();
+
+                                amountInput.addEventListener('input', function() {
+                                    if (tipeSelect.value == '1' && this.value > 200000) {
+                                        this.classList.add('is-invalid');
+                                    } else {
+                                        this.classList.remove('is-invalid');
+                                    }
+                                });
+                            });
+                        </script>
                         <div class="form-group">
                             <label for="amount">Amount</label>
                             <div class="input-group">
@@ -75,14 +119,14 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group pt-3">
                             <label for="attachment">Attachment Receipt, Nota</label>
                             <input type="file" name="attachment" id="attachment" class="form-control-file @error('attachment') is-invalid @enderror">
                             @error('attachment')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
                         </div>
-                        <div class="form-group">
+                        <div class="form-group pt-3">
                             <label for="attachment_note">Foto Bukti</label>
                             <input type="file" name="attachment_note" id="attachment_note" class="form-control-file @error('attachment_note') is-invalid @enderror">
                             @error('attachment_note')
@@ -91,7 +135,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-primary" style="background-color: green; color: white;">
+                        <button type="submit" class="btn btn-primary mt-3 w-full" style="background-color: green; color: white;">
                             {{ __('Submit Request') }}
                         </button>
                     </form>
