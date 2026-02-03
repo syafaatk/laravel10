@@ -16,71 +16,83 @@ class UserOrderDetailController extends Controller
             abort(403);
         }
 
-        return view('user-order-details.create', compact('lunchEventUserOrder'));
+        // untuk menu item yang sudah ada tampilkan sebagai data select2 option
+        $existingMenuItems = UserOrderDetail::whereHas('order', function($query) use ($lunchEventUserOrder) {
+            $query->where('lunch_event_id', $lunchEventUserOrder->lunch_event_id);
+        })
+        ->select('item_name', 'price', 'type')
+        ->distinct()
+        ->get();
+        $existingMenuItems = $existingMenuItems->map(function($item) {
+            return [
+                'item_name' => $item->item_name,
+                'price' => $item->price,
+                'type' => $item->type,
+            ];
+        });
+
+        return view('user-order-details.create', compact('lunchEventUserOrder', 'existingMenuItems'));
     }
 
     public function store(Request $request, LunchEventUserOrder $lunchEventUserOrder)
     {
-        // Ensure the authenticated user can store order details for this order
+        // 1. Authorization & Validation
         if (Auth::id() !== $lunchEventUserOrder->user_id && !Auth::user()->hasRole('admin')) {
             abort(403);
         }
 
         $request->validate([
             'item_name' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'type'      => 'required|in:makanan,minuman', // Pastikan type valid
+            'quantity'  => 'required|integer|min:1',
+            'price'     => 'required|numeric|min:0',
         ]);
 
-        $subtotal = $request->quantity * $request->price;
-
+        // 2. Create Order Detail
         UserOrderDetail::create([
             'lunch_event_user_order_id' => $lunchEventUserOrder->id,
-            'type' => $request->type,
-            'item_name' => $request->item_name,
-            'quantity' => $request->quantity,
-            'price' => $request->price,
-            'subtotal' => $subtotal,
-            'notes' => $request->notes,
+            'type'                      => $request->type,
+            'item_name'                 => $request->item_name,
+            'quantity'                  => $request->quantity,
+            'price'                     => $request->price,
+            'subtotal'                  => $request->quantity * $request->price,
+            'notes'                     => $request->notes, // Notes individual item (jika ada)
         ]);
 
-        // note didapat dari rangkuman pesanan , contoh "Makanan : Nasi Goreng 1 Porsi, Ayam Goreng 1 Porsi, Minuman : Es Jeruk 1 Gelas"
-        // jika type adalah makanan maka porsi , jika minuman maka gelas
-        $notes = '';
+        // 3. Refresh Data & Generate Summary Notes
+        // Penting: Refresh detail agar item yang baru masuk ikut terhitung dalam loop
+        $details = $lunchEventUserOrder->orderDetails()->get();
+        
+        $summaryNotes = [];
         $foodItems = [];
         $drinkItems = [];
 
-        foreach ($lunchEventUserOrder->orderDetails as $detail) {
-            // Simple heuristic to categorize as food or drink
-            // This can be improved with a 'type' column in user_order_details or a more sophisticated categorization
+        foreach ($details as $detail) {
             if ($detail->type == 'makanan') {
-                $foodItems[] = $detail->item_name . ' ' . $detail->quantity . ' Porsi';
+                $foodItems[] = "{$detail->item_name} {$detail->quantity} Porsi";
             } elseif ($detail->type == 'minuman') {
-                $drinkItems[] = $detail->item_name . ' ' . $detail->quantity . ' Gelas';
+                $drinkItems[] = "{$detail->item_name} {$detail->quantity} Gelas";
             }
         }
 
         if (!empty($foodItems)) {
-            $notes .= 'Makanan : ' . implode(', ', $foodItems);
+            $summaryNotes[] = 'Makanan : ' . implode(', ', $foodItems);
         }
         if (!empty($drinkItems)) {
-            if (!empty($notes)) {
-                $notes .= ', ';
-            }
-            $notes .= 'Minuman : ' . implode(', ', $drinkItems);
+            $summaryNotes[] = 'Minuman : ' . implode(', ', $drinkItems);
         }
-        $request->merge(['notes' => $notes]);
-        
-        
 
-        // Update total_price in LunchEventUserOrder
-        $lunchEventUserOrder->total_price = $lunchEventUserOrder->orderDetails()->sum('subtotal');
-        $lunchEventUserOrder->quantity = $lunchEventUserOrder->orderDetails()->sum('quantity');
-        $lunchEventUserOrder->notes = $notes;
-        $lunchEventUserOrder->save();
+        $finalNotes = implode(', ', $summaryNotes);
+
+        // 4. Sync Total ke Parent Order
+        $lunchEventUserOrder->update([
+            'total_price' => $details->sum('subtotal'),
+            'quantity'    => $details->sum('quantity'),
+            'notes'       => $finalNotes,
+        ]);
 
         return redirect()->route('user-order-details.create', $lunchEventUserOrder->id)
-                         ->with('success', 'Menu item added to your order successfully.');
+                        ->with('success', 'Menu berhasil ditambahkan ke pesanan.');
     }
 
     public function edit(UserOrderDetail $userOrderDetail)

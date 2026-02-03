@@ -1,4 +1,30 @@
 <x-app-layout>
+    <style>
+        .select2-container {
+            z-index: 10001 !important;
+        }
+
+        .select2-dropdown {
+            z-index: 10002 !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+            border: 1px solid #D1D5DB !important;
+            border-radius: 0.5rem;
+        }
+
+        .select2-container--default .select2-selection__rendered {
+            line-height: 36px !important;
+            padding-left: 12px !important;
+            color: #374151 !important;
+        }
+
+        iframe {
+            pointer-events: auto;
+        }
+
+    </style>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Add Order for Event') }}: {{ $lunchEventUserOrder->lunchEvent->name }}
@@ -198,139 +224,224 @@
     </div>
 
     {{-- MODAL for Form --}}
+    <!-- pindahkan ke sebelah kanan -->
 
-    <div id="orderModal" class="fixed z-50 inset-0 pointer-events-none w-full" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity pointer-events-none" aria-hidden="true" onclick="closeOrderModal()"></div>
-        <div class="flex min-h-screen justify-end pointer-events-none">
-            <div class="w-full max-w-md bg-white shadow-xl transform transition-all ml-auto pointer-events-auto">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Tambah Menu</h3>
-                        <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-500">
-                            <span class="sr-only">Close</span>
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
+    <!-- SIDE PANEL MODAL -->
+    <div id="orderModal"
+        class="fixed top-0 right-0 h-screen w-[420px] bg-white shadow-2xl z-50 flex flex-col"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between px-6 py-4 border-b">
+            <h3 class="text-lg font-semibold text-gray-900" id="modal-title">
+                Tambah Menu
+            </h3>
+            <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- BODY (SCROLLABLE) -->
+        <div class="flex-1 overflow-y-auto px-6 py-4">
+            <form method="POST" action="{{ route('user-order-details.store', $lunchEventUserOrder->id) }}" id="addItemForm" class="space-y-4">
+                @csrf
+
+                <div class="grid grid-cols-1 gap-3">
+                    {{-- item name --}}
                     
-                    <form method="POST" action="{{ route('user-order-details.store', $lunchEventUserOrder->id) }}" id="addItemForm" class="space-y-4">
-                        @csrf
+                    <div>
+                        <label for="item_name_select" class="text-sm font-medium text-gray-700">Menu Item</label>
+                        <!-- Hidden input to store the actual item name for submission -->
+                        <input type="hidden" name="item_name" id="hidden_item_name" value="{{ old('item_name') }}">
+                        <!-- Select2 for user interaction -->
+                        <select id="item_name_select" name="item_name_select" required
+                                class="select2 mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option></option> {{-- Empty option for placeholder --}}
+                            @foreach ($existingMenuItems as $menuItem)
+                                @php $value = $menuItem['item_name'] . '|' . $menuItem['price'] . '|' . $menuItem['type']; @endphp
+                                <option value="{{ $value }}"
+                                        data-price="{{ $menuItem['price'] }}" 
+                                        data-type="{{ $menuItem['type'] }}"
+                                        >
+                                    {{ $menuItem['item_name'] }} ({{ ucfirst($menuItem['type']) }}) - Rp{{ number_format($menuItem['price'], 0, ',', '.') }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('item_name')" class="mt-1" />
+                    </div>
 
-                        <div class="grid grid-cols-1 gap-3">
-                            {{-- item name --}}
-                            <div>
-                                <label for="item_name" class="text-sm font-medium text-gray-700">Menu Item</label>
-                                <input id="item_name" name="item_name" type="text" required
-                                       class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                       value="{{ old('item_name') }}" placeholder="e.g. Nasi Goreng Hongkong">
-                                <x-input-error :messages="$errors->get('item_name')" class="mt-1" />
-                            </div>
+                    {{-- type --}}
+                    <div>
+                        <label for="type" class="text-sm font-medium text-gray-700">Type</label>
+                        <select id="type" name="type" required
+                                class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="makanan" {{ old('type') == 'makanan' ? 'selected' : '' }}>Makanan</option>
+                            <option value="minuman" {{ old('type') == 'minuman' ? 'selected' : '' }}>Minuman</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('type')" class="mt-1" />
+                    </div>
 
-                            {{-- type --}}
-                            <div>
-                                <label for="type" class="text-sm font-medium text-gray-700">Type</label>
-                                <select id="type" name="type" required
-                                        class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                                    <option value="makanan" {{ old('type') == 'makanan' ? 'selected' : '' }}>Makanan</option>
-                                    <option value="minuman" {{ old('type') == 'minuman' ? 'selected' : '' }}>Minuman</option>
-                                </select>
-                                <x-input-error :messages="$errors->get('type')" class="mt-1" />
-                            </div>
+                    {{-- quantity --}}
+                    <div>
+                        <label for="quantity" class="text-sm font-medium text-gray-700">Quantity</label>
+                        <input id="quantity" name="quantity" type="number" min="1" required
+                            class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                            value="{{ old('quantity', 1) }}">
+                        <x-input-error :messages="$errors->get('quantity')" class="mt-1" />
+                    </div>
 
-                            {{-- quantity --}}
-                            <div>
-                                <label for="quantity" class="text-sm font-medium text-gray-700">Quantity</label>
-                                <input id="quantity" name="quantity" type="number" min="1" required
-                                       class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                       value="{{ old('quantity', 1) }}">
-                                <x-input-error :messages="$errors->get('quantity')" class="mt-1" />
-                            </div>
+                    {{-- price --}}
+                    <div>
+                        <label for="price" class="text-sm font-medium text-gray-700">Price / Item (Rp)</label>
+                        <input id="price" name="price" type="number" step="1" min="0" required
+                            class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                            value="{{ old('price') }}">
+                        <x-input-error :messages="$errors->get('price')" class="mt-1" />
+                    </div>
 
-                            {{-- price --}}
-                            <div>
-                                <label for="price" class="text-sm font-medium text-gray-700">Price / Item (Rp)</label>
-                                <input id="price" name="price" type="number" step="1" min="0" required
-                                       class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                       value="{{ old('price') }}">
-                                <x-input-error :messages="$errors->get('price')" class="mt-1" />
-                            </div>
-
-                            {{-- notes (ditempat/bungkus) --}}
-                            <div>
-                                <label for="notes" class="text-sm font-medium text-gray-700">Order Mode</label>
-                                <select id="notes" name="notes" required
-                                        class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                                    <option value="ditempat" {{ old('notes') == 'ditempat' ? 'selected' : '' }}>Makan Ditempat</option>
-                                    <option value="bungkus" {{ old('notes') == 'bungkus' ? 'selected' : '' }}>Bungkus</option>
-                                </select>
-                                <x-input-error :messages="$errors->get('notes')" class="mt-1" />
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-end pt-3 border-t border-dashed border-gray-200">
-                            <button type="button" onclick="closeOrderModal()" class="mr-3 inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-xs font-medium bg-white hover:bg-gray-50 text-gray-700">
-                                Cancel
-                            </button>
-                            <button type="submit" class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white rounded-lg text-xs font-semibold shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500">
-                                + Add Item
-                            </button>
-                        </div>
-                    </form>
+                    {{-- notes (ditempat/bungkus) --}}
+                    <div>
+                        <label for="notes" class="text-sm font-medium text-gray-700">Order Mode</label>
+                        <select id="notes" name="notes" required
+                                class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="ditempat" {{ old('notes') == 'ditempat' ? 'selected' : '' }}>Makan Ditempat</option>
+                            <option value="bungkus" {{ old('notes') == 'bungkus' ? 'selected' : '' }}>Bungkus</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('notes')" class="mt-1" />
+                    </div>
                 </div>
+
+                <div class="flex items-center justify-end pt-3 border-t border-dashed border-gray-200">
+                    <button type="button" onclick="closeOrderModal()" class="mr-3 inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-xs font-medium bg-white hover:bg-gray-50 text-gray-700">
+                        Cancel
+                    </button>
+                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white rounded-lg text-xs font-semibold shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500">
+                        + Add Item
+                    </button>
+                </div>
+            </form>
+            <!-- list pesanan yang sudah ada-->
+            <div class="mt-4">
+                @foreach ($lunchEventUserOrder->orderDetails as $orderDetail)
+                    <div class="flex justify-between items-center p-2 border-b text-sm">
+                        <div>
+                            <span class="font-medium">{{ $orderDetail->item_name }}</span>
+                            <span class="text-sm text-gray-500 ml-2">({{ ucfirst($orderDetail->type) }})</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-medium">Rp{{ number_format($orderDetail->price, 0, ',', '.') }}</span>
+                            <span class="text-sm text-gray-500 ml-2">x{{ $orderDetail->quantity }}</span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- FOOTER (STICKY) -->
+        <div class="px-6 py-4 border-t bg-gray-50">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Total Saat Ini</span>
+                <span class="text-xl font-bold text-emerald-600">
+                    Rp{{ number_format($lunchEventUserOrder->total_price, 0, ',', '.') }}
+                </span>
             </div>
         </div>
     </div>
-    <script>
-        // Modal open/close logic with scrollable background
-        function openOrderModal() {
-            document.getElementById('orderModal').classList.remove('hidden');
-            document.getElementById('orderModal').classList.add('flex');
-            // Do NOT add overflow-hidden to body, so background stays scrollable
-        }
-        function closeOrderModal() {
-            document.getElementById('orderModal').classList.add('hidden');
-            document.getElementById('orderModal').classList.remove('flex');
-        }
-    </script>
 
-    {{-- scripts --}}
+    
     <script>
-        // quick-fill function (masih bisa dipakai jika nanti ada daftar menu text)
-        function quickFill(itemName, type = 'makanan', price = '') {
-            const name = document.getElementById('item_name');
-            const typeEl = document.getElementById('type');
-            const priceEl = document.getElementById('price');
-            const qty = document.getElementById('quantity');
-            name.value = itemName;
-            typeEl.value = type;
-            if (price) priceEl.value = price;
-            qty.value = 1;
-            name.focus();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
+        // 1. Fungsi Modal (Diletakkan di luar agar global)
         function openOrderModal() {
-            document.getElementById('orderModal').classList.remove('hidden');
+            const modal = document.getElementById('orderModal');
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
         }
 
         function closeOrderModal() {
-            document.getElementById('orderModal').classList.add('hidden');
+            const modal = document.getElementById('orderModal');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
 
-        // Close modal on ESC
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                closeOrderModal();
-            }
-        });
+        $(document).ready(function() {
+            const itemNameSelect = $('#item_name_select');
+            const hiddenItemName = $('#hidden_item_name');
+            const typeSelect = $('#type');
+            const priceInput = $('#price');
 
-        // focus first error if any
-        @if ($errors->any())
-            (function () {
-                // If error, open modal automatically
+            // 2. Inisialisasi Select2
+            itemNameSelect.select2({
+                tags: true,
+                placeholder: "Pilih atau ketik menu baru...",
+                allowClear: true,
+                width: '100%',
+                /* PENTING: dropdownParent harus ke elemen modal yang aktif 
+                agar tidak tertutup otomatis oleh focus-trap modal 
+                */
+                dropdownParent: $('#orderModal'), 
+                createTag: function (params) {
+                    var term = $.trim(params.term);
+                    if (term === '') return null;
+
+                    var found = false;
+                    itemNameSelect.find('option').each(function() {
+                        const optionValue = $(this).val();
+                        if (optionValue && optionValue.split('|')[0].toLowerCase() === term.toLowerCase()) {
+                            found = true;
+                            return false;
+                        }
+                    });
+
+                    return found ? null : {
+                        id: term,
+                        text: term + ' (Item Baru)',
+                        newTag: true
+                    };
+                }
+            });
+
+            // 3. Event Handler Select2
+            itemNameSelect.on('select2:select', function (e) {
+                const data = e.params.data;
+                if (data.newTag) {
+                    hiddenItemName.val(data.id);
+                    priceInput.val('').focus();
+                    typeSelect.val('makanan').trigger('change');
+                } else {
+                    const parts = data.id.split('|');
+                    hiddenItemName.val(parts[0]);
+                    priceInput.val(parts[1]);
+                    typeSelect.val(parts[2]).trigger('change');
+                }
+            });
+
+            // 4. Handle Validation Errors
+            @if ($errors->any())
                 openOrderModal();
-            })();
-        @endif
+                const oldItemName = "{{ old('item_name') }}";
+                if (oldItemName) {
+                    const oldPrice = "{{ old('price') }}";
+                    const oldType = "{{ old('type') }}";
+                    const compositeValue = oldItemName + '|' + oldPrice + '|' + oldType;
+
+                    if (itemNameSelect.find("option[value='" + compositeValue + "']").length) {
+                        itemNameSelect.val(compositeValue).trigger('change');
+                    } else {
+                        var newOption = new Option(oldItemName, oldItemName, true, true);
+                        itemNameSelect.append(newOption).trigger('change');
+                    }
+                }
+            @endif
+
+            // 5. Close on ESC
+            $(document).on('keydown', function (e) {
+                if (e.key === 'Escape') closeOrderModal();
+            });
+        });
     </script>
 </x-app-layout>
