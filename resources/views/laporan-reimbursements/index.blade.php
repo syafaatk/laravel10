@@ -15,7 +15,7 @@
                     <a href="{{ route('admin.laporan-reimbursements.create') }}" class="btn btn-primary">Tambah Laporan Reimbursements</a>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="laporanReimbursementsTable">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -32,7 +32,12 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $laporan->user->name }}</td>
                                     <td>{{ number_format($laporan->amount, 2) }}</td>
-                                    <td>{{ ucfirst($laporan->status) }}</td>
+                                    <!-- status dibuat badge -->
+                                    <td>
+                                        <span class="badge bg-{{ $laporan->status == 'approved' ? 'success' : ($laporan->status == 'rejected' ? 'danger' : 'warning') }}">
+                                            {{ ucfirst($laporan->status) }}
+                                        </span>
+                                    </td>
                                     <td>{{ $laporan->created_at->format('d-m-Y') }}</td>
                                     <td>
                                         <a href="{{ route('admin.laporan-reimbursements.show', $laporan->id) }}" class="btn btn-info btn-sm">View</a>
@@ -52,4 +57,17 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#laporanReimbursementsTable').DataTable({
+                responsive: true,
+                paging: false,
+                info: false,
+                searching: true,
+                order: [[4, 'desc']]
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>
