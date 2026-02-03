@@ -154,21 +154,6 @@ class ReimbursementController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            // cek kembali apakah user_id sudah pernah mengajukan reimbursement di bulan yang sama untuk tipe transportasi
-            'user_id' => [
-                function ($attribute, $value, $fail) use ($request) {
-                    if ($request->tipe == 1) { // transportasi
-                        $existing = Reimbursement::where('user_id', Auth::id())
-                            ->where('tipe', 1)
-                            ->whereMonth('created_at', Carbon::now()->month)
-                            ->whereYear('created_at', Carbon::now()->year)
-                            ->first();
-                        if ($existing && $existing->amount >= 200000) {
-                            $fail('You have already submitted a transportation reimbursement for this month. Amount: Rp ' . number_format($existing->amount, 0, ',', '.'));
-                        }
-                    }
-                },
-            ],
             
             'tipe' => 'required|in:1,2,3',
             'amount' => [
@@ -177,8 +162,24 @@ class ReimbursementController extends Controller
                 'min:0',
                 'max:10000000',
                 function ($attribute, $value, $fail) use ($request) {
-                    if (in_array($request->tipe, [1, 3]) && $value > 200000) {
-                        $fail('The amount for Transportasi or Lain-lain cannot exceed Rp 200.000.');
+                    if (in_array($request->tipe, [1, 3])) {
+                        // Cek limit per request
+                        if ($value > 200000) {
+                            $fail('The amount for Transportasi or Lain-lain cannot exceed Rp 200.000 per request.');
+                            return;
+                        }
+
+                        // Cek limit akumulasi per bulan
+                        $totalExisting = Reimbursement::where('user_id', Auth::id())
+                            ->where('tipe', $request->tipe)
+                            ->whereMonth('created_at', Carbon::now()->month)
+                            ->whereYear('created_at', Carbon::now()->year)
+                            ->where('status', '!=', 'rejected')
+                            ->sum('amount');
+
+                        if (($totalExisting + $value) > 200000) {
+                            $fail('Total reimbursement for this type cannot exceed Rp 200.000 per month. Used: Rp ' . number_format($totalExisting, 0, ',', '.'));
+                        }
                     }
                 },
             ],
