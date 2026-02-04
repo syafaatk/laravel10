@@ -164,7 +164,7 @@ class ReimbursementController extends Controller
                 function ($attribute, $value, $fail) use ($request) {
                     if (in_array($request->tipe, [1, 3])) {
                         // Cek limit per request
-                        if ($value > 200000) {
+                        if ($value > 300000) {
                             $fail('The amount for Transportasi or Lain-lain cannot exceed Rp 200.000 per request.');
                             return;
                         }
@@ -177,8 +177,8 @@ class ReimbursementController extends Controller
                             ->where('status', '!=', 'rejected')
                             ->sum('amount');
 
-                        if (($totalExisting + $value) > 200000) {
-                            $fail('Total reimbursement for this type cannot exceed Rp 200.000 per month. Used: Rp ' . number_format($totalExisting, 0, ',', '.'));
+                        if (($totalExisting + $value) > 300000) {
+                            $fail('Total reimbursement for this type cannot exceed Rp 300.000 per month. Used: Rp ' . number_format($totalExisting, 0, ',', '.'));
                         }
                     }
                 },

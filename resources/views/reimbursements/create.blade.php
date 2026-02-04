@@ -72,10 +72,10 @@
                             @enderror
                         </div>
 
-                        <!-- tampilkan pesan jika tipe transportasi dipilih maka maksimal 200000 amount -->
+                        <!-- tampilkan pesan jika tipe transportasi dipilih maka maksimal 300000 amount -->
                          
                         <div id="transport_warning" class="alert alert-info mt-2" style="display: none;">
-                            <small><strong>Info:</strong> Untuk tipe Transportasi dan lain lain, maksimal pengajuan adalah Rp 200.000/bulan.</small>
+                            <small><strong>Info:</strong> Untuk tipe Transportasi dan lain lain, maksimal pengajuan adalah Rp 300.000/bulan.</small>
                         </div>
 
                         <script>
@@ -98,7 +98,7 @@
                                 checkTipe();
 
                                 amountInput.addEventListener('input', function() {
-                                    if (tipeSelect.value == '1' && this.value > 200000) {
+                                    if (tipeSelect.value == '1' && this.value > 300000) {
                                         this.classList.add('is-invalid');
                                     } else {
                                         this.classList.remove('is-invalid');
