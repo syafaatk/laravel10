@@ -38,12 +38,23 @@
                                 <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                     <dt class="text-sm font-medium leading-6 text-gray-900">Geolocation</dt>
                                     <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        Latitude: **{{ $masterRestaurant->latitude ?? '-' }}**, Longitude: **{{ $masterRestaurant->longitude ?? '-' }}**
-                                        <!-- view google map -->
                                         @if ($masterRestaurant->latitude && $masterRestaurant->longitude)
-                                            <a href="https://www.google.com/maps/search/?api=1&query={{ $masterRestaurant->latitude }},{{ $masterRestaurant->longitude }}" target="_blank" class="text-blue-600 hover:underline ml-2">View on Map</a>
+                                            <div class="rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                                                <iframe 
+                                                    width="100%" 
+                                                    height="250" 
+                                                    frameborder="0" 
+                                                    scrolling="no" 
+                                                    marginheight="0" 
+                                                    marginwidth="0" 
+                                                    src="https://maps.google.com/maps?q={{ $masterRestaurant->latitude }},{{ $masterRestaurant->longitude }}&hl=es&z=14&amp;output=embed">
+                                                </iframe>
+                                            </div>
+                                        @else
+                                            <p class="text-gray-400 italic">Coordinates not set</p>
                                         @endif
                                     </dd>
+                                    
                                 </div>
                                 <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                     <dt class="text-sm font-medium leading-6 text-gray-900">Description</dt>
