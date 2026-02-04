@@ -11,7 +11,10 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="h5 m-0">User List</span>
-                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add User</a>
+                        <div>
+                            <button type="button" class="btn btn-secondary me-2 bg-danger" data-bs-toggle="modal" data-bs-target="#inactiveUsersModal">User Nonaktif <span class="badge bg-light text-dark">{{ $inactiveUsers->count() }}</span></button>
+                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add User</a>
+                        </div>
                     </div>
                 </div>
 
@@ -39,6 +42,7 @@
                                     <th>Lama Kerja</th>
                                     <th>Total Gaji</th>
                                     <th>Sisa Cuti</th>
+                                    <th>Nilai Terakhir</th>
                                     <th>Roles</th>
                                     <th>Actions</th>
                                 </tr>
@@ -66,6 +70,7 @@
                                         $usedDays = $user->cuti_approved_sum_days_requested ?? 0;
                                         $annualQuota = $user->annual_cuti_quota ?? 12;
                                         $remaining = max(0, $annualQuota - $usedDays);
+                                        $lastPenilaian = \App\Models\PenilaianPegawai::where('user_id', $user->id)->latest('review_date')->first();
                                     @endphp
                                     <tr>
                                         <td class="align-middle">{{ $nopeg }}</td>
@@ -92,6 +97,17 @@
                                             <div class="text-muted small mt-1">Dipakai: {{ $usedDays }} / {{ $annualQuota }}</div>
                                         </td>
 
+                                        <td class="align-middle text-center">
+                                            @if($lastPenilaian)
+                                                <span class="badge {{ $lastPenilaian->overall_score >= 4 ? 'bg-success' : ($lastPenilaian->overall_score >= 3 ? 'bg-warning' : 'bg-danger') }}">
+                                                    {{ number_format($lastPenilaian->overall_score, 2) }}
+                                                </span>
+                                                <div class="text-muted small mt-1" style="font-size: 0.7rem;">{{ \Carbon\Carbon::parse($lastPenilaian->review_date)->format('d M Y') }}</div>
+                                            @else
+                                                <span class="text-muted small">-</span>
+                                            @endif
+                                        </td>
+
                                         <td class="align-middle">
                                             @if($user->roles && $user->roles->count())
                                                 @foreach ($user->roles as $role)
@@ -104,6 +120,7 @@
 
                                         <td class="align-middle">
                                             <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-info">Edit</a>
+                                            <a href="{{ route('admin.penilaian.create', ['user_id' => $user->id]) }}" class="btn btn-sm btn-success">Nilai</a>
 
                                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">
                                                 @csrf
@@ -165,6 +182,67 @@
                         </div>
                     </div>
                     <!-- end modal -->
+
+                    <!-- Modal User Nonaktif -->
+                    <div class="modal fade" id="inactiveUsersModal" tabindex="-1" aria-labelledby="inactiveUsersModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="inactiveUsersModalLabel">Daftar User Nonaktif</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped" id="inactive-users-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No Pegawai</th>
+                                                    <th>Name</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Tgl Masuk</th>
+                                                    <th>Tgl Keluar</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($inactiveUsers as $user)
+                                                    <tr>
+                                                        <td>{{ $user->nopeg ?? '-' }}</td>
+                                                        <td>{{ $user->name }}</td>
+                                                        <td>{{ $user->jabatan ?? '-' }}</td>
+                                                        <td>{{ $user->tgl_masuk ? \Carbon\Carbon::parse($user->tgl_masuk)->format('d M Y') : '-' }}</td>
+                                                        <!-- integrasi dengan menu pengunduran diri -->
+                                                        <td>
+                                                            @php $lastPengunduran = $user->pengundurans->sortByDesc('requested_date')->first(); @endphp
+                                                            @if($lastPengunduran)
+                                                                {{ \Carbon\Carbon::parse($lastPengunduran->requested_date)->format('d M Y') }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        <td>
+                                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-info">Edit</a>
+                                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-sm bg-danger text-white">Delete</button>
+                                                            </form>
+                                                            <!-- lihat pengunduran diri -->
+                                                            @if($lastPengunduran)
+                                                                <a href="{{ route('pengunduran.show', $lastPengunduran->id) }}" class="btn btn-sm btn-secondary">Resign</a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary bg-secondary text-white" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -181,6 +259,11 @@
                 columnDefs: [
                     { orderable: false, targets: [9, 10, 11] } // sisa cuti, roles, actions not orderable
                 ]
+            });
+
+            $('#inactive-users-table').DataTable({
+                responsive: true,
+                pageLength: 10
             });
 
             // refresh button simple action

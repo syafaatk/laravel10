@@ -18,9 +18,17 @@ class UserController extends Controller
     public function index()
     {
         Gate::authorize('view-user');
-        $users = User::withSum('cutiApproved', 'days_requested')->get();
+        $allUsers = User::with(['roles', 'pengundurans'])->withSum('cutiApproved', 'days_requested')->get();
+
+        $users = $allUsers->reject(function ($user) {
+            return $user->hasRole('user-nonaktif');
+        });
+
+        $inactiveUsers = $allUsers->filter(function ($user) {
+            return $user->hasRole('user-nonaktif');
+        });
            
-        return view('admin.users.index', compact('users')); 
+        return view('admin.users.index', compact('users', 'inactiveUsers')); 
     }
 
     /**

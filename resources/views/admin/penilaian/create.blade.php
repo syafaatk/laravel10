@@ -23,15 +23,17 @@
                     <form action="{{ route('admin.penilaian.store') }}" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label for="user_id">Pegawai yang Dinilai</label>
-                                <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
-                                    <option value="">Pilih Pegawai</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                            <div class="form-group mb-3">
+                                <label for="user_id" class="form-label">Pilih Pegawai</label>
+                                <select name="user_id" id="user_id" class="form-control select2" required>
+                                    <option value="">-- Pilih Pegawai --</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}" 
+                                            {{ (old('user_id') == $user->id) ? 'selected' : ((isset($selected_user_id) && $selected_user_id == $user->id) ? 'selected' : '') }}>
+                                            {{ $user->name }} - {{ $user->jabatan ?? '-' }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                @error('user_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="review_date">Tanggal Penilaian</label>

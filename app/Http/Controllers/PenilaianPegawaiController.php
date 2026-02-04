@@ -30,13 +30,14 @@ class PenilaianPegawaiController extends Controller
         return view('admin.penilaian.index', compact('penilaians'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $users = User::whereHas('roles', function ($query) {
             $query->where('name', 'user');
         })->get();
         $criteria = self::CRITERIA;
-        return view('admin.penilaian.create', compact('users', 'criteria'));
+        $selected_user_id = $request->user_id;
+        return view('admin.penilaian.create', compact('users', 'criteria', 'selected_user_id'));
     }
 
     public function print(PenilaianPegawai $penilaian)

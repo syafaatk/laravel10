@@ -41,13 +41,15 @@ class PengunduranController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'user_id' => 'required|exists:users,id',
             'requested_date' => 'required|date',
             'reason' => 'required|string|max:2000',
             'pic' => 'nullable|string|max:255',
         ]);
 
         $pengunduran = Pengunduran::create([
-            'user_id' => Auth::id(),
+            // jika admin yang membuat pengunduran diri, gunakan user_id dari form
+            'user_id' => Auth::user()->hasRole('admin') ? $request->user_id : Auth::id(),
             'requested_date' => $request->requested_date,
             'reason' => $request->reason,
             'pic' => $request->pic,
@@ -80,6 +82,11 @@ class PengunduranController extends Controller
         $pengunduran->processed_by = Auth::id();
         $pengunduran->save();
 
+        // update role user menjadi 'user-nonaktif'
+        $user = $pengunduran->user;
+        $user->removeRole('user');
+        $user->assignRole('user-nonaktif');
+        $user->save();
         return redirect()->route('pengunduran.index')->with('success', 'Pengunduran diri approved successfully.');
     }
 

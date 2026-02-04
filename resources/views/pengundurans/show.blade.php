@@ -22,7 +22,21 @@
                         <strong>Reason:</strong> {{ $pengunduran->reason }}
                     </div>
                     <div class="mb-4">
-                        <strong>PIC:</strong> {{ $pengunduran->pic }}
+                        <strong>PIC:</strong> 
+                        @if ($pengunduran->pic)
+                            @php
+                                $pic = [
+                                    '9520131577' => 'FITHRI HALIM AHMAD',
+                                    '8913230864' => 'DEDEK APRIYANI',
+                                    '8916131158' => 'ARYA REZA NUGRAHA',
+                                    '8520131736' => 'ASEP MARYANA',
+                                    '9824132111' => 'ZULFIKAR MURAKABIMAN',
+                                ];
+                            @endphp
+                            {{ $pic[$pengunduran->pic] ?? $pengunduran->pic }}
+                        @else
+                            -
+                        @endif
                     </div>
                     <div class="mb-4">
                         <strong>Status:</strong>
