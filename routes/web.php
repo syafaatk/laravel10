@@ -39,7 +39,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-
+Route::get('/lunch-events/public/{encryptedId}', [LunchEventController::class, 'showPublic'])->name('lunch-events.public');
+Route::patch('/lunch-event-user-orders/{lunchEventUserOrder}/status-public', [LunchEventUserOrderController::class, 'updateStatusPublic'])->name('lunch-event-user-orders.status-public');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

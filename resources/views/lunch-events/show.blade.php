@@ -1,11 +1,15 @@
-<x-app-layout>
+<x-dynamic-component :component="$layout === 'app' ? 'app-layout' : 'restaurant-layout'">
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-md text-gray-800 leading-tight">
             {{ __('Lunch Event Details') }}
         </h2>
     </x-slot>
 
+    @if($layout === 'app')
     <div class="py-12">
+    @else
+    <div class="py-0">
+    @endif
         <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
@@ -13,7 +17,7 @@
                     {{-- Tombol Aksi --}}
                     <div class="flex justify-end mb-6 space-x-3">
                         <!-- buat pesanan -->
-                        @if($lunchEvent->status == 'scheduled')
+                        @if(Auth::check() && $lunchEvent->status == 'scheduled')
                         <a href="{{ route('lunch-event-user-orders.create', $lunchEvent->id) }}" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
                             {{ __('Buat Pesanan') }}
                         </a>
@@ -21,60 +25,94 @@
                         <!-- <a href="{{ route('lunch-events.edit', $lunchEvent->id) }}" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">
                             {{ __('Edit Event') }}
                         </a> -->
-                        @if($lunchEvent->reimbursements->whereIn('status', ['approved', 'done'])->isEmpty())
+                        @if(Auth::check() && $lunchEvent->reimbursements->whereIn('status', ['approved', 'done'])->isEmpty())
                             <a href="{{ route('reimbursements.create', ['lunch_event_id' => $lunchEvent->id]) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                                 {{ __('Create Reimbursement') }}
                             </a>
                         @endif
-                        <a href="{{ route('lunch-events.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
-                            {{ __('Back to List') }}
-                        </a>
-                    </div>
 
+                        @if(Auth::check())
+                            <!-- Share Button -->
+                            <div class="relative inline-block text-left">
+                                <button onclick="copyPublicLink()" class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                    </svg>
+                                    Share Link
+                                </button>
+                                <input type="hidden" id="publicLink" value="{{ route('lunch-events.public', ['encryptedId' => \Illuminate\Support\Facades\Crypt::encrypt($lunchEvent->id)]) }}">
+                            </div>
+                            <a href="{{ route('lunch-events.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+                                {{ __('Back to List') }}
+                            </a>
+                        @endif
+
+                        
+                    </div>
+                    @if($layout === 'app')
                     <h3 class="text-3xl font-bold text-indigo-700 mb-6 border-b pb-2">{{ $lunchEvent->name }}</h3>
+                    @endif
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         
                         <div class="md:col-span-2">
                             <dl class="text-gray-900 divide-y divide-gray-200">
                                 
-                                {{-- Tanggal Event --}}
-                                <div class="py-4 flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-base font-semibold w-full sm:w-1/4">Date:</dt>
-                                    <dd class="mt-1 sm:mt-0 sm:w-3/4 text-lg">
-                                        {{ $lunchEvent->event_date }}
-                                    </dd>
-                                </div>
-
-                                {{-- Restoran --}}
-                                <div class="py-4 flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-base font-semibold w-full sm:w-1/4">Restaurant:</dt>
-                                    <dd class="mt-1 sm:mt-0 sm:w-3/4 text-lg">
-                                        {{-- Asumsi relasi 'restaurant' ada pada model LunchEvent --}}
-                                        @if ($lunchEvent->restaurant)
-                                            <a href="{{ route('master-restaurants.show', $lunchEvent->restaurant->id) }}" class="text-blue-600 hover:underline font-medium">
-                                                {{ $lunchEvent->restaurant->name }}
-                                            </a>
-                                        @else
-                                            <span class="text-red-500">Restaurant Not Found</span>
-                                        @endif
-                                    </dd>
-                                </div>
-                                <!-- total biaya -->
-                                 
-                                <div class="py-4 flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-base font-semibold w-full sm:w-1/4">Total Cost:</dt>
-                                    <dd class="mt-1 sm:mt-0 sm:w-3/4 text-lg">
-                                        Rp{{ number_format($totalPrice, 0, ',', '.') }}
-                                    </dd>
-                                </div>
-                                
-                                {{-- Deskripsi --}}
+                                {{-- Event Summary --}}
                                 <div class="py-4">
-                                    <dt class="text-base font-semibold mb-2">Description:</dt>
-                                    <dd class="text-gray-700 whitespace-pre-wrap">{{ $lunchEvent->description }}</dd>
+                                    <dt class="text-base font-semibold mb-4">Event Summary</dt>
+                                    <dd>
+                                        <div class="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                                            <h5 class="font-semibold text-indigo-900 mb-2">Event Information</h5>
+
+                                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+
+                                                {{-- Date --}}
+                                                <div>
+                                                    <p class="text-gray-600">Date</p>
+                                                    <p class="text-md font-bold text-indigo-700">
+                                                        {{ $lunchEvent->event_date }}
+                                                    </p>
+                                                </div>
+
+                                                {{-- Restaurant --}}
+                                                <div>
+                                                    <p class="text-gray-600">Restaurant</p>
+                                                    @if ($lunchEvent->restaurant)
+                                                        <a href="{{ route('master-restaurants.show', $lunchEvent->restaurant->id) }}"
+                                                        class="text-md font-bold text-indigo-700 hover:underline">
+                                                            {{ $lunchEvent->restaurant->name }}
+                                                        </a>
+                                                    @else
+                                                        <p class="text-md font-bold text-red-500">
+                                                            Not Found
+                                                        </p>
+                                                    @endif
+                                                </div>
+
+                                                {{-- Total Cost --}}
+                                                <div>
+                                                    <p class="text-gray-600">Total Cost</p>
+                                                    <p class="text-md font-bold text-emerald-600">
+                                                        Rp{{ number_format($totalPrice, 0, ',', '.') }}
+                                                    </p>
+                                                </div>
+
+                                                {{-- Description --}}
+                                                <div>
+                                                    <p class="text-gray-600">Description</p>
+                                                    <p class="text-md font-bold text-emerald-600">
+                                                        {{ $lunchEvent->description ?: '-' }}
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </dd>
                                 </div>
 
+                                @if($layout === 'app')
+                                {{-- Menu Assets --}}
                                 <!-- tampilkan gambar menu -->
                                 <div class="py-4">
                                     <div id="menuGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -151,6 +189,9 @@
                                         @endfor
                                     </div>
                                 </div>
+                                @endif
+
+                                {{-- User Orders --}}
                                 <!-- tampilkan user yang memesan -->
                                  
                                 <div class="py-4">
@@ -163,23 +204,23 @@
                                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                                     <div>
                                                         <p class="text-gray-600">Total Orders</p>
-                                                        <p class="text-xl font-bold text-blue-600">{{ $lunchEventUserOrders->count() }}</p>
+                                                        <p class="text-md font-bold text-blue-600">{{ $lunchEventUserOrders->count() }}</p>
                                                     </div>
                                                     <div>
                                                         <p class="text-gray-600">Total Items</p>
-                                                        <p class="text-xl font-bold text-blue-600">
+                                                        <p class="text-md font-bold text-blue-600">
                                                             {{ $lunchEventUserOrders->sum(fn($o) => $o->orderDetails->sum('quantity')) }}
                                                         </p>
                                                     </div>
                                                     <div>
                                                         <p class="text-gray-600">Total Revenue</p>
-                                                        <p class="text-xl font-bold text-blue-600">
+                                                        <p class="text-md font-bold text-blue-600">
                                                             Rp{{ number_format($lunchEventUserOrders->sum('total_price'), 0, ',', '.') }}
                                                         </p>
                                                     </div>
                                                     <div>
                                                         <p class="text-gray-600">Avg Order Value</p>
-                                                        <p class="text-xl font-bold text-blue-600">
+                                                        <p class="text-md font-bold text-blue-600">
                                                             Rp{{ number_format($lunchEventUserOrders->avg('total_price'), 0, ',', '.') }}
                                                         </p>
                                                     </div>
@@ -203,7 +244,7 @@
                                                     foreach ($order->orderDetails as $detail) {
                                                         $orderNote = strtolower($detail->notes ?? '');
                                                         $orderType = $orderNote === 'bungkus' ? 'bungkus' : 'ditempat';
-                                                        $itemType = $detail->type ?? $detail->type ?? $guessType($detail->item_name);
+                                                        $itemType = $detail->type ?? $guessType($detail->item_name);
 
                                                         $key = $detail->item_name . '|' . $detail->price . '|' . $itemType;
 
@@ -217,7 +258,10 @@
                                                         }
 
                                                         $groups[$orderType][$itemType][$key]['quantity'] += $detail->quantity;
-                                                        $groups[$orderType][$itemType][$key]['users'][] = $order->user->short_name;
+                                                        // Deduplicate users per item key using order ID
+                                                        $groups[$orderType][$itemType][$key]['users'][$order->id] = [
+                                                            'name' => $order->user->short_name ?? $order->user->name,
+                                                        ];
                                                     }
                                                 }
 
@@ -228,7 +272,8 @@
                                                     foreach (['makanan','minuman'] as $it) {
                                                         if (!empty($groups[$ot][$it])) {
                                                             foreach ($groups[$ot][$it] as $g) {
-                                                                $users = implode(', ', array_unique($g['users']));
+                                                                $userNames = array_map(function($u) { return $u['name']; }, $g['users']);
+                                                                $users = implode(', ', $userNames);
                                                                 $price = number_format($g['price'], 0, ',', '.');
                                                                 $lines[] = "{$g['quantity']} x {$g['item_name']} (Rp{$price}) – {$users}";
                                                             }
@@ -241,12 +286,12 @@
                                             {{-- Render Ditempat --}}
                                             <div class="mb-6 p-2 bg-green-50 rounded-lg border border-green-300">
                                                 <div class="flex items-center justify-between">
-                                                    <h5 class="font-bold text-green-900 mb-3 text-lg">Makan Ditempat</h5>
+                                                    <h5 class="font-bold text-green-900 mb-3 text-md">Makan Ditempat</h5>
                                                     <div class="flex items-center space-x-2">
                                                         <button class="px-3 py-1 text-sm bg-white border rounded hover:bg-gray-100" onclick="copySection('ditempat')">
                                                             Copy Pesanan
                                                         </button>
-                                                        @if(Auth::user()->hasRole('admin'))
+                                                        @if(Auth::check() && Auth::user()->hasRole('admin'))
                                                             <span class="text-xs text-gray-500">Admin: dapat edit</span>
                                                         @endif
                                                     </div>
@@ -260,9 +305,9 @@
                                                                 <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-green-100">
                                                                     <div class="flex-1">
                                                                         <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }} 
-                                                                          :  Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600">  {{ implode(', ', array_unique($item['users'])) }}</div>
+                                                                          :  Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600">  {{ collect($item['users'])->flatten()->unique()->implode(', ') }}</span></div>
                                                                     </div>
-                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                    @if(Auth::check() && Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'makanan','ditempat')">Edit</button>
                                                                     @endif
                                                                 </li>
@@ -279,9 +324,9 @@
                                                                 <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-green-100">
                                                                     <div class="flex-1">
                                                                         <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }}
-                                                                        : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
+                                                                        : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ collect($item['users'])->flatten()->unique()->implode(', ') }}</span></div>
                                                                     </div>
-                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                    @if(Auth::check() && Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'minuman','ditempat')">Edit</button>
                                                                     @endif
                                                                 </li>
@@ -294,7 +339,7 @@
                                             {{-- Render Bungkus --}}
                                             <div class="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-300">
                                                 <div class="flex items-center justify-between">
-                                                    <h5 class="font-bold text-orange-900 mb-3 text-lg">Bungkus</h5>
+                                                    <h5 class="font-bold text-orange-900 mb-3 text-md">Bungkus</h5>
                                                     <div class="flex items-center space-x-2">
                                                         <button class="px-3 py-1 text-sm bg-white border rounded hover:bg-gray-100" onclick="copySection('bungkus')">
                                                             Copy Pesanan
@@ -310,9 +355,9 @@
                                                                 <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-orange-100">
                                                                     <div class="flex-1">
                                                                         <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }} 
-                                                                            : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
+                                                                            : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ collect($item['users'])->flatten()->unique()->implode(', ') }}</span></div>
                                                                     </div>
-                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                    @if(Auth::check() && Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'makanan','bungkus')">Edit</button>
                                                                     @endif
                                                                 </li>
@@ -329,9 +374,9 @@
                                                                 <li class="flex items-start justify-between px-3 py-2 bg-white rounded border border-orange-100">
                                                                     <div class="flex-1">
                                                                         <div class="text-gray-900 font-semibold">{{ $item['quantity'] }} x {{ $item['item_name'] }} 
-                                                                            : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ implode(', ', array_unique($item['users'])) }}</span></div>
+                                                                            : Rp{{ number_format($item['price'], 0, ',', '.') }} • <span class="text-sm text-gray-600"> {{ collect($item['users'])->flatten()->unique()->implode(', ') }}</span></div>
                                                                     </div>
-                                                                    @if(Auth::user()->hasRole('admin'))
+                                                                    @if(Auth::check() && Auth::user()->hasRole('admin'))
                                                                         <button type="button" class="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-sm" onclick="openEditModal('{{ $itemKey }}','{{ $item['item_name'] }}',{{ $item['quantity'] }},{{ $item['price'] }},'minuman','bungkus')">Edit</button>
                                                                     @endif
                                                                 </li>
@@ -356,27 +401,20 @@
 
                         {{-- Card Restoran Terkait --}}
                         <div class="md:col-span-1 border rounded-lg shadow-lg p-4 bg-gray-50">
-                            <h4 class="text-xl font-bold mb-3 text-indigo-600">Restaurant Info</h4>
+                            <h4 class="text-md font-bold mb-3 text-indigo-600">Restaurant Info</h4>
                             @if ($lunchEvent->restaurant)
                                 <p class="text-sm text-gray-700 mb-2">Address: {{ $lunchEvent->restaurant->address ?? '-' }}</p>
                                 <p class="text-sm text-gray-700 mb-2">Phone: {{ $lunchEvent->restaurant->phone ?? '-' }}</p>
                                 @if ($lunchEvent->restaurant->image)
                                     <img src="{{ asset('storage/restaurants/' . $lunchEvent->restaurant->image) }}" alt="Restaurant Image" class="w-full h-70 object-cover rounded-md mt-3">
                                 @endif
-                                @if ($lunchEvent->image)
-                                    <img src="{{ asset('storage/' . $lunchEvent->image) }}" alt="Eviden Image" class="w-full h-70 object-cover rounded-md mt-3">
-                                @endif 
-                                <!-- foto nota -->
-                                @if ($lunchEvent->nota)
-                                    <img src="{{ asset('storage/' . $lunchEvent->nota) }}" alt="Nota Image" class="w-full h-70 object-cover rounded-md mt-3">
-                                @endif 
                             @else
                                 <p class="text-gray-500 italic">No associated restaurant details to display.</p>
                             @endif
 
                             {{-- Reimbursement Proofs --}}
                             @if($lunchEvent->reimbursements->isNotEmpty())
-                                <h4 class="text-lg font-semibold mt-6 mb-2 text-indigo-600">Reimbursement Proofs</h4>
+                                <h4 class="text-md font-semibold mt-6 mb-2 text-indigo-600">Reimbursement Proofs</h4>
                                 @foreach($lunchEvent->reimbursements as $reimbursement)
                                     @if($reimbursement->attachment)
                                         <div class="mt-3">
@@ -399,10 +437,45 @@
                                 @endforeach
                             @endif
 
-                            <h4 class="text-lg font-semibold mt-6 mb-2 text-indigo-600">Total Pesanan/orang </h4>
+                            <h4 class="text-md font-semibold mt-6 mb-2 text-indigo-600">Total Pesanan/orang </h4>
                             <div class="text-md font-bold text-indigo-800">
+                            <div class="text-md font-bold text-indigo-800 space-y-2">
                                 @foreach($lunchEventUserOrders as $order)
-                                    <p class="mb-1">{{ $order->user->short_name }} : Rp{{ number_format($order->total_price, 0, ',', '.') }}</p>
+                                    <div class="flex flex-col p-2 border rounded-md bg-white shadow-sm">
+                                        <div class="flex justify-between items-center">
+                                            <span>{{ $order->user->short_name ?? $order->user->name }}
+                                            <span class="text-xs px-2 py-0.5 rounded 
+                                                {{ $order->status == 'done' ? 'bg-green-100 text-green-800' : 
+                                                ($order->status == 'pending' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                                {{ ucfirst($order->status) }}
+                                            </span>
+                                            </span>
+                                            <span>Rp{{ number_format($order->total_price, 0, ',', '.') }}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center mt-1">
+                                            
+                                            
+                                            @if($layout === 'restaurant')
+                                                <div class="flex gap-1">
+                                                    @if($order->status === 'pending')
+                                                    <form action="{{ route('lunch-event-user-orders.status-public', $order->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="status" value="done">
+                                                        <button type="submit" class="px-2 py-0.5 text-xs bg-green-500 text-white rounded hover:bg-green-600" {{ $order->status == 'done' ? 'disabled opacity-50' : '' }}>Change Status</button>
+                                                    </form>
+                                                    @elseif($order->status === 'done')
+                                                    <form action="{{ route('lunch-event-user-orders.status-public', $order->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="status" value="pending">
+                                                        <button type="submit" class="px-2 py-0.5 text-xs bg-red-500 text-white rounded hover:bg-red-600" {{ $order->status == 'pending' ? 'disabled opacity-50' : '' }}>Change Status</button>
+                                                    </form>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>
@@ -416,7 +489,7 @@
     <div id="editModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">Edit Order Item</h3>
+                <h3 class="text-md font-semibold text-gray-900">Edit Order Item</h3>
                 <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -637,5 +710,14 @@
                 closeEditModal();
             }
         });
+
+        function copyPublicLink() {
+            var copyText = document.getElementById("publicLink");
+            navigator.clipboard.writeText(copyText.value).then(function() {
+                alert("Link publik berhasil disalin!");
+            }, function(err) {
+                console.error('Async: Could not copy text: ', err);
+            });
+        }
     </script>
-</x-app-layout>
+</x-dynamic-component>

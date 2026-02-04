@@ -7,6 +7,8 @@ use App\Models\MasterRestaurant;
 use App\Models\LunchEventUserOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 
 class LunchEventController extends Controller
 {
@@ -80,7 +82,12 @@ class LunchEventController extends Controller
             $totalPrice += $lunchEventUserOrder->total_price;
         }
         $lunchEvent->totalPrice = $totalPrice;
-        return view('lunch-events.show', compact('lunchEvent', 'lunchEventUserOrders', 'totalPrice'));
+        return view('lunch-events.show', [
+            'layout' => 'app',
+            'lunchEvent' => $lunchEvent,
+            'lunchEventUserOrders' => $lunchEventUserOrders,
+            'totalPrice' => $totalPrice
+        ]);
     }
 
     public function edit(LunchEvent $lunchEvent)
@@ -146,5 +153,26 @@ class LunchEventController extends Controller
             return redirect()->route('lunch-events.index')
                             ->with('success', 'Lunch event deleted successfully.');
         }
+    }
+
+    public function showPublic($encryptedId)
+    {
+        try {
+            $id = Crypt::decrypt($encryptedId);
+            $lunchEvent = LunchEvent::findOrFail($id);
+        } catch (\Exception $e) {
+            abort(404);
+        }
+
+        $lunchEventUserOrders = LunchEventUserOrder::where('lunch_event_id', $lunchEvent->id)->get();
+        $totalPrice = $lunchEventUserOrders->sum('total_price');
+        $lunchEvent->totalPrice = $totalPrice;
+
+        return view('lunch-events.show', [
+            'layout' => 'restaurant',
+            'lunchEvent' => $lunchEvent,
+            'lunchEventUserOrders' => $lunchEventUserOrders,
+            'totalPrice' => $totalPrice
+        ]);
     }
 }

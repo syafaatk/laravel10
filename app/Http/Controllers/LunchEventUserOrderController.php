@@ -170,4 +170,15 @@ class LunchEventUserOrderController extends Controller
         return redirect()->route('lunch-events.show', $lunchEvent)
                        ->with('success', 'Item deleted successfully!');
     }
+
+    public function updateStatusPublic(Request $request, LunchEventUserOrder $lunchEventUserOrder)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,done',
+        ]);
+
+        $lunchEventUserOrder->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status pesanan berhasil diperbarui.');
+    }
 }
