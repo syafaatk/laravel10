@@ -110,4 +110,14 @@
             </div>
         </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#lembur-table').DataTable({
+            responsive: true,
+            autoWidth: false,
+            searching: true,
+            paging: true,
+        });
+    });
+</script>
 </x-app-layout>
