@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('slip_gajis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('gaji_id')->constrained('gaji')->onDelete('cascade');
+            $table->foreignId('gaji_id')->constrained('gajis')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             
             // Income components
