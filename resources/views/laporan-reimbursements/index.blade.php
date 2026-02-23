@@ -19,7 +19,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>User</th>
+                                <th>Periode</th>
                                 <th>Total Amount</th>
                                 <th>Status</th>
                                 <th>Created At</th>
@@ -30,11 +30,11 @@
                             @foreach ($laporanReimbursements as $index => $laporan)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $laporan->user->name }}</td>
+                                    <td>{{ $laporan->title }}</td>
                                     <td>{{ number_format($laporan->amount, 2) }}</td>
                                     <!-- status dibuat badge -->
                                     <td>
-                                        <span class="badge bg-{{ $laporan->status == 'approved' ? 'success' : ($laporan->status == 'rejected' ? 'danger' : 'warning') }}">
+                                        <span class="badge bg-{{ $laporan->status == 'approved' ? 'success' : ($laporan->status == 'pending' ? 'warning' : ($laporan->status == 'rejected' ? 'danger' : 'primary')) }}">
                                             {{ ucfirst($laporan->status) }}
                                         </span>
                                     </td>

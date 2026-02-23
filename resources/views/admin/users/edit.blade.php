@@ -344,41 +344,89 @@
                             </div>
 
                             <div>
-                                <label for="gaji_tunjangan_tetap" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Tetap</label>
-                                <input type="number" name="gaji_tunjangan_tetap" id="gaji_tunjangan_tetap" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_tetap') border-red-500 @enderror" value="{{ old('gaji_tunjangan_tetap', $detailKontrakAktif?->gaji_tunjangan_tetap) }}" placeholder="500000" onchange="calculateTotal()">
-                                @error('gaji_tunjangan_tetap')
+                                <label for="tunjangan_jabatan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Jabatan</label>
+                                <input type="number" name="tunjangan_jabatan" id="tunjangan_jabatan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_jabatan') border-red-500 @enderror" value="{{ old('tunjangan_jabatan', $detailKontrakAktif?->tunjangan_jabatan) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('tunjangan_jabatan')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="tunjangan_golongan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Golongan</label>
+                                <input type="number" name="tunjangan_golongan" id="tunjangan_golongan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_golongan') border-red-500 @enderror" value="{{ old('tunjangan_golongan', $detailKontrakAktif?->tunjangan_golongan) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('tunjangan_golongan')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
                                 <label for="gaji_tunjangan_makan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Makan</label>
-                                <input type="number" name="gaji_tunjangan_makan" id="gaji_tunjangan_makan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_makan') border-red-500 @enderror" value="{{ old('gaji_tunjangan_makan', $detailKontrakAktif?->gaji_tunjangan_makan) }}" placeholder="200000" onchange="calculateTotal()">
+                                <input type="number" name="gaji_tunjangan_makan" id="gaji_tunjangan_makan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_makan') border-red-500 @enderror" value="{{ old('gaji_tunjangan_makan', $detailKontrakAktif?->gaji_tunjangan_makan) }}" placeholder="0" onchange="calculateTotal()">
                                 @error('gaji_tunjangan_makan')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="gaji_tunjangan_transport" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Transport + Tempat Tinggal</label>
-                                <input type="number" name="gaji_tunjangan_transport" id="gaji_tunjangan_transport" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_transport') border-red-500 @enderror" value="{{ old('gaji_tunjangan_transport', $detailKontrakAktif?->gaji_tunjangan_transport) }}" placeholder="1000000" onchange="calculateTotal()">
+                                <label for="tunjangan_rumah" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Rumah</label>
+                                <input type="number" name="tunjangan_rumah" id="tunjangan_rumah" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_rumah') border-red-500 @enderror" value="{{ old('tunjangan_rumah', $detailKontrakAktif?->tunjangan_rumah) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('tunjangan_rumah')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_tunjangan_transport" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Transport</label>
+                                <input type="number" name="gaji_tunjangan_transport" id="gaji_tunjangan_transport" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_transport') border-red-500 @enderror" value="{{ old('gaji_tunjangan_transport', $detailKontrakAktif?->gaji_tunjangan_transport) }}" placeholder="0" onchange="calculateTotal()">
                                 @error('gaji_tunjangan_transport')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="gaji_tunjangan_lain" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Lain-Lain</label>
-                                <input type="number" name="gaji_tunjangan_lain" id="gaji_tunjangan_lain" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_lain') border-red-500 @enderror" value="{{ old('gaji_tunjangan_lain', $detailKontrakAktif?->gaji_tunjangan_lain) }}" placeholder="300000" onchange="calculateTotal()">
-                                @error('gaji_tunjangan_lain')
+                                <label for="tunjangan_tambahan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Tambahan</label>
+                                <input type="number" name="tunjangan_tambahan" id="tunjangan_tambahan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_tambahan') border-red-500 @enderror" value="{{ old('tunjangan_tambahan', $detailKontrakAktif?->tunjangan_tambahan) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('tunjangan_tambahan')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="gaji_bpjs" class="block text-sm font-semibold text-gray-700 mb-2">BPJS</label>
-                                <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_bpjs') border-red-500 @enderror" value="{{ old('gaji_bpjs', $detailKontrakAktif?->gaji_bpjs) }}" placeholder="100000" onchange="calculateTotal()">
+                                <label for="tunjangan_extra" class="block text-sm font-semibold text-gray-700 mb-2">Uang Lembur</label>
+                                <input type="number" name="tunjangan_extra" id="tunjangan_extra" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_extra') border-red-500 @enderror" value="{{ old('tunjangan_extra', $detailKontrakAktif?->tunjangan_extra) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('tunjangan_extra')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gaji_bpjs" class="block text-sm font-semibold text-gray-700 mb-2">BPJS (Tunjangan)</label>
+                                <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_bpjs') border-red-500 @enderror" value="{{ old('gaji_bpjs', $detailKontrakAktif?->gaji_bpjs) }}" placeholder="0" onchange="calculateTotal()">
                                 @error('gaji_bpjs')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="premi_jkk_jkm" class="block text-sm font-semibold text-gray-700 mb-2">Premi JKK & JKM</label>
+                                <input type="number" name="premi_jkk_jkm" id="premi_jkk_jkm" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('premi_jkk_jkm') border-red-500 @enderror" value="{{ old('premi_jkk_jkm', $detailKontrakAktif?->premi_jkk_jkm) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('premi_jkk_jkm')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="potongan_pph21" class="block text-sm font-semibold text-gray-700 mb-2">Potongan PPh 21</label>
+                                <input type="number" name="potongan_pph21" id="potongan_pph21" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('potongan_pph21') border-red-500 @enderror" value="{{ old('potongan_pph21', $detailKontrakAktif?->potongan_pph21) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('potongan_pph21')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="potongan_jmo" class="block text-sm font-semibold text-gray-700 mb-2">Potongan JMO</label>
+                                <input type="number" name="potongan_jmo" id="potongan_jmo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('potongan_jmo') border-red-500 @enderror" value="{{ old('potongan_jmo', $detailKontrakAktif?->potongan_jmo) }}" placeholder="0" onchange="calculateTotal()">
+                                @error('potongan_jmo')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -426,13 +474,17 @@
 
         function calculateTotal() {
             const gaji_pokok = parseInt(document.getElementById('gaji_pokok').value) || 0;
-            const gaji_tunjangan_tetap = parseInt(document.getElementById('gaji_tunjangan_tetap').value) || 0;
+            const tunjangan_jabatan = parseInt(document.getElementById('tunjangan_jabatan').value) || 0;
+            const tunjangan_golongan = parseInt(document.getElementById('tunjangan_golongan').value) || 0;
             const gaji_tunjangan_makan = parseInt(document.getElementById('gaji_tunjangan_makan').value) || 0;
+            const tunjangan_rumah = parseInt(document.getElementById('tunjangan_rumah').value) || 0;
             const gaji_tunjangan_transport = parseInt(document.getElementById('gaji_tunjangan_transport').value) || 0;
-            const gaji_tunjangan_lain = parseInt(document.getElementById('gaji_tunjangan_lain').value) || 0;
+            const tunjangan_tambahan = parseInt(document.getElementById('tunjangan_tambahan').value) || 0;
+            const tunjangan_extra = parseInt(document.getElementById('tunjangan_extra').value) || 0;
             const gaji_bpjs = parseInt(document.getElementById('gaji_bpjs').value) || 0;
+            const premi_jkk_jkm = parseInt(document.getElementById('premi_jkk_jkm').value) || 0;
 
-            const total = gaji_pokok + gaji_tunjangan_tetap + gaji_tunjangan_makan + gaji_tunjangan_transport + gaji_tunjangan_lain + gaji_bpjs;
+            const total = gaji_pokok + tunjangan_jabatan + tunjangan_golongan + gaji_tunjangan_makan + tunjangan_rumah + gaji_tunjangan_transport + tunjangan_tambahan + tunjangan_extra + gaji_bpjs + premi_jkk_jkm;
             
             document.getElementById('totalSalary').textContent = 'Rp ' + total.toLocaleString('id-ID');
         }

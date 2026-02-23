@@ -355,9 +355,16 @@ class CutiController extends Controller
         // Get all users join kontrak order by kontrak
         $users = \App\Models\User::with('detailKontrakUserActive')
             ->whereHas('detailKontrakUserActive')
+            ->whereDoesntHave('pengundurans', function($query) use ($startDate, $endDate) {
+            $query->where('status', 'approved')
+                  ->whereBetween('requested_date', [$startDate->toDateString(), $endDate->toDateString()]);
+            })
+            ->whereDoesntHave('pengundurans', function($query) {
+            $query->where('status', 'approved');
+            })
             ->get()
             ->sortBy(function($user) {
-                return $user->detailKontrakUserActive->kontrak;
+            return $user->detailKontrakUserActive->kontrak;
             });
 
         // Get cuti data within the date range

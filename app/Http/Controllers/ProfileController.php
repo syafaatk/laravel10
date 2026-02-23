@@ -93,11 +93,17 @@ class ProfileController extends Controller
                     'tgl_mulai_kontrak' => $tglMulaiKontrakBaru,
                     'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak') ? Carbon::parse($request->input('tgl_selesai_kontrak')) : null,
                     'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
-                    'gaji_tunjangan_tetap' => $request->input('gaji_tunjangan_tetap') ?? 0,
+                    'tunjangan_jabatan' => $request->input('tunjangan_jabatan') ?? 0,
+                    'tunjangan_golongan' => $request->input('tunjangan_golongan') ?? 0,
                     'gaji_tunjangan_makan' => $request->input('gaji_tunjangan_makan') ?? 0,
+                    'tunjangan_rumah' => $request->input('tunjangan_rumah') ?? 0,
                     'gaji_tunjangan_transport' => $request->input('gaji_tunjangan_transport') ?? 0,
-                    'gaji_tunjangan_lain' => $request->input('gaji_tunjangan_lain') ?? 0,
+                    'tunjangan_tambahan' => $request->input('tunjangan_tambahan') ?? 0,
+                    'tunjangan_extra' => $request->input('tunjangan_extra') ?? 0,
                     'gaji_bpjs' => $request->input('gaji_bpjs') ?? 0,
+                    'premi_jkk_jkm' => $request->input('premi_jkk_jkm') ?? 0,
+                    'potongan_pph21' => $request->input('potongan_pph21') ?? 0,
+                    'potongan_jmo' => $request->input('potongan_jmo') ?? 0,
                     'is_active' => true,
                 ]);
             } else {
@@ -105,11 +111,17 @@ class ProfileController extends Controller
                 $detailKontrakAktif->tgl_selesai_kontrak = $request->input('tgl_selesai_kontrak') ? Carbon::parse($request->input('tgl_selesai_kontrak')) : null;
                 $detailKontrakAktif->kontrak = $request->input('kontrak');
                 $detailKontrakAktif->gaji_pokok = $request->input('gaji_pokok') ?? 0;
-                $detailKontrakAktif->gaji_tunjangan_tetap = $request->input('gaji_tunjangan_tetap') ?? 0;
+                $detailKontrakAktif->tunjangan_jabatan = $request->input('tunjangan_jabatan') ?? 0;
+                $detailKontrakAktif->tunjangan_golongan = $request->input('tunjangan_golongan') ?? 0;
                 $detailKontrakAktif->gaji_tunjangan_makan = $request->input('gaji_tunjangan_makan') ?? 0;
+                $detailKontrakAktif->tunjangan_rumah = $request->input('tunjangan_rumah') ?? 0;
                 $detailKontrakAktif->gaji_tunjangan_transport = $request->input('gaji_tunjangan_transport') ?? 0;
-                $detailKontrakAktif->gaji_tunjangan_lain = $request->input('gaji_tunjangan_lain') ?? 0;
+                $detailKontrakAktif->tunjangan_tambahan = $request->input('tunjangan_tambahan') ?? 0;
+                $detailKontrakAktif->tunjangan_extra = $request->input('tunjangan_extra') ?? 0;
                 $detailKontrakAktif->gaji_bpjs = $request->input('gaji_bpjs') ?? 0;
+                $detailKontrakAktif->premi_jkk_jkm = $request->input('premi_jkk_jkm') ?? 0;
+                $detailKontrakAktif->potongan_pph21 = $request->input('potongan_pph21') ?? 0;
+                $detailKontrakAktif->potongan_jmo = $request->input('potongan_jmo') ?? 0;
                 $detailKontrakAktif->save();
             }
         } elseif (!$detailKontrakAktif && $tglMulaiKontrakBaru) {
@@ -120,11 +132,17 @@ class ProfileController extends Controller
                 'tgl_mulai_kontrak' => $tglMulaiKontrakBaru,
                 'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak') ? Carbon::parse($request->input('tgl_selesai_kontrak')) : null,
                 'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
-                'gaji_tunjangan_tetap' => $request->input('gaji_tunjangan_tetap') ?? 0,
+                'tunjangan_jabatan' => $request->input('tunjangan_jabatan') ?? 0,
+                'tunjangan_golongan' => $request->input('tunjangan_golongan') ?? 0,
                 'gaji_tunjangan_makan' => $request->input('gaji_tunjangan_makan') ?? 0,
+                'tunjangan_rumah' => $request->input('tunjangan_rumah') ?? 0,
                 'gaji_tunjangan_transport' => $request->input('gaji_tunjangan_transport') ?? 0,
-                'gaji_tunjangan_lain' => $request->input('gaji_tunjangan_lain') ?? 0,
+                'tunjangan_tambahan' => $request->input('tunjangan_tambahan') ?? 0,
+                'tunjangan_extra' => $request->input('tunjangan_extra') ?? 0,
                 'gaji_bpjs' => $request->input('gaji_bpjs') ?? 0,
+                'premi_jkk_jkm' => $request->input('premi_jkk_jkm') ?? 0,
+                'potongan_pph21' => $request->input('potongan_pph21') ?? 0,
+                'potongan_jmo' => $request->input('potongan_jmo') ?? 0,
                 'is_active' => true,
             ]);
         }

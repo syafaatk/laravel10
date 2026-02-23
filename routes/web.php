@@ -18,6 +18,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\PengunduranController;
+use App\Http\Controllers\GajiController;
+use App\Http\Controllers\SlipGajiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,6 +73,11 @@ Route::middleware('auth')->group(function () {
     Route::get('cuti/{cuti}/print', [CutiController::class, 'print'])->name('cuti.print');
     Route::patch('cuti/{cuti}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
     Route::patch('cuti/{cuti}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+
+    // User Payslip Routes
+    Route::get('slip-gaji', [SlipGajiController::class, 'index'])->name('slip-gaji.index');
+    Route::get('slip-gaji/{slipGaji}', [SlipGajiController::class, 'show'])->name('slip-gaji.show');
+    Route::get('slip-gaji/{slipGaji}/print', [SlipGajiController::class, 'print'])->name('slip-gaji.print');
 
     // Pengunduran Diri (Resignation) Routes
     Route::get('pengunduran', [PengunduranController::class, 'index'])->name('pengunduran.index');
@@ -134,8 +141,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('laporan-reimbursements/{laporanReimbursement}', [LaporanReimbursementController::class, 'destroy'])->name('laporan-reimbursements.destroy');
     Route::put('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'updateItem'])->name('lunch-event-user-orders.update-item');
     Route::delete('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'destroyItem'])->name('lunch-event-user-orders.destroy-item');
-
+    Route::resource('gaji', GajiController::class);
+    Route::put('slip-gaji/{slipGaji}', [SlipGajiController::class, 'update'])->name('slip-gaji.update');
 });
+
+
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('reimbursements/{reimbursement}', [ReimbursementController::class, 'destroy'])->name('reimbursements.destroy');

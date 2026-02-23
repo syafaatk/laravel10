@@ -15,11 +15,17 @@ class DetailKontrakUser extends Model
         'tgl_mulai_kontrak',
         'tgl_selesai_kontrak',
         'gaji_pokok',
-        'gaji_tunjangan_tetap',
+        'tunjangan_jabatan',
+        'tunjangan_golongan',
         'gaji_tunjangan_makan',
+        'tunjangan_rumah',
         'gaji_tunjangan_transport',
-        'gaji_tunjangan_lain',
+        'tunjangan_tambahan',
+        'tunjangan_extra',
         'gaji_bpjs',
+        'premi_jkk_jkm',
+        'potongan_pph21',
+        'potongan_jmo',
         'is_active',
     ];
 
@@ -27,11 +33,17 @@ class DetailKontrakUser extends Model
         'tgl_mulai_kontrak' => 'datetime',
         'tgl_selesai_kontrak' => 'datetime',
         'gaji_pokok' => 'integer',
-        'gaji_tunjangan_tetap' => 'integer',
+        'tunjangan_jabatan' => 'integer',
+        'tunjangan_golongan' => 'integer',
         'gaji_tunjangan_makan' => 'integer',
+        'tunjangan_rumah' => 'integer',
         'gaji_tunjangan_transport' => 'integer',
-        'gaji_tunjangan_lain' => 'integer',
+        'tunjangan_tambahan' => 'integer',
+        'tunjangan_extra' => 'integer',
         'gaji_bpjs' => 'integer',
+        'premi_jkk_jkm' => 'integer',
+        'potongan_pph21' => 'integer',
+        'potongan_jmo' => 'integer',
         'is_active' => 'boolean',
     ];
 
@@ -44,16 +56,46 @@ class DetailKontrakUser extends Model
     }
 
     /**
-     * Get total salary
+     * Get total allowances.
      */
-    public function getTotalGajiAttribute()
+    public function getTotalTunjanganAttribute()
     {
-        return $this->gaji_pokok + 
-               $this->gaji_tunjangan_tetap + 
-               $this->gaji_tunjangan_makan + 
-               $this->gaji_tunjangan_transport + 
-               $this->gaji_tunjangan_lain + 
-               $this->gaji_bpjs;
+        return $this->tunjangan_jabatan +
+               $this->tunjangan_golongan +
+               $this->gaji_tunjangan_makan +
+               $this->tunjangan_rumah +
+               $this->gaji_tunjangan_transport +
+               $this->tunjangan_tambahan +
+               $this->tunjangan_extra;
+    }
+
+    /**
+     * Get gross income.
+     * Penghasilan Bruto = Gaji Pokok + Semua Tunjangan + Premi dibayar perusahaan (JKK, JKM)
+     */
+    public function getPenghasilanBrutoAttribute()
+    {
+        return $this->gaji_pokok + $this->total_tunjangan + $this->premi_jkk_jkm;
+    }
+
+    /**
+     * Get total deductions.
+     */
+    public function getTotalPotonganAttribute()
+    {
+        // Assuming gaji_bpjs is company contribution, not employee deduction.
+        // If it is, it should be added here.
+        return $this->potongan_pph21 + $this->potongan_jmo;
+    }
+
+    /**
+     * Get net income (take-home pay).
+     * Penghasilan Netto = (Gaji Pokok + Tunjangan) - Potongan
+     */
+    public function getPenghasilanNettoAttribute()
+    {
+        // The premi_jkk_jkm is for tax calculation, not take-home pay.
+        return ($this->gaji_pokok + $this->total_tunjangan) - $this->total_potongan;
     }
 
     /**

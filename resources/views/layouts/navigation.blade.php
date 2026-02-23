@@ -44,6 +44,9 @@
                             <x-dropdown-link :href="route('pengunduran.index')" :active="request()->routeIs('pengunduran.*')">
                                 {{ __('Pengunduran Diri') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('slip-gaji.index')" :active="request()->routeIs('slip-gaji.index') || request()->routeIs('slip-gaji.show')">
+                                {{ __('Slip Gaji Saya') }}
+                            </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -98,6 +101,10 @@
                             <x-dropdown-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.gaji.index')" :active="request()->routeIs('admin.gaji.*')">
+                                {{ __('Manajemen Gaji') }}
+                            </x-dropdown-link>
+                            
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -201,6 +208,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('lembur.index')" :active="request()->routeIs('lembur.*')" class="ps-8">
                         {{ __('Lembur') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('slip-gaji.index')" :active="request()->routeIs('slip-gaji.index') || request()->routeIs('slip-gaji.show')" class="ps-8">
+                        {{ __('Slip Gaji Saya') }}
                     </x-responsive-nav-link>
                 </div>
             </div>
