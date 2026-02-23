@@ -76,7 +76,9 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('admin.slip-gaji.show', $period->id) }}" class="text-indigo-600 hover:text-indigo-900">Lihat Detail</a>
+                                            <a href="{{ route('admin.gaji.edit', $period->id) }}" class="text-indigo-600 hover:text-indigo-900">
+                                                {{ __('Edit') }}
+                                            </a>
                                         </td>
                                     </tr>
                                 @empty
