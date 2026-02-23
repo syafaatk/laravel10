@@ -109,6 +109,6 @@ class SlipGajiController extends Controller
 
         $slipGaji->update($updateData);
 
-        return redirect()->route('admin.slip-gaji.show', $slipGaji->id)->with('success', 'Slip gaji berhasil diperbarui.');
+        return redirect()->route('admin.gaji.show', $slipGaji->gaji_id)->with('success', 'Slip gaji berhasil diperbarui.');
     }
 }
