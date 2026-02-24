@@ -351,39 +351,99 @@
             <!-- Salary Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <x-input-label for="gaji_pokok" :value="__('Base Salary')" class="font-semibold" />
-                    <x-text-input id="gaji_pokok" name="gaji_pokok" type="number" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" :value="old('gaji_pokok', $detailKontrakAktif?->gaji_pokok)" placeholder="5000000" autocomplete="off" />
-                    <x-input-error class="mt-2" :messages="$errors->get('gaji_pokok')" />
+                    <label for="gaji_pokok" class="block text-sm font-semibold text-gray-700 mb-2">Gaji Pokok</label>
+                    <input type="number" name="gaji_pokok" id="gaji_pokok" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_pokok') border-red-500 @enderror" value="{{ old('gaji_pokok', $detailKontrakAktif?->gaji_pokok) }}" placeholder="5000000" onchange="calculateTotal()">
+                    @error('gaji_pokok')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="gaji_tunjangan_tetap" :value="__('Fixed Allowance')" class="font-semibold" />
-                    <x-text-input id="gaji_tunjangan_tetap" name="gaji_tunjangan_tetap" type="number" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" :value="old('gaji_tunjangan_tetap', $detailKontrakAktif?->gaji_tunjangan_tetap)" placeholder="500000" autocomplete="off" />
-                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_tetap')" />
+                    <label for="tunjangan_jabatan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Jabatan</label>
+                    <input type="number" name="tunjangan_jabatan" id="tunjangan_jabatan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_jabatan') border-red-500 @enderror" value="{{ old('tunjangan_jabatan', $detailKontrakAktif?->tunjangan_jabatan) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('tunjangan_jabatan')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="gaji_tunjangan_makan" :value="__('Meal Allowance')" class="font-semibold" />
-                    <x-text-input id="gaji_tunjangan_makan" name="gaji_tunjangan_makan" type="number" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" :value="old('gaji_tunjangan_makan', $detailKontrakAktif?->gaji_tunjangan_makan)" placeholder="200000" autocomplete="off" />
-                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_makan')" />
+                    <label for="tunjangan_golongan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Golongan</label>
+                    <input type="number" name="tunjangan_golongan" id="tunjangan_golongan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_golongan') border-red-500 @enderror" value="{{ old('tunjangan_golongan', $detailKontrakAktif?->tunjangan_golongan) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('tunjangan_golongan')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="gaji_tunjangan_transport" :value="__('Transport + Housing Allowance')" class="font-semibold" />
-                    <x-text-input id="gaji_tunjangan_transport" name="gaji_tunjangan_transport" type="number" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" :value="old('gaji_tunjangan_transport', $detailKontrakAktif?->gaji_tunjangan_transport)" placeholder="1000000" autocomplete="off" />
-                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_transport')" />
+                    <label for="gaji_tunjangan_makan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Makan</label>
+                    <input type="number" name="gaji_tunjangan_makan" id="gaji_tunjangan_makan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_makan') border-red-500 @enderror" value="{{ old('gaji_tunjangan_makan', $detailKontrakAktif?->gaji_tunjangan_makan) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('gaji_tunjangan_makan')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="gaji_tunjangan_lain" :value="__('Other Allowance')" class="font-semibold" />
-                    <x-text-input id="gaji_tunjangan_lain" name="gaji_tunjangan_lain" type="number" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" :value="old('gaji_tunjangan_lain', $detailKontrakAktif?->gaji_tunjangan_lain)" placeholder="300000" autocomplete="off" />
-                    <x-input-error class="mt-2" :messages="$errors->get('gaji_tunjangan_lain')" />
+                    <label for="tunjangan_rumah" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Rumah</label>
+                    <input type="number" name="tunjangan_rumah" id="tunjangan_rumah" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_rumah') border-red-500 @enderror" value="{{ old('tunjangan_rumah', $detailKontrakAktif?->tunjangan_rumah) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('tunjangan_rumah')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <x-input-label for="gaji_bpjs" :value="__('BPJS')" class="font-semibold" />
-                    <x-text-input id="gaji_bpjs" name="gaji_bpjs" type="number" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" :value="old('gaji_bpjs', $detailKontrakAktif?->gaji_bpjs)" placeholder="100000" autocomplete="off" />
-                    <x-input-error class="mt-2" :messages="$errors->get('gaji_bpjs')" />
+                    <label for="gaji_tunjangan_transport" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Transport</label>
+                    <input type="number" name="gaji_tunjangan_transport" id="gaji_tunjangan_transport" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_tunjangan_transport') border-red-500 @enderror" value="{{ old('gaji_tunjangan_transport', $detailKontrakAktif?->gaji_tunjangan_transport) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('gaji_tunjangan_transport')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="tunjangan_tambahan" class="block text-sm font-semibold text-gray-700 mb-2">Tunjangan Tambahan</label>
+                    <input type="number" name="tunjangan_tambahan" id="tunjangan_tambahan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_tambahan') border-red-500 @enderror" value="{{ old('tunjangan_tambahan', $detailKontrakAktif?->tunjangan_tambahan) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('tunjangan_tambahan')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="tunjangan_extra" class="block text-sm font-semibold text-gray-700 mb-2">Uang Lembur</label>
+                    <input type="number" name="tunjangan_extra" id="tunjangan_extra" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tunjangan_extra') border-red-500 @enderror" value="{{ old('tunjangan_extra', $detailKontrakAktif?->tunjangan_extra) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('tunjangan_extra')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="gaji_bpjs" class="block text-sm font-semibold text-gray-700 mb-2">BPJS (Tunjangan)</label>
+                    <input type="number" name="gaji_bpjs" id="gaji_bpjs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('gaji_bpjs') border-red-500 @enderror" value="{{ old('gaji_bpjs', $detailKontrakAktif?->gaji_bpjs) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('gaji_bpjs')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="premi_jkk_jkm" class="block text-sm font-semibold text-gray-700 mb-2">Premi JKK & JKM</label>
+                    <input type="number" name="premi_jkk_jkm" id="premi_jkk_jkm" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('premi_jkk_jkm') border-red-500 @enderror" value="{{ old('premi_jkk_jkm', $detailKontrakAktif?->premi_jkk_jkm) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('premi_jkk_jkm')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="potongan_pph21" class="block text-sm font-semibold text-gray-700 mb-2">Potongan PPh 21</label>
+                    <input type="number" name="potongan_pph21" id="potongan_pph21" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('potongan_pph21') border-red-500 @enderror" value="{{ old('potongan_pph21', $detailKontrakAktif?->potongan_pph21) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('potongan_pph21')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="potongan_jmo" class="block text-sm font-semibold text-gray-700 mb-2">Potongan JMO</label>
+                    <input type="number" name="potongan_jmo" id="potongan_jmo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('potongan_jmo') border-red-500 @enderror" value="{{ old('potongan_jmo', $detailKontrakAktif?->potongan_jmo) }}" placeholder="0" onchange="calculateTotal()">
+                    @error('potongan_jmo')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 

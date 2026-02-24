@@ -64,7 +64,8 @@ class UserController extends Controller
             'jabatan' => $request->input('jabatan') ?? null,
             'norek' => $request->input('norek') ?? null,
             'bank' => $request->input('bank') ?? null,
-            'tgl_mulai_kontrak' => $request->input('tgl_mulai_kontrak') ?? null,
+            // now() digunakan untuk memastikan kontrak aktif langsung setelah dibuat, karena tgl_mulai_kontrak bisa saja tidak diisi
+            'tgl_mulai_kontrak' => $request->input('tgl_mulai_kontrak') ?? now(),
             'tgl_selesai_kontrak' => $request->input('tgl_selesai_kontrak') ?? null,
             'gaji_pokok' => $request->input('gaji_pokok') ?? 0,
             'tunjangan_jabatan' => $request->input('tunjangan_jabatan') ?? 0,

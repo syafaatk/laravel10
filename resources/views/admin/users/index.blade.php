@@ -57,7 +57,8 @@
                                         $kontrakDetail = $user->detailKontrakUserActive;
                                         $kontrak = $user->detailKontrakUserActive->kontrak;
                                         $gajiParts = [
-                                            $kontrakDetail->gaji_tunjangan_tetap ?? 0,
+                                            $kontrakDetail->tunjangan_jabatan ?? 0,
+                                            $kontrakDetail->tunjangan_golongan ?? 0,
                                             $kontrakDetail->gaji_tunjangan_makan ?? 0,
                                             $kontrakDetail->gaji_tunjangan_transport ?? 0,
                                             $kontrakDetail->gaji_tunjangan_lain ?? 0,

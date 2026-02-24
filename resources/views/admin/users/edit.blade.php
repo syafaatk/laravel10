@@ -267,7 +267,7 @@
                             {{ __('Contract History') }}
                         </h4>
                         <div class="space-y-3 max-h-64 overflow-y-auto">
-                            @foreach ($user->detailKontrakUsers->sortByDesc('created_at') as $detail)
+                            @foreach ($user->detailKontrakUsers->sortByDesc('tgl_mulai_kontrak') as $detail)
                             <div class="flex items-center justify-between p-3 bg-white rounded border border-blue-100 hover:shadow-md transition">
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900">{{ $detail->kontrak ?? '-' }}</p>
@@ -276,8 +276,15 @@
                                         @if ($detail->tgl_selesai_kontrak)
                                             s/d {{ $detail->tgl_selesai_kontrak->format('d M Y') }}
                                         @else
-                                            - {{ __('Ongoing') }}
+                                            s/d {{ __('Ongoing') }}
                                         @endif
+                                        <span class="text-xs text-gray-500 block">
+                                            ({{ $detail->tgl_mulai_kontrak 
+                                                ? ($detail->tgl_selesai_kontrak ?? now())
+                                                ->locale('id')
+                                                ->diffForHumans($detail->tgl_mulai_kontrak, ['parts' => 2, 'short' => true, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) 
+                                                : '-' }})
+                                        </span>
                                     </p>
                                 </div>
                                 <div class="text-right">

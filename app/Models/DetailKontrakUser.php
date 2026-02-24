@@ -56,6 +56,23 @@ class DetailKontrakUser extends Model
     }
 
     /**
+     * Get total gaji (all components).
+     */
+    public function getTotalGajiAttribute()
+    {
+        return $this->gaji_pokok +
+               $this->tunjangan_jabatan +
+               $this->tunjangan_golongan +
+               $this->gaji_tunjangan_makan +
+               $this->tunjangan_rumah +
+               $this->gaji_tunjangan_transport +
+               $this->tunjangan_tambahan +
+               $this->tunjangan_extra +
+               $this->gaji_bpjs +
+               $this->premi_jkk_jkm;
+    }
+
+    /**
      * Get total allowances.
      */
     public function getTotalTunjanganAttribute()
