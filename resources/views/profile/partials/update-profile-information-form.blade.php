@@ -450,11 +450,18 @@
             <!-- Total Summary -->
             @php
                 $total = ($detailKontrakAktif?->gaji_pokok ?? 0) + 
-                         ($detailKontrakAktif?->gaji_tunjangan_tetap ?? 0) + 
+                         ($detailKontrakAktif?->tunjangan_jabatan ?? 0) + 
+                         ($detailKontrakAktif?->tunjangan_golongan ?? 0) + 
+                         ($detailKontrakAktif?->tunjangan_extra ?? 0) + 
+                         ($detailKontrakAktif?->tunjangan_tambahan ?? 0) + 
+                         ($detailKontrakAktif?->tunjangan_rumah ?? 0) + 
                          ($detailKontrakAktif?->gaji_tunjangan_makan ?? 0) + 
                          ($detailKontrakAktif?->gaji_tunjangan_transport ?? 0) + 
                          ($detailKontrakAktif?->gaji_tunjangan_lain ?? 0) + 
-                         ($detailKontrakAktif?->gaji_bpjs ?? 0);
+                         ($detailKontrakAktif?->gaji_bpjs ?? 0) - 
+                         ($detailKontrakAktif?->potongan_pph21 ?? 0) - 
+                         ($detailKontrakAktif?->potongan_jmo ?? 0) - 
+                         ($detailKontrakAktif?->premi_jkk_jkm ?? 0);
             @endphp
             <div class="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
                 <p class="text-sm font-semibold text-gray-700 uppercase">{{ __('Total Salary & Allowance') }}</p>

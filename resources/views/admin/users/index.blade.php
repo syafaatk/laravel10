@@ -62,6 +62,9 @@
                                             $kontrakDetail->gaji_tunjangan_makan ?? 0,
                                             $kontrakDetail->gaji_tunjangan_transport ?? 0,
                                             $kontrakDetail->gaji_tunjangan_lain ?? 0,
+                                            $kontrakDetail->tunjangan_extra ?? 0,
+                                            $kontrakDetail->tunjangan_tambahan ?? 0,
+                                            $kontrakDetail->tunjangan_rumah ?? 0,
                                             $kontrakDetail->gaji_pokok ?? 0,
                                             $kontrakDetail->gaji_bpjs ?? 0,
                                         ];
