@@ -524,7 +524,9 @@
                                         $q->whereBetween('created_at', [$startDate, $endDate])
                                             ->where('tipe', '1')
                                             ->where('status', 'approved');
-                                    }])->get();
+                                    }])->whereDoesntHave('pengundurans', function($q) {
+                                        $q->where('status', 'approved');
+                                    })->get();
                                 @endphp
 
                                 @forelse ($employees as $employee)

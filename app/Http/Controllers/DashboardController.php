@@ -18,13 +18,15 @@ class DashboardController extends Controller
             // return redirect()->403 with error message
             abort(403);
         }
-
         $user = Auth::user();
+
         $currentYear = Carbon::now()->year;
 
         if ($user->hasRole('admin')) {
             // Admin Statistics
-            $totalUsers = User::count();
+            $totalUsers = User::whereDoesntHave('pengundurans', function ($query) {
+                $query->where('status', 'approved');
+            })->count();
             $totalReimbursements = Reimbursement::count();
             $pendingReimbursements = Reimbursement::where('status', 'pending')->count();
             $approvedReimbursements = Reimbursement::where('status', 'approved')->count();
@@ -52,7 +54,9 @@ class DashboardController extends Controller
             $remainingCutiDays = $masterCutis->map(fn($ct) => ['id' => $ct->id, 'name' => $ct->name, 'days' => $ct->days])->toArray();
 
             $employeesRemainingCuti = [];
-            $employees = User::with('cutis')->get();
+            $employees = User::with('cutis')->whereDoesntHave('pengundurans', function ($query) {
+                $query->where('status', 'approved');
+            })->get();
 
             foreach ($employees as $employee) {
                 $employeesRemainingCuti[$employee->name] = [];
