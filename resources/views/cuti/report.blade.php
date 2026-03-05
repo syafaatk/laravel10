@@ -39,6 +39,11 @@
                             <span class="inline-flex w-4 h-4 rounded-sm bg-amber-400 border border-amber-500"></span>
                             <span>Hari Libur Nasional (x)</span>
                         </div>
+                        <!-- cuti bersama tambahan -->
+                        <div class="inline-flex items-center gap-1">
+                            <span class="inline-flex w-4 h-4 rounded-sm bg-violet-500 border border-violet-600"></span>
+                            <span>Cuti Bersama Tambahan (x)</span>
+                        </div>
                     </div>
                     <!-- tombol print -->
                     <div>
@@ -129,6 +134,7 @@
                                                       in_array($date->format('Y-m-d'), $cutiData[$user->id]);
                                             $isWeekend = $date->isWeekend();
                                             $isHoliday = in_array($date->format('Y-m-d'), $holidayDates);
+                                            $isCutiBersamaTambahan = in_array($date->format('Y-m-d'), $cutiBersamaTambahan);
                                         @endphp
 
                                         @if ($isCuti)
@@ -138,6 +144,10 @@
                                                 </td>
                                             @elseif ($isHoliday)
                                                 <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-amber-400 text-gray-900">
+                                                    x
+                                                </td>
+                                            @elseif ($isCutiBersamaTambahan)
+                                                <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-violet-500 text-white">
                                                     x
                                                 </td>
                                             @else
@@ -151,6 +161,10 @@
                                             </td>
                                         @elseif ($isHoliday)
                                             <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-amber-400 text-gray-900">
+                                                x
+                                            </td>
+                                        @elseif ($isCutiBersamaTambahan)
+                                            <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-violet-500 text-white">
                                                 x
                                             </td>
                                         @else
