@@ -50,6 +50,8 @@ return [
         //2026
         '2026-01-01', // Tahun Baru
         '2026-01-16', // Isra dan Miraj
+        '2026-03-19', // Hari Raya Idul Fitri (Libur)
+        '2026-04-03', // Wafat Yesus Kristus
     ],
 
     // Cuti Bersama tambahan (opsional - jika berbeda dari holidays)
@@ -57,8 +59,11 @@ return [
         // Biasanya cuti bersama sudah termasuk di holidays array
         // Jika ada cuti bersama khusus tambahan, list di sini
         // Contoh:
-        // '2024-06-16', // Cuti Bersama sebelum Lebaran
-        // '2024-06-17', // Cuti Bersama sebelum Lebaran
+        '2026-03-18', // Cuti Bersama tambahan
+        '2026-03-20', // Cuti Bersama tambahan
+        '2026-03-23', // Cuti Bersama tambahan
+        '2026-03-24', // Cuti Bersama tambahan
+        
     ],
 
     // Hari libur per minggu (Sabtu dan Minggu sudah otomatis di-skip di controller)
