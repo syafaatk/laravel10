@@ -41,7 +41,7 @@
                         </div>
                         <!-- cuti bersama tambahan -->
                         <div class="inline-flex items-center gap-1">
-                            <span class="inline-flex w-4 h-4 rounded-sm bg-violet-500 border border-violet-600"></span>
+                            <span class="inline-flex w-4 h-4 rounded-sm bg-blue-500 border border-blue-600"></span>
                             <span>Cuti Bersama Tambahan (x)</span>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                                                     x
                                                 </td>
                                             @elseif ($isCutiBersamaTambahan)
-                                                <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-violet-500 text-white">
+                                                <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-blue-500 text-white">
                                                     x
                                                 </td>
                                             @else
@@ -164,7 +164,7 @@
                                                 x
                                             </td>
                                         @elseif ($isCutiBersamaTambahan)
-                                            <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-violet-500 text-white">
+                                            <td class="px-1 py-1 text-center align-middle text-[11px] font-semibold bg-blue-500 text-white">
                                                 x
                                             </td>
                                         @else
@@ -213,6 +213,13 @@
                                             <span class="inline-flex w-4 h-4 rounded-sm bg-amber-400 border border-amber-500"></span>
                                             <span>Hari Libur Nasional (x)</span>
                                         </div>
+                                        <!-- cuti bersama tambahan -->
+                                        <div class="inline-flex items-center gap-1">
+                                            <span class="inline-flex w-4 h-4 rounded-sm bg-blue-500 border border-blue-600"></span>
+                                            <span>Cuti Bersama Tambahan (x)</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
                                         <span class="mt-1 md:mt-0 text-[10px] text-gray-400">
                                             Catatan: Jumlah cuti hanya menghitung hari kerja, tidak termasuk akhir pekan & hari libur.
                                         </span>
