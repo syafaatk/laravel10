@@ -302,9 +302,10 @@ class CutiController extends Controller
                 $jatahCuti = $report_data['master_cuti']->days ?? 12;
             }
 
+            $allHolidays = array_merge(config('holidays.holidays', []), config('holidays.cuti_bersama', []));
+
             return view('cuti.print', compact('cuti', 'report_data', 'jatahCuti', 'currentCal', 'lastCal', 'calendarStart', 'calendarEnd'))
-                ->with('holidayDates', config('holidays.holidays', []))
-                ->with('cutiBersama', config('holidays.cuti_bersama', []));
+                ->with('holidayDates', $allHolidays);
         }
 
         abort(403);
@@ -402,6 +403,9 @@ class CutiController extends Controller
             $holidayDates = array_map(fn($d) => Carbon::parse($d)->toDateString(), config('holidays.holidays', []));
         }
 
+        // Cuti bersama list from config (optional)
+        $cutiBersamaTambahan = array_map(fn($d) => Carbon::parse($d)->toDateString(), config('holidays.cuti_bersama', []));
+
         // sisa cuti per user
         foreach ($users as $user) {
             $totalTaken = Cuti::where('user_id', $user->id)
@@ -418,7 +422,7 @@ class CutiController extends Controller
             $user->sisa_cuti_tahun_depan = 12 - $totalTakenNextYear; // assuming total cuti per year is 12 days
         }
 
-        return view('cuti.report', compact('startDate', 'endDate', 'dateRange', 'users', 'cutiData', 'holidayDates'));
+        return view('cuti.report', compact('startDate', 'endDate', 'dateRange', 'users', 'cutiData', 'holidayDates', 'cutiBersamaTambahan'));
     }
     
 }

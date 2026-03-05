@@ -181,11 +181,12 @@
                                                 ? count(
                                                     array_filter(
                                                         $cutiData[$user->id],
-                                                        function ($cutiDate) use ($startDate, $endDate, $holidayDates) {
+                                                        function ($cutiDate) use ($startDate, $endDate, $holidayDates, $cutiBersamaTambahan) {
                                                             $date = \Carbon\Carbon::parse($cutiDate);
                                                             return $date->between($startDate, $endDate) &&
                                                                    !$date->isWeekend() &&
-                                                                   !in_array($date->format('Y-m-d'), $holidayDates);
+                                                                   !in_array($date->format('Y-m-d'), $holidayDates) &&
+                                                                   !in_array($date->format('Y-m-d'), $cutiBersamaTambahan);
                                                         }
                                                     )
                                                 )

@@ -219,7 +219,7 @@
                             </div>
                             <div class="inline-flex items-center gap-1">
                                 <span class="inline-flex w-3 h-3 rounded-full bg-red-400"></span>
-                                <span>Hari Libur Nasional</span>
+                                <span>Libur Nasional / Cuti Bersama</span>
                             </div>
                             <div class="inline-flex items-center gap-1">
                                 <span class="inline-flex w-3 h-3 rounded-full border border-indigo-300"></span>
