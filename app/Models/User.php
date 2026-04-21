@@ -154,5 +154,35 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pengunduran::class, 'processed_by');
     }
+    public function gaji()
+    {
+        return $this->hasMany(Gaji::class);
+    }
+
+    public function slipGaji()
+    {
+        return $this->hasMany(SlipGaji::class);
+    }
+
+    public function cv()
+    {
+        return $this->hasOne(Cv::class);
+    }
+
+    public function pendidikans()
+    {
+        return $this->hasMany(Pendidikan::class);
+    }
+
+    public function pengalamanKerjas()
+    {
+        return $this->hasMany(PengalamanKerja::class);
+    }
+
+    public function keahlians()
+    {
+        return $this->hasMany(Keahlian::class);
+    }
+    
 
 }

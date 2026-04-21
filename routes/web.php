@@ -20,6 +20,7 @@ use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\PengunduranController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\SlipGajiController;
+use App\Http\Controllers\CvController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,6 +102,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('lembur/{lembur}/reject', [LemburController::class, 'reject'])->name('lembur.reject');
     Route::get('lembur/{lembur}/print', [LemburController::class, 'print'])->name('lembur.print');
     
+    // CV (Curriculum Vitae) Routes
+    Route::get('cv', [CvController::class, 'show'])->name('cv.show');
+    Route::get('cv/edit', [CvController::class, 'edit'])->name('cv.edit');
+    Route::get('cv/download', [CvController::class, 'downloadPdf'])->name('cv.download');
+    Route::patch('cv', [CvController::class, 'update'])->name('cv.update');
+    Route::post('cv/pendidikan', [CvController::class, 'storePendidikan'])->name('cv.pendidikan.store');
+    Route::delete('cv/pendidikan/{id}', [CvController::class, 'destroyPendidikan'])->name('cv.pendidikan.destroy');
+    Route::post('cv/pengalaman', [CvController::class, 'storePengalaman'])->name('cv.pengalaman.store');
+    Route::delete('cv/pengalaman/{id}', [CvController::class, 'destroyPengalaman'])->name('cv.pengalaman.destroy');
+    Route::post('cv/keahlian', [CvController::class, 'storeKeahlian'])->name('cv.keahlian.store');
+    Route::delete('cv/keahlian/{id}', [CvController::class, 'destroyKeahlian'])->name('cv.keahlian.destroy');
 
     Route::resource('master-restaurants', MasterRestaurantController::class)->names('master-restaurants');
     Route::resource('lunch-events', LunchEventController::class)->names('lunch-events');

@@ -47,6 +47,9 @@
                             <x-dropdown-link :href="route('slip-gaji.index')" :active="request()->routeIs('slip-gaji.index') || request()->routeIs('slip-gaji.show')">
                                 {{ __('Slip Gaji Saya') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('cv.show')" :active="request()->routeIs('cv.show')">
+                                {{ __('CV') }}
+                            </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -211,6 +214,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('slip-gaji.index')" :active="request()->routeIs('slip-gaji.index') || request()->routeIs('slip-gaji.show')" class="ps-8">
                         {{ __('Slip Gaji Saya') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('cv.show')" :active="request()->routeIs('cv.show')" class="ps-8">
+                        {{ __('CV') }}
                     </x-responsive-nav-link>
                 </div>
             </div>
