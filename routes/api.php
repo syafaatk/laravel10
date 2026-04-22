@@ -15,8 +15,15 @@ use App\Http\Controllers\KontrakController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Lembur API
+    Route::get('/lemburs', [\App\Http\Controllers\Api\LemburApiController::class, 'index']);
+    Route::post('/lemburs', [\App\Http\Controllers\Api\LemburApiController::class, 'store']);
+    Route::get('/lemburs/{lembur}', [\App\Http\Controllers\Api\LemburApiController::class, 'show']);
 });
 
 /*
