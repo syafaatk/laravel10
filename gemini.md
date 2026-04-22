@@ -7,6 +7,16 @@ Dokumen ini mencatat perubahan yang telah diimplementasikan oleh Gemini Code Ass
 
 ## Changelog
 
+### [21-04-2026] - Peningkatan Fitur Lembur
+
+-   **Perubahan:** Menambahkan fungsionalitas PDF, laporan, dan filter pada modul Lembur.
+-   **Deskripsi:**
+    -   **[Fitur] Unduh Surat Tugas Lembur sebagai PDF:** Menambahkan tombol dan logika untuk mengunduh surat tugas lembur dalam format PDF dari halaman cetak.
+    -   **[Fitur] Laporan Rekapitulasi Lembur:** Membuat halaman laporan baru untuk admin, yang memungkinkan rekapitulasi data lembur (total jam dan estimasi biaya) per karyawan berdasarkan periode bulan dan tahun.
+    -   **[Perbaikan] Filter pada Halaman Daftar Lembur:** Menambahkan fungsionalitas filter pada halaman daftar lembur untuk admin, memungkinkan penyaringan berdasarkan karyawan, rentang tanggal, dan status pengajuan.
+
+---
+
 ### [21-04-2026] - Ekspor PDF dan Desain Ulang CV
 
 -   **Perubahan:** Menambahkan fungsionalitas ekspor PDF dan memperbarui desain CV.
@@ -53,14 +63,11 @@ Dokumen ini mencatat perubahan yang telah diimplementasikan oleh Gemini Code Ass
 
 Berikut adalah daftar fitur atau perbaikan yang direncanakan untuk implementasi di masa mendatang:
 
--   **[Fitur] Unduh Surat Tugas Lembur sebagai PDF:**
-    -   **Deskripsi:** Menambahkan tombol pada halaman detail atau cetak lembur untuk mengunduh surat tugas langsung sebagai file PDF, tanpa perlu melalui dialog cetak browser.
-
--   **[Fitur] Laporan Rekapitulasi Lembur:**
-    -   **Deskripsi:** Membuat halaman baru untuk menampilkan laporan rekapitulasi lembur bulanan atau berdasarkan rentang tanggal untuk semua karyawan. Mirip dengan fungsionalitas laporan cuti.
-
--   **[Perbaikan] Filter pada Halaman Daftar Lembur:**
-    -   **Deskripsi:** Menambahkan fungsionalitas filter pada halaman `lembur.index` untuk admin, agar bisa memfilter pengajuan lembur berdasarkan karyawan, rentang tanggal, atau status.
-
 -   **[Fitur] Integrasi Data Pengalaman Kerja dari Kontrak:**
     -   **Deskripsi:** Mengembangkan fitur CV agar data pengalaman kerja dapat secara otomatis diambil dari data kontrak karyawan yang sudah ada dalam sistem, mengurangi redundansi input data.
+
+-   **[Fitur] Notifikasi Persetujuan Lembur:**
+    -   **Deskripsi:** Mengirimkan notifikasi (misalnya email atau notifikasi sistem) kepada pengguna ketika pengajuan lembur mereka disetujui atau ditolak.
+
+-   **[Fitur] Persetujuan Massal (Bulk Approval) Lembur:**
+    -   **Deskripsi:** Memungkinkan admin untuk menyetujui atau menolak beberapa pengajuan lembur sekaligus dari halaman daftar untuk efisiensi.

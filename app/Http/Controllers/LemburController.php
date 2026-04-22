@@ -2,28 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Lembur;
 use App\Models\DetailLembur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LemburController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!Gate::allows('view-user')) {
-            // return redirect()->403 with error message
             abort(403);
-        }    
-        $user = Auth::user();
-        if ($user->hasRole('admin')) {
-            $lemburs = Lembur::with(['user', 'approved'])->latest()->get();
-        } else {
-            $lemburs = Lembur::where('user_id', $user->id)->with(['user', 'approved'])->latest()->get();
         }
-        return view('lembur.index', compact('lemburs'));
+
+        $user = Auth::user();
+        $query = Lembur::with(['user', 'approved']);
+
+        if ($user->hasRole('admin')) {
+            // Admin filters
+            if ($request->filled('user_id')) {
+                $query->where('user_id', $request->user_id);
+            }
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            if ($request->filled('start_date')) {
+                $query->whereDate('tanggal', '>=', $request->start_date);
+            }
+            if ($request->filled('end_date')) {
+                $query->whereDate('tanggal', '<=', $request->end_date);
+            }
+        } else {
+            // Non-admin only sees their own
+            $query->where('user_id', $user->id);
+        }
+
+        $lemburs = $query->latest()->get();
+        
+        // Data untuk filter
+        $users = $user->hasRole('admin') ? User::orderBy('name')->get() : [];
+
+        return view('lembur.index', compact('lemburs', 'users'));
     }
 
     public function create()
@@ -263,5 +286,51 @@ class LemburController extends Controller
         }
 
         return round($estimasi, 0);
+    }
+
+    /**
+     * Download overtime assignment letter as PDF.
+     */
+    public function downloadPdf(Lembur $lembur)
+    {
+        if (!Auth::user()->hasRole('admin') && Auth::id() !== $lembur->user_id) {
+            abort(403);
+        }
+
+        $pdf = Pdf::loadView('lembur.pdf', compact('lembur'))->setPaper('a4', 'landscape');
+        return $pdf->download('Surat Tugas Lembur - ' . $lembur->user->name . ' - ' . $lembur->tanggal->format('d-m-Y') . '.pdf');
+    }
+
+    /**
+     * Show the search form for the overtime report.
+     */
+    public function searchReport()
+    {
+        Gate::authorize('view-admin-reports'); // Anda mungkin perlu membuat Gate ini
+        return view('lembur.report-search');
+    }
+
+    /**
+     * Generate and display the overtime report.
+     */
+    public function generateReport(Request $request)
+    {
+        Gate::authorize('view-admin-reports');
+
+        $request->validate([
+            'month' => 'required|integer|between:1,12',
+            'year' => 'required|integer|min:2020|max:' . (date('Y') + 1),
+        ]);
+
+        $month = $request->month;
+        $year = $request->year;
+
+        $reportData = Lembur::where('status', 'approved')
+            ->whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)
+            ->with('user')
+            ->get();
+
+        return view('lembur.report', compact('reportData', 'month', 'year'));
     }
 }

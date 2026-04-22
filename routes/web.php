@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('lembur/{lembur}/approve', [LemburController::class, 'approve'])->name('lembur.approve');
     Route::patch('lembur/{lembur}/reject', [LemburController::class, 'reject'])->name('lembur.reject');
     Route::get('lembur/{lembur}/print', [LemburController::class, 'print'])->name('lembur.print');
+    Route::get('lembur/{lembur}/download', [LemburController::class, 'downloadPdf'])->name('lembur.download');
     
     // CV (Curriculum Vitae) Routes
     Route::get('cv', [CvController::class, 'show'])->name('cv.show');
@@ -155,9 +156,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/lunch-events/{lunchEvent}/items', [LunchEventUserOrderController::class, 'destroyItem'])->name('lunch-event-user-orders.destroy-item');
     Route::resource('gaji', GajiController::class);
     Route::put('slip-gaji/{slipGaji}', [SlipGajiController::class, 'update'])->name('slip-gaji.update');
+    Route::get('laporan-lembur', [LemburController::class, 'searchReport'])->name('laporan-lembur.search');
+    Route::post('laporan-lembur/generate', [LemburController::class, 'generateReport'])->name('laporan-lembur.generate');
 });
-
-
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('reimbursements/{reimbursement}', [ReimbursementController::class, 'destroy'])->name('reimbursements.destroy');

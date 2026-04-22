@@ -128,13 +128,16 @@
 
                         <x-slot name="content">
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Laporan Keuangan') }}
+                                {{ __('Laporan (Admin)') }}
                             </div>
                             <x-dropdown-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
                                 {{ __('Daftar Reimbursements') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.laporan-reimbursements.search')" :active="request()->routeIs('admin.laporan-reimbursements.*')">
                                 {{ __('Generate Reimbursements') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.laporan-lembur.search')" :active="request()->routeIs('admin.laporan-lembur.*')">
+                                {{ __('Generate Lembur') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.laporan-cuti.search')" :active="request()->routeIs('admin.laporan-cuti.*')">
                                 {{ __('Generate Cuti') }}
@@ -263,6 +266,10 @@
                     <x-responsive-nav-link :href="route('admin.laporan-reimbursements.index')" :active="request()->routeIs('admin.laporan-reimbursements.index')">
                         {{ __('Daftar Reimbursements') }}
                     </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.laporan-lembur.search')" :active="request()->routeIs('admin.laporan-lembur.search')">
+                        {{ __('Generate Lembur') }}
+                    </x-responsive-nav-link>
+                    
                     <x-responsive-nav-link :href="route('admin.laporan-reimbursements.search')" :active="request()->routeIs('admin.laporan-reimbursements.search')">
                         {{ __('Generate Reimbursements') }}
                     </x-responsive-nav-link>
