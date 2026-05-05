@@ -143,6 +143,14 @@
                                                         <button type="submit" class="btn btn-danger btn-sm bg-danger">Tolak</button>
                                                     </form>
                                                 @endif
+                                                <!-- Revisi oleh user jika sudah di approve-->
+                                                @if ($lembur->status === 'approved')
+                                                    <form action="{{ route('lembur.revisi', $lembur->id) }}" method="POST" class="inline-block">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-warning btn-sm bg-warning">Revisi</button>
+                                                    </form>
+                                                @endif
                                             @endcan
                                         </td>
                                     </tr>

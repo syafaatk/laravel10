@@ -54,6 +54,15 @@ class LemburController extends Controller
         return view('lembur.create');
     }
 
+    public function revisi( $id)
+    {
+        $lembur = Lembur::findOrFail($id);
+        if (Auth::id() !== $lembur->user_id) {
+            abort(403);
+        }
+        return view('lembur.edit', compact('lembur'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -139,7 +148,7 @@ class LemburController extends Controller
         if (Auth::id() !== $lembur->user_id) {
             abort(403);
         }
-
+        
         $request->validate([
             'tanggal' => 'required|date',
             'jenis' => 'required|in:weekday,weekend,holiday',

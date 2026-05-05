@@ -102,7 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('lembur/{lembur}/reject', [LemburController::class, 'reject'])->name('lembur.reject');
     Route::get('lembur/{lembur}/print', [LemburController::class, 'print'])->name('lembur.print');
     Route::get('lembur/{lembur}/download', [LemburController::class, 'downloadPdf'])->name('lembur.download');
-    
+    Route::patch('lembur/{lembur}/revisi', [LemburController::class, 'revisi'])->name('lembur.revisi');
     // CV (Curriculum Vitae) Routes
     Route::get('cv', [CvController::class, 'show'])->name('cv.show');
     Route::get('cv/edit', [CvController::class, 'edit'])->name('cv.edit');
